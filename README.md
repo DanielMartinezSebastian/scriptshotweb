@@ -11,6 +11,14 @@ Una herramienta simplificada para capturar pantallas de sitios web en múltiples
 - 📁 **Organización automática**: Carpetas por cliente y dispositivo
 - ⚡ **Sin configuración manual**: Todo automatizado
 
+## 🚩 Proximas Features
+
+- [] Realizar captura completa de la url navegando primero hasta abajo para disparar animacions basadas en scroll
+- [] Obtener capturas en webp optimizado
+- [] Capturar webs completas navegando por todos los links bajo ese dominio para obtener toda la web
+- [] Scrapear contenido en formato .md
+- [] Obtener todo el contenido media que exista en la url objetivo 
+
 ## 🚀 Instalación
 
 ### Opción 1: Instalación Automática (Recomendada)
