@@ -13,11 +13,11 @@ Una herramienta simplificada para capturar pantallas de sitios web en múltiples
 
 ## 🚩 Proximas Features
 
-- [] Realizar captura completa de la url navegando primero hasta abajo para disparar animacions basadas en scroll
-- [] Obtener capturas en webp optimizado
-- [] Capturar webs completas navegando por todos los links bajo ese dominio para obtener toda la web
-- [] Scrapear contenido en formato .md
-- [] Obtener todo el contenido media que exista en la url objetivo 
+- [ ] Realizar captura completa de la url navegando primero hasta abajo para disparar animacions basadas en scroll
+- [ ] Obtener capturas en webp optimizado
+- [ ] Capturar webs completas navegando por todos los links bajo ese dominio para obtener toda la web
+- [ ] Scrapear contenido en formato .md
+- [ ] Obtener todo el contenido media que exista en la url objetivo 
 
 ## 🚀 Instalación
 
