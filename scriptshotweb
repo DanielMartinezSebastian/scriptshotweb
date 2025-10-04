@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
 ScriptShotWeb - Herramienta simplificada para capturas de pantalla web
-Uso: scriptshotweb URL [-all] [--device DEVICE]
+Uso: scriptshotweb URL [-all] [--device DEVICE] [--wait-time SECONDS] [--smooth-scroll] [--super]
 
 Ejemplos:
   scriptshotweb http://mariadelasmercedes.com/contacto -all
   scriptshotweb https://mecalito.com --device mobile-17
+  scriptshotweb https://example.com --device tablet --wait-time 5 --smooth-scroll
+  scriptshotweb https://site.com --super  # Modo completo optimizado
 """
 
 import argparse
@@ -13,10 +15,74 @@ import sys
 from pathlib import Path
 from urllib.parse import urlparse
 from datetime import datetime
-from playwright.sync_api import sync_playwright
 import re
-import requests
-from requests.exceptions import RequestException, Timeout, ConnectionError
+import time
+# Importaciones de playwright y requests se harán más tarde para permitir que --help funcione
+
+def mostrar_ayuda_extendida():
+    """Muestra información adicional sobre el uso del script"""
+    ayuda = """
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           SCRIPTSHOTWEB - GUÍA COMPLETA                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📖 DESCRIPCIÓN:
+   ScriptShotWeb es una herramienta profesional para realizar capturas de pantalla
+   de sitios web en múltiples dispositivos, optimizada para sitios modernos con
+   animaciones, efectos de scroll y contenido dinámico.
+
+🎯 CARACTERÍSTICAS PRINCIPALES:
+   • Capturas en 4 tamaños de dispositivo predefinidos
+   • Soporte para animaciones y contenido que se carga con delay
+   • Scroll suave para disparar animaciones basadas en scroll
+   • Organización automática de archivos por cliente y dispositivo
+   • Modo super para captura completa optimizada
+
+📱 DISPOSITIVOS DISPONIBLES:
+   mobile-se  │ iPhone SE      │ 375 × 667   │ Móvil pequeño
+   mobile-17  │ iPhone 17      │ 393 × 852   │ Móvil moderno  
+   tablet     │ iPad           │ 768 × 1024  │ Tablet estándar
+   desktop    │ Desktop        │ 1920 × 1080 │ Escritorio HD
+
+🚀 MODOS DE USO:
+
+   Básico (un dispositivo):
+   $ scriptshotweb https://example.com --device desktop
+
+   Completo (todos los dispositivos):  
+   $ scriptshotweb https://example.com --all-devices
+
+   Super optimizado (recomendado para sitios complejos):
+   $ scriptshotweb https://example.com --super
+
+⚙️  OPCIONES AVANZADAS:
+   --wait-time SEGUNDOS    │ Tiempo de espera para animaciones (default: 3s)
+   --smooth-scroll         │ Scroll suave antes de captura completa
+   --cliente NOMBRE        │ Nombre personalizado para organizar archivos
+   --output-dir PATH       │ Directorio personalizado de salida
+
+📂 ESTRUCTURA DE ARCHIVOS:
+   Las capturas se guardan por defecto en:
+   ./capturas/ (carpeta en el proyecto)
+   └── [cliente]/
+       ├── mobile-se/
+       ├── mobile-17/ 
+       ├── tablet/
+       └── desktop/
+           ├── pagina-viewport-20241004_143025.png
+           └── pagina-completa-20241004_143025.png
+   
+   Usa --output-dir para guardar en otra ubicación como:
+   ~/Pictures/ScriptShotWeb o ~/Downloads/ScriptShotWeb
+
+💡 CONSEJOS:
+   • Usa --super para sitios con muchas animaciones
+   • Usa --wait-time mayor para sitios lentos
+   • El scroll suave es ideal para lazy loading y parallax
+   • Las URLs deben incluir http:// o https://
+
+"""
+    print(ayuda)
 
 # Configuración de dispositivos/tamaños
 TAMAÑOS = {
@@ -28,6 +94,15 @@ TAMAÑOS = {
 
 def validar_url(url):
     """Valida que la URL responda antes de proceder con las capturas"""
+    # Importar requests solo cuando se necesite
+    try:
+        import requests
+        from requests.exceptions import RequestException, Timeout, ConnectionError
+    except ImportError:
+        print("❌ Error: La librería 'requests' no está instalada")
+        print("💡 Instala con: pip install requests")
+        return False
+    
     print(f"🔍 Validando URL: {url}")
     
     try:
@@ -99,8 +174,92 @@ def crear_nombre_archivo(url, device, timestamp, es_completa=False):
         sufijo = "-completa" if es_completa else ""
         return f"captura-{device}{sufijo}-{timestamp}.png"
 
-def capturar_url(url, device_key, device_config, base_path, timestamp):
+def wait_for_animations(page, wait_time):
+    """Espera el tiempo especificado para que carguen las animaciones"""
+    if wait_time > 0:
+        print(f"⏳ Esperando {wait_time} segundos para que carguen las animaciones...")
+        time.sleep(wait_time)
+
+def smooth_scroll_page(page):
+    """Realiza scroll suave hacia abajo para disparar animaciones basadas en scroll"""
+    print("📜 Realizando scroll suave para disparar animaciones...")
+    
+    # Obtener la altura total de la página
+    total_height = page.evaluate("document.body.scrollHeight")
+    viewport_height = page.evaluate("window.innerHeight")
+    
+    print(f"📏 Altura total de la página: {total_height}px, Viewport: {viewport_height}px")
+    
+    # Scroll optimizado - pasos de 80px (balance entre velocidad y efectividad)
+    step_size = 80
+    steps = int(total_height / step_size)
+    
+    print(f"🔄 Realizando scroll suave en {steps} pasos de {step_size}px...")
+    
+    for i in range(steps):
+        # Usar scrollBy para scroll incremental natural
+        page.evaluate(f"""
+            window.scrollBy(0, {step_size});
+            window.dispatchEvent(new Event('scroll'));
+        """)
+        
+        # Pausa corta optimizada (0.08s - rápido pero efectivo)
+        time.sleep(0.08)
+        
+        # Mostrar progreso cada 20% del recorrido
+        progress = (i / steps) * 100
+        if progress % 20 < (100 / steps):
+            print(f"📍 Progreso: {int(progress)}% ({i * step_size}px de {total_height}px)")
+    
+    # Asegurar que llegamos al final
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    print("📍 Llegado al final de la página")
+    
+    # Forzar estado final de animaciones comunes
+    print("✨ Forzando estado final de animaciones...")
+    page.evaluate("""
+        // AOS (Animate On Scroll)
+        document.querySelectorAll('[data-aos]').forEach(el => {
+            el.classList.add('aos-animate');
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+        
+        // GSAP ScrollTrigger refresh
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.getAll().forEach(st => st.refresh());
+        }
+        
+        // Intersection Observer - forzar visibilidad
+        document.querySelectorAll('[class*="fade"], [class*="slide"], [class*="animate"]').forEach(el => {
+            if (el.style.opacity === '0' || el.style.opacity === '') {
+                el.style.opacity = '1';
+            }
+            if (el.style.visibility === 'hidden') {
+                el.style.visibility = 'visible';
+            }
+        });
+        
+        // Disparar scroll event final
+        window.dispatchEvent(new Event('scroll'));
+        window.dispatchEvent(new Event('resize'));
+    """)
+    
+    # Pausa final para que se completen las animaciones
+    time.sleep(1.0)
+    print("✅ Scroll completado - página lista para captura desde el final")
+
+def capturar_url(url, device_key, device_config, base_path, timestamp, wait_time=3.0, smooth_scroll=False):
     """Captura screenshots de una URL en un dispositivo específico"""
+    # Importar playwright solo cuando se necesite
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("❌ Error: La librería 'playwright' no está instalada")
+        print("💡 Instala con: pip install playwright")
+        print("💡 Luego ejecuta: playwright install")
+        return
+    
     print(f"📱 Configurando: {device_config['nombre']} ({device_config['width']}x{device_config['height']})")
     
     with sync_playwright() as p:
@@ -111,6 +270,9 @@ def capturar_url(url, device_key, device_config, base_path, timestamp):
             print(f"📸 Navegando a: {url}")
             page.goto(url, wait_until="networkidle")
             
+            # Esperar tiempo especificado para animaciones
+            wait_for_animations(page, wait_time)
+            
             # Captura normal (viewport)
             archivo_normal = crear_nombre_archivo(url, device_key, timestamp, False)
             ruta_normal = base_path / archivo_normal
@@ -118,6 +280,11 @@ def capturar_url(url, device_key, device_config, base_path, timestamp):
             print(f"✅ Captura viewport: {ruta_normal}")
             
             # Captura completa (página scrolleable)
+            if smooth_scroll:
+                smooth_scroll_page(page)
+                # Esperar tiempo mínimo después del scroll suave
+                wait_for_animations(page, 1.0)  # Tiempo mínimo optimizado
+            
             archivo_completa = crear_nombre_archivo(url, device_key, timestamp, True)
             ruta_completa = base_path / archivo_completa
             page.screenshot(path=str(ruta_completa), full_page=True)
@@ -128,9 +295,18 @@ def capturar_url(url, device_key, device_config, base_path, timestamp):
         finally:
             browser.close()
 
-def crear_estructura_carpetas(cliente, devices_a_usar):
+def crear_estructura_carpetas(cliente, devices_a_usar, output_dir=None):
     """Crea la estructura de carpetas solo para los dispositivos que se van a usar"""
-    base_path = Path.cwd() / cliente
+    # Determinar el directorio base de salida
+    if output_dir:
+        # Si se especifica un directorio personalizado
+        base_output = Path(output_dir).expanduser()
+    else:
+        # Por defecto: carpeta 'capturas' en el directorio del proyecto
+        base_output = Path.cwd() / "capturas"
+    
+    # Crear la ruta completa con el nombre del cliente
+    base_path = base_output / cliente
     
     for device_key in devices_a_usar:
         device_path = base_path / device_key
@@ -141,35 +317,113 @@ def crear_estructura_carpetas(cliente, devices_a_usar):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="ScriptShotWeb - Capturas simplificadas de sitios web",
+        description="""
+ScriptShotWeb - Herramienta profesional para capturas de pantalla web
+
+Esta herramienta permite realizar capturas de pantalla optimizadas de sitios web
+en múltiples dispositivos y tamaños, con soporte para animaciones y efectos de scroll.
+        """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Ejemplos de uso:
-  scriptshotweb http://mariadelasmercedes.com/contacto -all
-  scriptshotweb https://mecalito.com --device mobile-17
-  scriptshotweb https://example.com --device tablet
+EJEMPLOS DE USO:
+  
+  Captura básica en un dispositivo:
+    scriptshotweb https://example.com --device desktop
+    scriptshotweb https://site.com --device mobile-17
+  
+  Captura en todos los dispositivos:
+    scriptshotweb https://example.com --all-devices
+  
+  Captura con tiempo de espera personalizado:
+    scriptshotweb https://site.com --device tablet --wait-time 7
+  
+  Captura con scroll suave para animaciones:
+    scriptshotweb https://animated-site.com --all-devices --smooth-scroll
+  
+  Modo super (completo y optimizado):
+    scriptshotweb https://complex-site.com --super
+  
+  Combinando opciones:
+    scriptshotweb https://site.com --device desktop --wait-time 4 --smooth-scroll
+  
+  Guardar en directorio personalizado:
+    scriptshotweb https://site.com --super --output-dir ~/Proyectos/Capturas
+
+DISPOSITIVOS DISPONIBLES:
+  mobile-se    iPhone SE (375x667)
+  mobile-17    iPhone 17 (393x852)  
+  tablet       iPad (768x1024)
+  desktop      Desktop (1920x1080)
+
+NOTAS:
+  • Las capturas se guardan en carpetas organizadas por cliente y dispositivo
+  • El nombre del cliente se extrae automáticamente de la URL
+  • Se generan dos tipos de captura: viewport y página completa
+  • El modo --super activa automáticamente: all-devices + smooth-scroll + wait-time 2s (optimizado)
         """
     )
     
     parser.add_argument('url', 
-                       help='URL del sitio web a capturar')
+                       nargs='?',  # Hacer que URL sea opcional
+                       help='URL completa del sitio web a capturar (ej: https://example.com)')
     
     parser.add_argument('-all', '--all-devices', 
                        action='store_true',
-                       help='Capturar en todos los dispositivos/tamaños')
+                       help='Capturar en todos los dispositivos disponibles (mobile-se, mobile-17, tablet, desktop)')
     
     parser.add_argument('--device', 
                        choices=list(TAMAÑOS.keys()),
-                       help='Dispositivo específico para capturar')
+                       help='Dispositivo específico para capturar. Opciones: mobile-se, mobile-17, tablet, desktop')
     
     parser.add_argument('--cliente',
-                       help='Nombre del cliente (se detecta automáticamente desde URL)')
+                       help='Nombre personalizado del cliente para organizar capturas (se detecta automáticamente desde URL si no se especifica)')
+    
+    parser.add_argument('--output-dir',
+                       help='Directorio personalizado para guardar las capturas (default: ./capturas/ en el directorio actual)')
+    
+    parser.add_argument('--wait-time',
+                       type=float,
+                       default=3.0,
+                       help='Tiempo de espera en segundos para que carguen animaciones y contenido dinámico (default: 3.0)')
+    
+    parser.add_argument('--smooth-scroll',
+                       action='store_true',
+                       help='Realizar scroll suave hacia abajo antes de captura completa para disparar animaciones basadas en scroll')
+    
+    parser.add_argument('--super',
+                       action='store_true',
+                       help='🚀 Modo super: activa automáticamente --all-devices + --smooth-scroll + wait-time optimizado (2s) para capturas completas y rápidas')
+    
+    parser.add_argument('--info',
+                       action='store_true',
+                       help='📖 Mostrar guía completa y ejemplos detallados de uso')
     
     args = parser.parse_args()
     
+    # Si se solicita información extendida, mostrarla y salir
+    if args.info:
+        mostrar_ayuda_extendida()
+        sys.exit(0)
+    
+    # Si no es --info, entonces URL es requerida
+    if not args.url:
+        print("❌ Error: URL es requerida")
+        print("💡 Usa --help para ver opciones básicas o --info para guía completa")
+        parser.print_help()
+        sys.exit(1)
+    
+    # Si se usa --super, activar automáticamente las opciones optimizadas
+    if args.super:
+        args.all_devices = True
+        args.smooth_scroll = True
+        # Si no se especificó wait_time personalizado, usar 2 segundos para modo super (optimizado)
+        if args.wait_time == 3.0:  # valor default
+            args.wait_time = 2.0
+    
     # Validar argumentos
-    if not args.all_devices and not args.device:
-        print("❌ Error: Debes especificar -all o --device")
+    if not args.all_devices and not args.device and not args.super:
+        print("❌ Error: Debes especificar -all, --device o --super")
+        print("💡 Usa --help para ver opciones básicas o --info para guía completa")
         parser.print_help()
         sys.exit(1)
     
@@ -188,17 +442,29 @@ Ejemplos de uso:
     # Determinar dispositivos a usar
     if args.all_devices:
         devices_a_usar = list(TAMAÑOS.keys())
-        print(f"🚀 Capturando URL: {args.url}")
-        print(f"👤 Cliente: {cliente}")
-        print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
+        if args.super:
+            print(f"🚀 MODO SUPER ACTIVADO 🚀")
+            print(f"📱 Capturando URL: {args.url}")
+            print(f"👤 Cliente: {cliente}")
+            print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
+            print(f"⏳ Tiempo de espera: {args.wait_time}s")
+            print(f"📜 Scroll suave: ✅ Activado")
+        else:
+            print(f"🚀 Capturando URL: {args.url}")
+            print(f"👤 Cliente: {cliente}")
+            print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
     else:
         devices_a_usar = [args.device]
         print(f"🚀 Capturando URL: {args.url}")
         print(f"👤 Cliente: {cliente}")
         print(f"📱 Dispositivo: {args.device}")
+        if args.smooth_scroll:
+            print(f"📜 Scroll suave: ✅ Activado")
+        if args.wait_time != 3.0:
+            print(f"⏳ Tiempo de espera: {args.wait_time}s")
     
     # Crear estructura de carpetas SOLO para dispositivos solicitados
-    base_path = crear_estructura_carpetas(cliente, devices_a_usar)
+    base_path = crear_estructura_carpetas(cliente, devices_a_usar, args.output_dir)
     
     print(f"📁 Carpeta base: {base_path}")
     print("="*60)
@@ -209,7 +475,7 @@ Ejemplos de uso:
         device_config = TAMAÑOS[device_key]
         device_path = base_path / device_key
         
-        capturar_url(args.url, device_key, device_config, device_path, timestamp)
+        capturar_url(args.url, device_key, device_config, device_path, timestamp, args.wait_time, args.smooth_scroll)
     
     print(f"\n🎉 ¡Capturas completadas!")
     print(f"📂 Revisa las imágenes en: {base_path}")
