@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""
+ScriptShotWeb - Herramienta simplificada para capturas de pantalla web
+Uso: scriptshotweb URL [-all] [--device DEVICE]
+
+Ejemplos:
+  scriptshotweb http://mariadelasmercedes.com/contacto -all
+  scriptshotweb https://mecalito.com --device mobile-17
+"""
+
+import argparse
+import sys
+from pathlib import Path
+from urllib.parse import urlparse
+from datetime import datetime
+from playwright.sync_api import sync_playwright
+import re
+import requests
+from requests.exceptions import RequestException, Timeout, ConnectionError
+
+# Configuración de dispositivos/tamaños
+TAMAÑOS = {
+    "mobile-se": {"width": 375, "height": 667, "nombre": "iPhone SE"},
+    "mobile-17": {"width": 393, "height": 852, "nombre": "iPhone 17"},
+    "tablet": {"width": 768, "height": 1024, "nombre": "iPad"},
+    "desktop": {"width": 1920, "height": 1080, "nombre": "Desktop"}
+}
+
+def validar_url(url):
+    """Valida que la URL responda antes de proceder con las capturas"""
+    print(f"🔍 Validando URL: {url}")
+    
+    try:
+        # Intentar una petición HEAD primero (más rápida)
+        response = requests.head(url, timeout=10, allow_redirects=True)
+        
+        # Si HEAD no es soportado, intentar GET
+        if response.status_code == 405:  # Method Not Allowed
+            response = requests.get(url, timeout=10, allow_redirects=True)
+        
+        if response.status_code == 200:
+            print(f"✅ URL válida (Status: {response.status_code})")
+            return True
+        else:
+            print(f"⚠️ URL responde pero con status: {response.status_code}")
+            # Permitir algunos códigos que pueden funcionar con Playwright
+            if response.status_code in [301, 302, 303, 307, 308]:
+                print(f"📝 Redireccionamiento detectado, continuando...")
+                return True
+            return False
+            
+    except (ConnectionError, Timeout) as e:
+        print(f"❌ Error de conexión: {e}")
+        return False
+    except RequestException as e:
+        print(f"❌ Error en la petición: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ Error inesperado validando URL: {e}")
+        return False
+
+def extraer_nombre_cliente(url):
+    """Extrae el nombre del cliente desde la URL del dominio"""
+    try:
+        parsed = urlparse(url)
+        domain = parsed.netloc.lower()
+        # Remover www. si existe
+        if domain.startswith('www.'):
+            domain = domain[4:]
+        # Remover extensión del dominio
+        nombre = domain.split('.')[0]
+        # Limpiar caracteres especiales
+        nombre = re.sub(r'[^a-zA-Z0-9]', '', nombre)
+        return nombre
+    except:
+        return "sitio_web"
+
+def crear_nombre_archivo(url, device, timestamp, es_completa=False):
+    """Crea nombre descriptivo para el archivo"""
+    try:
+        parsed = urlparse(url)
+        # Extraer path y limpiar
+        path = parsed.path.strip('/')
+        if not path:
+            descripcion = "pagina-principal"
+        else:
+            descripcion = path.replace('/', '-').replace('#', '-seccion-')
+        
+        # Limpiar caracteres especiales
+        descripcion = re.sub(r'[^a-zA-Z0-9\-]', '', descripcion)
+        if not descripcion:
+            descripcion = "captura"
+            
+        # Añadir sufijo si es captura completa
+        sufijo = "-completa" if es_completa else ""
+        
+        return f"{descripcion}-{device}{sufijo}-{timestamp}.png"
+    except:
+        sufijo = "-completa" if es_completa else ""
+        return f"captura-{device}{sufijo}-{timestamp}.png"
+
+def capturar_url(url, device_key, device_config, base_path, timestamp):
+    """Captura screenshots de una URL en un dispositivo específico"""
+    print(f"📱 Configurando: {device_config['nombre']} ({device_config['width']}x{device_config['height']})")
+    
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page(viewport=device_config)
+        
+        try:
+            print(f"📸 Navegando a: {url}")
+            page.goto(url, wait_until="networkidle")
+            
+            # Captura normal (viewport)
+            archivo_normal = crear_nombre_archivo(url, device_key, timestamp, False)
+            ruta_normal = base_path / archivo_normal
+            page.screenshot(path=str(ruta_normal))
+            print(f"✅ Captura viewport: {ruta_normal}")
+            
+            # Captura completa (página scrolleable)
+            archivo_completa = crear_nombre_archivo(url, device_key, timestamp, True)
+            ruta_completa = base_path / archivo_completa
+            page.screenshot(path=str(ruta_completa), full_page=True)
+            print(f"✅ Captura completa: {ruta_completa}")
+            
+        except Exception as e:
+            print(f"❌ Error capturando {url} en {device_key}: {e}")
+        finally:
+            browser.close()
+
+def crear_estructura_carpetas(cliente, devices_a_usar):
+    """Crea la estructura de carpetas solo para los dispositivos que se van a usar"""
+    base_path = Path.cwd() / cliente
+    
+    for device_key in devices_a_usar:
+        device_path = base_path / device_key
+        device_path.mkdir(parents=True, exist_ok=True)
+        print(f"📁 Carpeta verificada: {device_path}")
+    
+    return base_path
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="ScriptShotWeb - Capturas simplificadas de sitios web",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Ejemplos de uso:
+  scriptshotweb http://mariadelasmercedes.com/contacto -all
+  scriptshotweb https://mecalito.com --device mobile-17
+  scriptshotweb https://example.com --device tablet
+        """
+    )
+    
+    parser.add_argument('url', 
+                       help='URL del sitio web a capturar')
+    
+    parser.add_argument('-all', '--all-devices', 
+                       action='store_true',
+                       help='Capturar en todos los dispositivos/tamaños')
+    
+    parser.add_argument('--device', 
+                       choices=list(TAMAÑOS.keys()),
+                       help='Dispositivo específico para capturar')
+    
+    parser.add_argument('--cliente',
+                       help='Nombre del cliente (se detecta automáticamente desde URL)')
+    
+    args = parser.parse_args()
+    
+    # Validar argumentos
+    if not args.all_devices and not args.device:
+        print("❌ Error: Debes especificar -all o --device")
+        parser.print_help()
+        sys.exit(1)
+    
+    # VALIDAR URL ANTES DE CREAR CARPETAS
+    if not validar_url(args.url):
+        print(f"❌ Error: La URL {args.url} no responde o no es accesible")
+        print("💡 Verifica que la URL sea correcta y esté disponible")
+        sys.exit(1)
+    
+    # Detectar cliente automáticamente o usar el proporcionado
+    cliente = args.cliente or extraer_nombre_cliente(args.url)
+    
+    # Generar timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Determinar dispositivos a usar
+    if args.all_devices:
+        devices_a_usar = list(TAMAÑOS.keys())
+        print(f"🚀 Capturando URL: {args.url}")
+        print(f"👤 Cliente: {cliente}")
+        print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
+    else:
+        devices_a_usar = [args.device]
+        print(f"🚀 Capturando URL: {args.url}")
+        print(f"👤 Cliente: {cliente}")
+        print(f"📱 Dispositivo: {args.device}")
+    
+    # Crear estructura de carpetas SOLO para dispositivos solicitados
+    base_path = crear_estructura_carpetas(cliente, devices_a_usar)
+    
+    print(f"📁 Carpeta base: {base_path}")
+    print("="*60)
+    
+    # Realizar capturas
+    for i, device_key in enumerate(devices_a_usar, 1):
+        print(f"\n[{i}/{len(devices_a_usar)}] Procesando {device_key}...")
+        device_config = TAMAÑOS[device_key]
+        device_path = base_path / device_key
+        
+        capturar_url(args.url, device_key, device_config, device_path, timestamp)
+    
+    print(f"\n🎉 ¡Capturas completadas!")
+    print(f"📂 Revisa las imágenes en: {base_path}")
+
+if __name__ == "__main__":
+    main()

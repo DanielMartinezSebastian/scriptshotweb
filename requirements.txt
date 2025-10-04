@@ -1,0 +1,7 @@
+# Dependencias Python
+playwright>=1.40.0
+requests>=2.32.0
+
+# Para desarrollo (opcional)
+# pytest>=7.0.0
+# black>=23.0.0
