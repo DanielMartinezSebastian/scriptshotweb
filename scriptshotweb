@@ -38,6 +38,7 @@ def mostrar_ayuda_extendida():
    • Soporte para animaciones y contenido que se carga con delay
    • Scroll suave para disparar animaciones basadas en scroll
    • Cierre automático de banners de cookies y pop-ups 🤖
+   • Extracción de metadatos OpenGraph para SEO y redes sociales 📊
    • Organización automática de archivos por cliente y dispositivo
    • Modo super para captura completa optimizada
 
@@ -62,6 +63,7 @@ def mostrar_ayuda_extendida():
    --wait-time SEGUNDOS    │ Tiempo de espera para animaciones (default: 3s)
    --smooth-scroll         │ Scroll suave antes de captura completa
    --auto-dismiss          │ Cerrar automáticamente banners de cookies y pop-ups 🤖
+   --open-graph, --og      │ Extraer metadatos OpenGraph (og:*, Twitter Card) 📊
    --cliente NOMBRE        │ Nombre personalizado para organizar archivos
    --output-dir PATH       │ Directorio personalizado de salida
    --open                  │ Abrir explorador de archivos al finalizar
@@ -86,6 +88,8 @@ def mostrar_ayuda_extendida():
    • El scroll suave es ideal para lazy loading y parallax
    • Usa --auto-dismiss para sitios con banners de cookies molestos
    • Combina --auto-dismiss con --super para capturas perfectas sin pop-ups
+   • Usa --og o --open-graph para extraer metadatos SEO y redes sociales
+   • El modo --all y --super incluyen automáticamente extracción OpenGraph
    • Las URLs deben incluir http:// o https://
 
 """
@@ -394,6 +398,142 @@ def auto_dismiss_popups(page):
     
     return cerrados
 
+def extraer_opengraph(page, url, base_path, timestamp):
+    """
+    Extrae todos los metadatos OpenGraph de la página y los guarda en JSON.
+    También descarga las imágenes og:image si están disponibles.
+    
+    Args:
+        page: Objeto page de Playwright
+        url: URL de la página
+        base_path: Ruta base donde guardar los archivos
+        timestamp: Timestamp para nombrar archivos
+    
+    Returns:
+        dict: Diccionario con los metadatos extraídos
+    """
+    import json
+    
+    print("🔍 Extrayendo metadatos OpenGraph...")
+    
+    # Extraer todos los metadatos og:* de la página
+    og_data = page.evaluate("""
+        () => {
+            const metaTags = document.querySelectorAll('meta[property^="og:"], meta[name^="og:"]');
+            const data = {};
+            
+            metaTags.forEach(tag => {
+                const property = tag.getAttribute('property') || tag.getAttribute('name');
+                const content = tag.getAttribute('content');
+                if (property && content) {
+                    // Remover el prefijo 'og:' para simplificar
+                    const key = property.replace('og:', '');
+                    data[key] = content;
+                }
+            });
+            
+            // También extraer metadatos estándar relevantes
+            const title = document.querySelector('title');
+            const description = document.querySelector('meta[name="description"]');
+            const keywords = document.querySelector('meta[name="keywords"]');
+            const canonical = document.querySelector('link[rel="canonical"]');
+            
+            // Añadir metadatos adicionales si no están en og:
+            if (title && !data.title) {
+                data.title = title.textContent;
+            }
+            if (description && !data.description) {
+                data.description = description.getAttribute('content');
+            }
+            if (keywords) {
+                data.keywords = keywords.getAttribute('content');
+            }
+            if (canonical) {
+                data.canonical_url = canonical.getAttribute('href');
+            }
+            
+            // Twitter Card metadata (complementario)
+            const twitterCard = document.querySelector('meta[name="twitter:card"]');
+            const twitterSite = document.querySelector('meta[name="twitter:site"]');
+            const twitterCreator = document.querySelector('meta[name="twitter:creator"]');
+            
+            if (twitterCard) data.twitter_card = twitterCard.getAttribute('content');
+            if (twitterSite) data.twitter_site = twitterSite.getAttribute('content');
+            if (twitterCreator) data.twitter_creator = twitterCreator.getAttribute('content');
+            
+            return data;
+        }
+    """)
+    
+    # Añadir información adicional
+    og_data['extracted_at'] = datetime.now().isoformat()
+    og_data['source_url'] = url
+    og_data['timestamp'] = timestamp
+    
+    # Crear carpeta opengraph
+    og_path = base_path / 'opengraph'
+    og_path.mkdir(parents=True, exist_ok=True)
+    
+    # Guardar JSON con los metadatos
+    json_filename = f"opengraph-{timestamp}.json"
+    json_path = og_path / json_filename
+    
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(og_data, f, indent=2, ensure_ascii=False)
+    
+    print(f"✅ Metadatos OpenGraph guardados: {json_path}")
+    
+    # Descargar imagen og:image si existe
+    if 'image' in og_data and og_data['image']:
+        try:
+            import requests
+            from urllib.parse import urljoin
+            
+            image_url = og_data['image']
+            # Convertir URL relativa a absoluta si es necesario
+            if not image_url.startswith('http'):
+                image_url = urljoin(url, image_url)
+            
+            print(f"📥 Descargando imagen OpenGraph: {image_url}")
+            
+            response = requests.get(image_url, timeout=10, stream=True)
+            if response.status_code == 200:
+                # Obtener extensión de la imagen
+                ext = image_url.split('.')[-1].split('?')[0]
+                if ext not in ['jpg', 'jpeg', 'png', 'gif', 'webp']:
+                    ext = 'jpg'  # Default
+                
+                image_filename = f"og-image-{timestamp}.{ext}"
+                image_path = og_path / image_filename
+                
+                with open(image_path, 'wb') as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        f.write(chunk)
+                
+                print(f"✅ Imagen OpenGraph descargada: {image_path}")
+                og_data['image_local_path'] = str(image_path)
+            else:
+                print(f"⚠️  No se pudo descargar la imagen (Status: {response.status_code})")
+        except Exception as e:
+            print(f"⚠️  Error descargando imagen OpenGraph: {e}")
+    
+    # Mostrar resumen de los metadatos encontrados
+    print(f"\n📊 Metadatos OpenGraph encontrados:")
+    if 'title' in og_data:
+        print(f"   📌 Título: {og_data['title'][:80]}{'...' if len(og_data['title']) > 80 else ''}")
+    if 'description' in og_data:
+        print(f"   📝 Descripción: {og_data['description'][:80]}{'...' if len(og_data['description']) > 80 else ''}")
+    if 'type' in og_data:
+        print(f"   🏷️  Tipo: {og_data['type']}")
+    if 'image' in og_data:
+        print(f"   🖼️  Imagen: ✅")
+    if 'site_name' in og_data:
+        print(f"   🌐 Sitio: {og_data['site_name']}")
+    
+    print(f"   ℹ️  Total: {len(og_data)} campos extraídos\n")
+    
+    return og_data
+
 def smooth_scroll_page(page):
     """Realiza scroll suave hacia abajo para disparar animaciones basadas en scroll"""
     print("📜 Realizando scroll suave para disparar animaciones...")
@@ -617,11 +757,14 @@ EJEMPLOS DE USO:
   Cerrar automáticamente banners de cookies:
     scriptshotweb https://google.com --device desktop --auto-dismiss
   
+  Extraer metadatos OpenGraph:
+    scriptshotweb https://miempresa.com --device desktop --og
+  
   Modo super (completo y optimizado):
     scriptshotweb https://complex-site.com --super
   
   Combinando opciones:
-    scriptshotweb https://site.com --device desktop --wait-time 4 --smooth-scroll --auto-dismiss
+    scriptshotweb https://site.com --device desktop --wait-time 4 --smooth-scroll --auto-dismiss --og
   
   Guardar en directorio personalizado:
     scriptshotweb https://site.com --super --output-dir ~/Proyectos/Capturas
@@ -640,8 +783,10 @@ NOTAS:
   • Las capturas se guardan en carpetas organizadas por cliente y dispositivo
   • El nombre del cliente se extrae automáticamente de la URL
   • Se generan dos tipos de captura: viewport y página completa
-  • El modo --super activa automáticamente: all-devices + smooth-scroll + wait-time 2s (optimizado)
+  • El modo --super activa automáticamente: all-devices + smooth-scroll + open-graph + wait-time 2s
+  • El modo --all incluye automáticamente extracción de OpenGraph
   • Usa --auto-dismiss para cerrar automáticamente banners de cookies y pop-ups (ideal para Google, Facebook, etc.)
+  • Los metadatos OpenGraph se guardan en carpeta opengraph/ con JSON e imagen descargada
         """
     )
     
@@ -676,9 +821,14 @@ NOTAS:
                        action='store_true',
                        help='🤖 Cerrar automáticamente banners de cookies, avisos de privacidad y otros pop-ups que bloqueen la pantalla. Detecta y cierra botones comunes en múltiples idiomas (Aceptar, Accept, Accepter, etc.)')
     
+    parser.add_argument('--open-graph', '--og',
+                       dest='open_graph',
+                       action='store_true',
+                       help='📊 Extraer metadatos OpenGraph (og:title, og:description, og:image, etc.) y guardarlos en JSON. También descarga la imagen og:image. Se activa automáticamente con --all y --super')
+    
     parser.add_argument('--super',
                        action='store_true',
-                       help='🚀 Modo super: activa automáticamente --all-devices + --smooth-scroll + wait-time optimizado (2s) para capturas completas y rápidas')
+                       help='🚀 Modo super: activa automáticamente --all-devices + --smooth-scroll + --open-graph + wait-time optimizado (2s) para capturas completas y rápidas')
     
     parser.add_argument('--info',
                        action='store_true',
@@ -706,9 +856,14 @@ NOTAS:
     if args.super:
         args.all_devices = True
         args.smooth_scroll = True
+        args.open_graph = True  # Activar OpenGraph automáticamente en modo super
         # Si no se especificó wait_time personalizado, usar 2 segundos para modo super (optimizado)
         if args.wait_time == 3.0:  # valor default
             args.wait_time = 2.0
+    
+    # Si se usa --all, activar automáticamente OpenGraph
+    if args.all_devices and not args.open_graph:
+        args.open_graph = True
     
     # Validar argumentos
     if not args.all_devices and not args.device and not args.super:
@@ -739,12 +894,15 @@ NOTAS:
             print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
             print(f"⏳ Tiempo de espera: {args.wait_time}s")
             print(f"📜 Scroll suave: ✅ Activado")
+            print(f"📊 Extracción OpenGraph: ✅ Activado")
             if args.auto_dismiss:
                 print(f"🤖 Cierre automático de pop-ups: ✅ Activado")
         else:
             print(f"🚀 Capturando URL: {args.url}")
             print(f"👤 Cliente: {cliente}")
             print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
+            if args.open_graph:
+                print(f"📊 Extracción OpenGraph: ✅ Activado")
             if args.auto_dismiss:
                 print(f"🤖 Cierre automático de pop-ups: ✅ Activado")
     else:
@@ -756,6 +914,8 @@ NOTAS:
             print(f"📜 Scroll suave: ✅ Activado")
         if args.wait_time != 3.0:
             print(f"⏳ Tiempo de espera: {args.wait_time}s")
+        if args.open_graph:
+            print(f"📊 Extracción OpenGraph: ✅ Activado")
         if args.auto_dismiss:
             print(f"🤖 Cierre automático de pop-ups: ✅ Activado")
     
@@ -764,6 +924,40 @@ NOTAS:
     
     print(f"📁 Carpeta base: {base_path}")
     print("="*60)
+    
+    # Extraer OpenGraph si está activado (antes de las capturas)
+    og_data = None
+    if args.open_graph:
+        # Importar playwright para extraer OpenGraph
+        try:
+            from playwright.sync_api import sync_playwright
+            
+            print(f"\n📊 Extrayendo metadatos OpenGraph...")
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                # Usar desktop viewport para OpenGraph
+                page = browser.new_page(viewport=TAMAÑOS['desktop'])
+                
+                try:
+                    page.goto(args.url, wait_until="networkidle")
+                    # Esperar un poco para que cargue todo
+                    time.sleep(2)
+                    
+                    # Cerrar pop-ups si auto-dismiss está activado
+                    if args.auto_dismiss:
+                        auto_dismiss_popups(page)
+                    
+                    # Extraer OpenGraph
+                    og_data = extraer_opengraph(page, args.url, base_path, timestamp)
+                    
+                except Exception as e:
+                    print(f"❌ Error extrayendo OpenGraph: {e}")
+                finally:
+                    browser.close()
+                    
+        except ImportError:
+            print("❌ Error: La librería 'playwright' no está instalada")
+            print("💡 Instala con: pip install playwright")
     
     # Realizar capturas
     for i, device_key in enumerate(devices_a_usar, 1):

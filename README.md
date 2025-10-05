@@ -14,7 +14,8 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - ⏳ **Control de animaciones**: Tiempo de espera configurable para animaciones (3s por defecto)
 - 📜 **Scroll inteligente**: Scroll suave para disparar animaciones basadas en scroll
 - 🤖 **Cierre automático de pop-ups**: Detecta y cierra banners de cookies y avisos automáticamente
-- 🚀 **Modo Super**: Captura optimizada completa con un solo comando
+- � **Extracción OpenGraph**: Obtiene metadatos og:* y descarga imágenes sociales
+- �🚀 **Modo Super**: Captura optimizada completa con un solo comando
 - 📖 **Ayuda completa**: Sistema de ayuda extensivo con `--help` e `--info`
 
 ## 🚩 Próximas Features
@@ -138,11 +139,16 @@ chmod +x scriptshotweb.sh scriptshotweb
 # Cerrar automáticamente banners de cookies y pop-ups
 ./scriptshotweb.sh https://example.com --device desktop --auto-dismiss
 
+# Extraer metadatos OpenGraph (og:title, og:description, og:image, etc.)
+./scriptshotweb.sh https://example.com --device desktop --open-graph
+# O usar el alias corto:
+./scriptshotweb.sh https://example.com --device desktop --og
+
 # Abrir explorador de archivos automáticamente al finalizar
 ./scriptshotweb.sh https://example.com --super --open
 
 # Combinando opciones (recomendado para sitios con cookies)
-./scriptshotweb.sh https://example.com --device tablet --wait-time 4 --smooth-scroll --auto-dismiss --open
+./scriptshotweb.sh https://example.com --device tablet --wait-time 4 --smooth-scroll --auto-dismiss --og --open
 ```
 
 ### 📖 Ver ayuda:
@@ -173,10 +179,23 @@ scriptshotweb/
 │       ├── mobile-17/             # Solo carpetas solicitadas
 │       │   ├── pagina-mobile-17-20231004_142958.png           # Viewport
 │       │   └── pagina-mobile-17-completa-20231004_142958.png  # Página completa
-│       └── tablet/
-│           ├── pagina-tablet-20231004_142958.png
-│           └── pagina-tablet-completa-20231004_142958.png
+│       ├── tablet/
+│       │   ├── pagina-tablet-20231004_142958.png
+│       │   └── pagina-tablet-completa-20231004_142958.png
+│       └── opengraph/             # Metadatos OpenGraph (si se usa --og o --all)
+│           ├── opengraph-20231004_142958.json     # Todos los metadatos
+│           └── og-image-20231004_142958.jpg       # Imagen social descargada
 └── scriptshotweb
+```
+
+**Con `--all` o `--super` se crean todas las carpetas automáticamente:**
+```
+capturas/example/
+├── mobile-se/
+├── mobile-17/
+├── tablet/
+├── desktop/
+└── opengraph/    ← Incluye JSON + imagen og:image
 ```
 
 ## 🛡️ Validación de URLs
@@ -232,7 +251,8 @@ ScriptShotWeb verifica automáticamente que las URLs sean válidas antes de proc
 | `--wait-time SEGUNDOS` | Tiempo de espera para animaciones | `--wait-time 5` |
 | `--smooth-scroll` | Scroll suave antes de captura completa | `--smooth-scroll` |
 | `--auto-dismiss` | 🤖 Cerrar automáticamente banners de cookies y pop-ups | `--auto-dismiss` |
-| `--super` | 🚀 Modo completo optimizado | `--super` |
+| `--open-graph, --og` | 📊 Extraer metadatos OpenGraph y descargar imagen social | `--og` |
+| `--super` | 🚀 Modo completo optimizado (incluye OpenGraph) | `--super` |
 | `--open` | 📂 Abrir explorador de archivos al finalizar | `--open` |
 | `--help, -h` | Ayuda estándar | `--help` |
 | `--info` | Guía completa extendida | `--info` |
@@ -276,6 +296,60 @@ Captura toda la página incluyendo contenido scrolleable (`full_page=True`).
 - Frameworks: OneTrust, Cookiebot, Cookie Consent, Quantcast, TrustArc, Osano
 - Atributos ARIA: `aria-label="Accept"`, `aria-label="Close"`
 
+### 📊 **Extracción de Metadatos OpenGraph (NUEVO en v2.5)**
+```bash
+# Extraer metadatos OpenGraph de cualquier página
+./scriptshotweb.sh https://site.com --device desktop --open-graph
+# O usar el alias corto:
+./scriptshotweb.sh https://site.com --device desktop --og
+
+# Se activa automáticamente con --all y --super
+./scriptshotweb.sh https://site.com --all  # ← OpenGraph incluido
+./scriptshotweb.sh https://site.com --super  # ← OpenGraph incluido
+```
+
+**¿Qué extrae?**
+- 🏷️ **og:title** - Título para redes sociales
+- 📝 **og:description** - Descripción optimizada
+- 🖼️ **og:image** - Imagen social (descargada automáticamente)
+- 🌐 **og:url** - URL canónica
+- 🎯 **og:type** - Tipo de contenido (website, article, etc.)
+- 📱 **og:site_name** - Nombre del sitio
+- 🐦 **Twitter Card** - Metadatos de Twitter
+- 📄 Y muchos más...
+
+**Archivos generados:**
+```
+capturas/
+└── [cliente]/
+    └── opengraph/
+        ├── opengraph-20241005_143025.json  ← Todos los metadatos
+        └── og-image-20241005_143025.jpg    ← Imagen social descargada
+```
+
+**Ejemplo de JSON generado:**
+```json
+{
+  "title": "Mi Sitio Web Increíble",
+  "description": "Descripción optimizada para compartir en redes sociales",
+  "image": "https://example.com/social-image.jpg",
+  "url": "https://example.com",
+  "type": "website",
+  "site_name": "Example",
+  "twitter_card": "summary_large_image",
+  "extracted_at": "2024-10-05T14:30:25",
+  "source_url": "https://example.com",
+  "image_local_path": "/path/to/og-image.jpg"
+}
+```
+
+**Ideal para:**
+- 🔍 Auditorías SEO completas
+- 📱 Verificar optimización para redes sociales
+- 🎨 Revisar imágenes compartidas (Facebook, Twitter, LinkedIn)
+- 📊 Análisis de contenido y metadatos
+- 🚀 Testing de Open Graph antes de publicar
+
 ### ⏳ **Control de Animaciones**
 ```bash
 # Tiempo de espera personalizado para que carguen animaciones (default: 3s)
@@ -302,11 +376,12 @@ Ideal para:
 **Activa automáticamente:**
 - ✅ Todos los dispositivos (`-all`)
 - ✅ Scroll suave (`--smooth-scroll`)
+- ✅ Extracción OpenGraph (`--open-graph`)
 - ✅ Tiempo optimizado (`--wait-time 2`)
 
 **Recomendado para:**
 - Sitios complejos con animaciones
-- Auditorías completas
+- Auditorías completas (capturas + metadatos)
 - Sitios modernos con efectos avanzados
 
 ### 📖 **Sistema de Ayuda Extendido**
@@ -366,14 +441,17 @@ Ideal para:
 # Sitio con banner de cookies - cerrar automáticamente
 ./scriptshotweb.sh https://google.com --device desktop --auto-dismiss
 
+# Extraer solo metadatos OpenGraph sin capturas
+./scriptshotweb.sh https://miempresa.com --device desktop --og
+
 # Sitio con muchas animaciones - usar modo super y abrir explorador
 ./scriptshotweb.sh https://sitio-animado.com --super --open
 
-# Sitio con lazy loading y cookies - combinación perfecta
+# Sitio con lazy loading, cookies y OpenGraph - combinación completa
 ./scriptshotweb.sh https://sitio-parallax.com -all --smooth-scroll --auto-dismiss
 
-# Captura completa optimizada para auditoría (con cierre de pop-ups)
-./scriptshotweb.sh https://cliente-importante.com --super --auto-dismiss --cliente "ClienteVIP"
+# Auditoría SEO completa: capturas + metadatos OpenGraph
+./scriptshotweb.sh https://cliente-importante.com --super --cliente "ClienteVIP"
 
 # Guardar en ubicación personalizada y abrir automáticamente
 ./scriptshotweb.sh https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
@@ -384,12 +462,13 @@ Ideal para:
 | Tipo de sitio | Comando recomendado | Razón |
 |---------------|---------------------|-------|
 | **Sitio estático simple** | `--device desktop` | Rápido y eficiente |
-| **Sitio responsive** | `-all` | Ver en todos los dispositivos |
-| **Sitio con animaciones** | `--super` | Tiempo optimizado + scroll |
+| **Sitio responsive** | `-all` | Ver en todos los dispositivos + OpenGraph |
+| **Sitio con animaciones** | `--super` | Tiempo optimizado + scroll + OpenGraph |
 | **Sitio con lazy loading** | `--smooth-scroll` | Activa el contenido diferido |
 | **Sitio con cookies/GDPR** | `--auto-dismiss` | Cierra banners automáticamente |
-| **Google, Facebook, etc.** | `--super --auto-dismiss` | Capturas limpias sin pop-ups |
-| **Auditoría completa** | `--super --auto-dismiss` | Captura exhaustiva sin obstrucciones |
+| **Auditoría SEO** | `--super` | Capturas completas + metadatos OpenGraph |
+| **Google, Facebook, etc.** | `--super --auto-dismiss` | Capturas limpias sin pop-ups + metadatos |
+| **Auditoría completa** | `--super --auto-dismiss` | Captura exhaustiva sin obstrucciones + SEO |
 | **Sitio lento** | `--wait-time 7` | Más tiempo para cargar |
 
 ## 🤝 Contribuir
@@ -431,6 +510,16 @@ python scriptshotweb https://example.com --super
 ---
 
 ## 🎉 Changelog
+
+### v2.5 - Extracción de Metadatos OpenGraph 📊
+- ✅ Nuevo parámetro `--open-graph` (alias `--og`) para extraer metadatos
+- ✅ Extracción completa de todos los metadatos og:* (title, description, image, etc.)
+- ✅ Descarga automática de imágenes og:image
+- ✅ Soporte para Twitter Card metadata complementario
+- ✅ Generación de archivos JSON estructurados con toda la información
+- ✅ Se activa automáticamente con `--all` y `--super`
+- ✅ Carpeta dedicada `opengraph/` para organizar archivos
+- ✅ Ideal para auditorías SEO y análisis de redes sociales
 
 ### v2.4 - Cierre Automático de Pop-ups 🤖
 - ✅ Nuevo parámetro `--auto-dismiss` para cerrar automáticamente pop-ups
