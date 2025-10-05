@@ -1,5 +1,9 @@
-# 📸 Wshot
 
+<div align="center">
+  <img src="wshot-cover.png" alt="Wshot - Automated web screenshot tool" width="100%">
+</div>
+
+# 📸 Wshot
 Automated web screenshot tool for multiple devices. Perfect for visual audits, responsive testing, and web project documentation.
 
 ## 🚀 Quick Installation
