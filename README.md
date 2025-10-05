@@ -31,6 +31,93 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - [ ] Scrapear contenido en formato .md
 - [ ] Obtener todo el contenido media que exista en la url objetivo
 
+<details>
+<summary><strong>🏗️ Refactorización Arquitectónica Futura</strong> (haz clic para expandir)</summary>
+
+<br>
+
+Para mejorar la mantenibilidad y escalabilidad del proyecto, se propone la siguiente **reestructuración modular**:
+
+### 📋 Roadmap de Arquitectura
+
+**Objetivo:** Migrar de una arquitectura monolítica (`cli.py`) a una estructura modular y profesional que facilite:
+- ✅ **Mantenimiento** - Código organizado por responsabilidades
+- ✅ **Escalabilidad** - Fácil adición de nuevas características
+- ✅ **Testing** - Unidades testeable independientes
+- ✅ **Reutilización** - Módulos importables por otras aplicaciones
+
+### 🎯 Estructura Propuesta
+
+```
+wshot/
+├── __init__.py
+├── cli.py                 # CLI interface (ligero, solo argumentos)
+├── core/                  # 📁 Lógica principal
+│   ├── __init__.py
+│   ├── capture.py         # Funciones de captura de screenshots
+│   ├── devices.py         # Configuraciones de dispositivos
+│   ├── utils.py           # Utilidades (validación URLs, manejo archivos)
+│   └── opengraph.py       # Extracción metadatos OpenGraph
+├── formats/               # 📁 Diferentes formatos de salida
+│   ├── __init__.py
+│   ├── png.py             # Formato PNG (actual)
+│   ├── webp.py            # Formato WebP optimizado
+│   └── markdown.py        # Generación de reportes en Markdown
+└── scrapers/              # 📁 Scrapers especializados
+    ├── __init__.py
+    ├── full_site.py       # Captura completa navegando por todos los links
+    └── media_extractor.py # Extracción de contenido multimedia
+```
+
+### 🔄 Migración por Fases
+
+**Fase 1: Separación de Responsabilidades** 🟡
+- [ ] Extraer lógica de dispositivos a `core/devices.py`
+- [ ] Mover funciones de captura a `core/capture.py`
+- [ ] Separar validación de URLs y utilidades a `core/utils.py`
+- [ ] Mantener `cli.py` solo para interfaz de comandos
+
+**Fase 2: Formatos Modulares** 🟠
+- [ ] Crear módulo `formats/png.py` (migrar código actual)
+- [ ] Implementar `formats/webp.py` para optimización
+- [ ] Desarrollar `formats/markdown.py` para reportes
+
+**Fase 3: Scrapers Avanzados** 🔴
+- [ ] Implementar `scrapers/full_site.py` para captura completa de sitios
+- [ ] Crear `scrapers/media_extractor.py` para extracción de multimedia
+- [ ] Integrar scrapers con formatos de salida
+
+**Fase 4: Consolidación** 🟢
+- [ ] Tests unitarios para todos los módulos
+- [ ] Documentación API interna
+- [ ] Optimización de rendimiento
+- [ ] Refactorización de imports y dependencias
+
+### 💡 Beneficios Esperados
+
+**Para Desarrolladores:**
+- 🧩 **Modularidad** - Cada función tiene su lugar específico
+- 🧪 **Testabilidad** - Tests unitarios por módulo
+- 📖 **Legibilidad** - Código más fácil de entender y mantener
+- 🔧 **Extensibilidad** - Nuevas features sin tocar código existente
+
+**Para Usuarios:**
+- 🚀 **Nuevas Características** - WebP, sitios completos, reportes MD
+- ⚡ **Mejor Rendimiento** - Código optimizado y eficiente
+- 🎯 **Más Formatos** - Múltiples opciones de salida
+- 📊 **Reportes Avanzados** - Informes detallados de auditorías
+
+### 🎪 Compatibilidad
+
+- ✅ **API CLI** - Interfaz de comandos se mantendrá idéntica
+- ✅ **Retrocompatibilidad** - Todos los comandos actuales seguirán funcionando
+- ✅ **Funcionalidades** - Características actuales se preservan 100%
+- ✅ **Configuración** - Mismos parámetros y estructura de salida
+
+> **Nota:** Esta refactorización es una mejora interna que no afectará la experiencia del usuario final. El comando `wshot` funcionará exactamente igual pero con una base de código más robusta y mantenible.
+
+</details>
+
 ## 🚀 Instalación
 
 ### Instalación mediante pip (Recomendada) ⭐
