@@ -4,7 +4,40 @@ Complete guide to solve common issues with Wshot.
 
 ## 🚨 Most Common Issues
 
-### 1. Error: "libicudata.so.66 not found" or other missing libraries
+### 1. Error: "requests library not installed" or dependency issues
+
+**Symptom:** `❌ Error: The 'requests' library is not installed` or similar dependency errors.
+
+**Cause:** This happens when using `pipx` due to isolated environments.
+
+**Solutions:**
+
+#### Option A: Use pip (Recommended for most users)
+```bash
+# Uninstall pipx version if installed
+pipx uninstall wshot
+
+# Install with pip
+pip install wshot
+playwright install chromium
+```
+
+#### Option B: Fix pipx installation
+```bash
+# Inject missing dependencies
+pipx inject wshot playwright requests
+```
+
+#### Option C: Virtual environment (Best practice)
+```bash
+python -m venv wshot-env
+source wshot-env/bin/activate  # Linux/Mac
+# wshot-env\Scripts\activate     # Windows
+pip install wshot
+playwright install chromium
+```
+
+### 2. Error: "libicudata.so.66 not found" or other missing libraries
 
 **Symptom:** Error when running captures mentioning missing `.so` libraries.
 

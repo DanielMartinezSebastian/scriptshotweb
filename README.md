@@ -4,9 +4,22 @@ Automated web screenshot tool for multiple devices. Perfect for visual audits, r
 
 ## 🚀 Quick Installation
 
+### **Method 1: Standard Installation (Recommended)**
 ```bash
 pip install wshot
 playwright install chromium
+```
+
+### **Method 2: Isolated Installation (pipx)**
+```bash
+pipx install wshot
+pipx inject wshot playwright requests
+playwright install chromium
+```
+
+### **Verify Installation**
+```bash
+wshot --help
 ```
 
 <details>
@@ -14,6 +27,24 @@ playwright install chromium
 
 ```bash
 pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+playwright install chromium
+```
+</details>
+
+<details>
+<summary>🔧 Installation Troubleshooting</summary>
+
+**pipx users**: If you get dependency errors, inject the required packages:
+```bash
+pipx inject wshot playwright requests
+```
+
+**Virtual environments**: Always install in a virtual environment for isolation:
+```bash
+python -m venv wshot-env
+source wshot-env/bin/activate  # Linux/Mac
+# wshot-env\Scripts\activate     # Windows
+pip install wshot
 playwright install chromium
 ```
 </details>
