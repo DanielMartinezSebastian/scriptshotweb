@@ -14,6 +14,14 @@ __pycache__/
 *$py.class
 *.so
 
+# Archivos de distribución / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+wheels/
+.eggs/
+
 # Archivos de desarrollo
 .pytest_cache/
 .coverage

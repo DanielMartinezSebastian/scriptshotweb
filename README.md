@@ -1,10 +1,10 @@
-# 📸 ScriptShotWeb
+# 📸 Wshot
 
 Una herramienta profesional para capturar pantallas de sitios web en múltiples dispositivos y resoluciones, optimizada para sitios modernos con animaciones y contenido dinámico.
 
 ## ✨ Características
 
-- 🚀 **Sintaxis ultra-simple**: `scriptshotweb URL -all`
+- 🚀 **Sintaxis ultra-simple**: `wshot URL -all`
 - 📱 **Múltiples dispositivos**: iPhone SE, iPhone 17, iPad, Desktop
 - 🔄 **Doble captura**: Viewport + página completa scrolleable
 - 🛡️ **Validación inteligente**: Verifica URLs antes de crear carpetas
@@ -24,6 +24,7 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - [x] ~~Control de tiempo de espera para animaciones~~ ✅ **COMPLETADO**
 - [x] ~~Modo super para captura completa optimizada~~ ✅ **COMPLETADO**
 - [x] ~~Alojar las capturas dentro de una carpeta general como downloads o similar en lugar de simplemente en la carpeta del script~~ ✅ **COMPLETADO**
+- [x] ~~Refactorización para uso mediante pip~~ ✅ **COMPLETADO**
 - [ ] Refactorizar para homogeneizar uso de idioma castellano vs ingles
 - [ ] Obtener capturas en webp optimizado
 - [ ] Capturar webs completas navegando por todos los links bajo ese dominio para obtener toda la web
@@ -31,9 +32,75 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - [ ] Obtener todo el contenido media que exista en la url objetivo
 ## 🚀 Instalación
 
-### Opción 1: Instalación Automática (Recomendada) ⭐
+### Opción 1: Instalación mediante pip (Recomendada) ⭐
 
-El nuevo instalador mejorado maneja automáticamente errores y proporciona instrucciones claras:
+Instala wshot como un paquete Python global o en un entorno virtual:
+
+```bash
+# Instalación desde el repositorio con pip
+pip install git+https://github.com/DanielMartinezSebastian/scriptshotweb.git
+
+# O en un entorno virtual (recomendado)
+python3 -m venv wshot-env
+source wshot-env/bin/activate  # En Windows: wshot-env\Scripts\activate
+pip install git+https://github.com/DanielMartinezSebastian/scriptshotweb.git
+```
+
+**Paso adicional necesario:**
+
+Después de instalar con pip, debes instalar el navegador Chromium de Playwright:
+
+```bash
+playwright install chromium
+```
+
+**Verificar instalación:**
+
+Puedes verificar que todo está instalado correctamente ejecutando:
+
+```bash
+# Verificación básica
+wshot --help
+
+# Verificación completa con script de test
+python test_installation.py
+```
+
+**Dependencias del sistema (opcional):**
+
+Si encuentras errores relacionados con librerías del sistema faltantes, instálalas según tu distribución:
+
+```bash
+# Ubuntu/Debian
+sudo apt install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+  libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
+
+# Fedora
+sudo dnf install -y nss nspr atk at-spi2-atk cups-libs libdrm libxkbcommon \
+  libxcomposite libxdamage libXrandr mesa-libgbm pango cairo alsa-lib
+
+# Arch Linux
+sudo pacman -S nss nspr atk at-spi2-atk cups libdrm libxkbcommon \
+  libxcomposite libxdamage libxrandr mesa pango cairo alsa-lib
+```
+
+### Opción 2: Instalación desde el repositorio (Desarrollo)
+
+Si quieres desarrollar o contribuir al proyecto:
+
+```bash
+git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
+cd scriptshotweb
+
+# Instalar en modo desarrollo
+pip install -e .
+playwright install chromium
+```
+
+### Opción 3: Scripts de instalación legacy
+
+Si prefieres usar los scripts de instalación tradicionales con entorno virtual local:
 
 ```bash
 git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
@@ -41,120 +108,71 @@ cd scriptshotweb
 ./install.sh
 ```
 
-**Características del nuevo instalador:**
-- ✅ Instalación paso a paso con mensajes claros
-- ✅ Solo instala Chromium (más rápido y ligero)
-- ✅ Manejo inteligente de errores sin detener el proceso
-- ✅ Instrucciones específicas para cada distribución Linux
-- ✅ No requiere sudo durante la instalación inicial
-
-### Verificar instalación
-
-Después de instalar, verifica que todo funcione correctamente:
-
-```bash
-./check.sh
-```
-
-Este script verifica:
-- Python y entorno virtual
-- Dependencias Python (playwright, requests)
-- Navegador Chromium
-- Dependencias del sistema
-- Realiza un test funcional básico
-
-### Instalar dependencias del sistema (si es necesario)
-
-Si `check.sh` reporta dependencias faltantes, ejecuta:
-
-```bash
-sudo ./install-deps.sh
-```
-
-Este script detecta automáticamente tu distribución (Ubuntu, Debian, Fedora, Arch) e instala las librerías necesarias.
-
-### Opción 2: Instalación Manual
-
-Si prefieres más control:
-
-1. **Clonar repositorio**:
-```bash
-git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
-cd scriptshotweb
-```
-
-2. **Configurar entorno virtual**:
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-playwright install chromium
-```
-
-3. **Instalar dependencias del sistema** (Ubuntu/Debian):
-```bash
-sudo apt install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
-  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
-  libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
-```
-
-4. **Hacer ejecutables**:
-```bash
-chmod +x scriptshotweb.sh scriptshotweb
-```
-
-5. **Verificar**:
-```bash
-./check.sh
-```
+**Scripts legacy disponibles:**
+- `./install.sh` - Instalación completa con entorno virtual local
+- `./install-deps.sh` - Instalar solo dependencias del sistema
+- `./check.sh` - Verificar instalación legacy
+- `./scriptshotweb.sh` - Wrapper para ejecutar (usa `.venv` local)
+- `./scriptshotweb` - Script Python directo (requiere `.venv` activo)
 
 ## 🎯 Uso Básico
 
 ### Capturar todos los dispositivos:
 ```bash
-./scriptshotweb.sh https://example.com -all
+wshot https://example.com -all
 ```
 
 ### Capturar dispositivo específico:
 ```bash
-./scriptshotweb.sh https://example.com --device mobile-17
-./scriptshotweb.sh https://example.com --device tablet
-./scriptshotweb.sh https://example.com --device desktop
+wshot https://example.com --device mobile-17
+wshot https://example.com --device tablet
+wshot https://example.com --device desktop
 ```
 
 ### 🚀 Modo Super (Recomendado para sitios complejos):
 ```bash
-./scriptshotweb.sh https://example.com --super
+wshot https://example.com --super
 # Activa automáticamente: todos los dispositivos + scroll suave + tiempo optimizado (2s)
 ```
 
 ### ⚙️ Opciones avanzadas:
 ```bash
 # Con tiempo de espera personalizado para animaciones
-./scriptshotweb.sh https://example.com --device desktop --wait-time 7
+wshot https://example.com --device desktop --wait-time 7
 
 # Con scroll suave para disparar animaciones basadas en scroll  
-./scriptshotweb.sh https://example.com -all --smooth-scroll
+wshot https://example.com -all --smooth-scroll
 
 # Cerrar automáticamente banners de cookies y pop-ups
-./scriptshotweb.sh https://example.com --device desktop --auto-dismiss
+wshot https://example.com --device desktop --auto-dismiss
 
 # Extraer metadatos OpenGraph (og:title, og:description, og:image, etc.)
-./scriptshotweb.sh https://example.com --device desktop --open-graph
+wshot https://example.com --device desktop --open-graph
 # O usar el alias corto:
-./scriptshotweb.sh https://example.com --device desktop --og
+wshot https://example.com --device desktop --og
 
 # Abrir explorador de archivos automáticamente al finalizar
-./scriptshotweb.sh https://example.com --super --open
+wshot https://example.com --super --open
 
 # Combinando opciones (recomendado para sitios con cookies)
-./scriptshotweb.sh https://example.com --device tablet --wait-time 4 --smooth-scroll --auto-dismiss --og --open
+wshot https://example.com --device tablet --wait-time 4 --smooth-scroll --auto-dismiss --og --open
 ```
 
 ### 📖 Ver ayuda:
 ```bash
-./scriptshotweb.sh --help      # Ayuda estándar
-./scriptshotweb.sh --info      # Guía completa con ejemplos
+wshot --help      # Ayuda estándar
+wshot --info      # Guía completa con ejemplos
+```
+
+### 🔧 Uso legacy (con scripts de instalación):
+
+Si instalaste usando `./install.sh`, puedes usar los scripts legacy:
+
+```bash
+wshot https://example.com -all  # Wrapper que activa .venv
+# O directamente:
+source .venv/bin/activate
+python scriptshotweb https://example.com -all
 ```
 
 ## 📱 Dispositivos Disponibles
@@ -170,7 +188,7 @@ chmod +x scriptshotweb.sh scriptshotweb
 
 **Ubicación por defecto:**
 - 📁 `./capturas/` (carpeta en el directorio del proyecto)
-- 📁 O ruta personalizada con `--output-dir ~/Pictures/ScriptShotWeb`
+- 📁 O ruta personalizada con `--output-dir ~/Pictures/Wshot`
 
 ```
 scriptshotweb/
@@ -200,17 +218,17 @@ capturas/example/
 
 ## 🛡️ Validación de URLs
 
-ScriptShotWeb verifica automáticamente que las URLs sean válidas antes de proceder:
+Wshot verifica automáticamente que las URLs sean válidas antes de proceder:
 
 ```bash
 # ✅ URL válida
-./scriptshotweb.sh https://google.com -all
+wshot https://google.com -all
 # 🔍 Validando URL...
 # ✅ URL válida (Status: 200)
 # 📁 Creando capturas...
 
 # ❌ URL inexistente
-./scriptshotweb.sh https://sitio-que-no-existe.com -all
+wshot https://sitio-que-no-existe.com -all
 # 🔍 Validando URL...
 # ❌ Error: La URL no responde
 # ❌ No se crean carpetas
@@ -221,23 +239,23 @@ ScriptShotWeb verifica automáticamente que las URLs sean válidas antes de proc
 ### Todas las opciones disponibles:
 ```bash
 # Especificar cliente manualmente:
-./scriptshotweb.sh https://example.com -all --cliente "MiCliente"
+wshot https://example.com -all --cliente "MiCliente"
 
 # Control de tiempo de espera para animaciones (default: 3 segundos):
-./scriptshotweb.sh https://example.com --device desktop --wait-time 5
+wshot https://example.com --device desktop --wait-time 5
 
 # Scroll suave para disparar animaciones basadas en scroll:
-./scriptshotweb.sh https://example.com -all --smooth-scroll
+wshot https://example.com -all --smooth-scroll
 
 # Modo super (combina lo mejor de todo):
-./scriptshotweb.sh https://example.com --super
+wshot https://example.com --super
 # Equivale a: -all + --smooth-scroll + --wait-time 2
 ```
 
 ### 📖 Sistema de ayuda:
 ```bash
-./scriptshotweb.sh --help      # Ayuda rápida con todas las opciones
-./scriptshotweb.sh --info      # Guía completa con ejemplos detallados
+wshot --help      # Ayuda rápida con todas las opciones
+wshot --info      # Guía completa con ejemplos detallados
 ```
 
 ### 🎛️ Lista completa de parámetros:
@@ -270,10 +288,10 @@ Captura toda la página incluyendo contenido scrolleable (`full_page=True`).
 ### 🤖 **Cierre Automático de Pop-ups (NUEVO en v2.4)**
 ```bash
 # Cerrar automáticamente banners de cookies, avisos GDPR y otros pop-ups
-./scriptshotweb.sh https://site.com --device desktop --auto-dismiss
+wshot https://site.com --device desktop --auto-dismiss
 
 # Combinar con otras opciones para capturas perfectas
-./scriptshotweb.sh https://site.com --super --auto-dismiss
+wshot https://site.com --super --auto-dismiss
 ```
 
 **¿Qué hace?**
@@ -299,13 +317,13 @@ Captura toda la página incluyendo contenido scrolleable (`full_page=True`).
 ### 📊 **Extracción de Metadatos OpenGraph (NUEVO en v2.5)**
 ```bash
 # Extraer metadatos OpenGraph de cualquier página
-./scriptshotweb.sh https://site.com --device desktop --open-graph
+wshot https://site.com --device desktop --open-graph
 # O usar el alias corto:
-./scriptshotweb.sh https://site.com --device desktop --og
+wshot https://site.com --device desktop --og
 
 # Se activa automáticamente con --all y --super
-./scriptshotweb.sh https://site.com --all  # ← OpenGraph incluido
-./scriptshotweb.sh https://site.com --super  # ← OpenGraph incluido
+wshot https://site.com --all  # ← OpenGraph incluido
+wshot https://site.com --super  # ← OpenGraph incluido
 ```
 
 **¿Qué extrae?**
@@ -353,14 +371,14 @@ capturas/
 ### ⏳ **Control de Animaciones**
 ```bash
 # Tiempo de espera personalizado para que carguen animaciones (default: 3s)
-./scriptshotweb.sh https://site.com --wait-time 5
+wshot https://site.com --wait-time 5
 ```
 Perfecto para sitios con animaciones CSS, JavaScript o contenido que se carga con delay.
 
 ### 📜 **Scroll Suave Inteligente**
 ```bash
 # Scroll gradual para disparar animaciones basadas en scroll
-./scriptshotweb.sh https://site.com --smooth-scroll
+wshot https://site.com --smooth-scroll
 ```
 Ideal para:
 - Sitios con **lazy loading**
@@ -371,7 +389,7 @@ Ideal para:
 ### 🚀 **Modo Super (Todo-en-Uno)**
 ```bash
 # Un solo comando para captura completa optimizada
-./scriptshotweb.sh https://site.com --super
+wshot https://site.com --super
 ```
 **Activa automáticamente:**
 - ✅ Todos los dispositivos (`-all`)
@@ -386,14 +404,14 @@ Ideal para:
 
 ### 📖 **Sistema de Ayuda Extendido**
 ```bash
-./scriptshotweb.sh --help      # Ayuda rápida
-./scriptshotweb.sh --info      # Guía completa con ejemplos
+wshot --help      # Ayuda rápida
+wshot --info      # Guía completa con ejemplos
 ```
 
 ### 📂 **Abrir Explorador de Archivos Automáticamente**
 ```bash
 # Abrir explorador al finalizar (multiplataforma)
-./scriptshotweb.sh https://site.com --super --open
+wshot https://site.com --super --open
 
 # En Windows abre Explorer
 # En macOS abre Finder  
@@ -407,11 +425,11 @@ Ideal para:
 ### 📂 **Ubicación de Archivos**
 ```bash
 # Por defecto guarda en ./capturas/ dentro del proyecto
-./scriptshotweb.sh https://site.com --super
+wshot https://site.com --super
 
 # Especificar ubicación personalizada (ej: Pictures o Downloads)
-./scriptshotweb.sh https://site.com --super --output-dir ~/Pictures/ScriptShotWeb
-./scriptshotweb.sh https://site.com --super --output-dir ~/Downloads/Capturas
+wshot https://site.com --super --output-dir ~/Pictures/Wshot
+wshot https://site.com --super --output-dir ~/Downloads/Capturas
 ```
 **Beneficios:**
 - ✅ Mantiene las capturas organizadas en el proyecto
@@ -430,31 +448,31 @@ Ideal para:
 
 ```bash
 # Capturar página de contacto en todos los dispositivos (básico)
-./scriptshotweb.sh https://miempresa.com/contacto -all
+wshot https://miempresa.com/contacto -all
 
 # Capturar solo en móvil iPhone 17
-./scriptshotweb.sh https://mitienda.com/productos --device mobile-17
+wshot https://mitienda.com/productos --device mobile-17
 
 # Capturar página principal en tablet con tiempo de espera extra
-./scriptshotweb.sh https://miblog.com --device tablet --wait-time 6
+wshot https://miblog.com --device tablet --wait-time 6
 
 # Sitio con banner de cookies - cerrar automáticamente
-./scriptshotweb.sh https://google.com --device desktop --auto-dismiss
+wshot https://google.com --device desktop --auto-dismiss
 
 # Extraer solo metadatos OpenGraph sin capturas
-./scriptshotweb.sh https://miempresa.com --device desktop --og
+wshot https://miempresa.com --device desktop --og
 
 # Sitio con muchas animaciones - usar modo super y abrir explorador
-./scriptshotweb.sh https://sitio-animado.com --super --open
+wshot https://sitio-animado.com --super --open
 
 # Sitio con lazy loading, cookies y OpenGraph - combinación completa
-./scriptshotweb.sh https://sitio-parallax.com -all --smooth-scroll --auto-dismiss
+wshot https://sitio-parallax.com -all --smooth-scroll --auto-dismiss
 
 # Auditoría SEO completa: capturas + metadatos OpenGraph
-./scriptshotweb.sh https://cliente-importante.com --super --cliente "ClienteVIP"
+wshot https://cliente-importante.com --super --cliente "ClienteVIP"
 
 # Guardar en ubicación personalizada y abrir automáticamente
-./scriptshotweb.sh https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
+wshot https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
 ```
 
 ### 🎯 Casos de uso recomendados:
@@ -485,31 +503,57 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 🛠️ Desarrollo
 
-### Estructura del proyecto:
+### Estructura del proyecto (nueva estructura de paquete):
 ```
 scriptshotweb/
-├── scriptshotweb.sh      # Script principal (wrapper)
-├── scriptshotweb         # Script Python core
-├── install.sh           # Script de instalación automática
-├── requirements.txt     # Dependencias Python
-├── .venv/              # Entorno virtual
-├── .gitignore          # Archivos a ignorar en Git
-├── LICENSE             # Licencia MIT
-└── README.md           # Este archivo
+├── wshot/                   # Paquete Python principal
+│   ├── __init__.py         # Módulo del paquete
+│   └── cli.py              # Código principal CLI
+├── setup.py                # Script de instalación setuptools
+├── pyproject.toml          # Configuración del proyecto (PEP 517/518)
+├── requirements.txt        # Dependencias Python
+├── scriptshotweb.sh        # Script legacy (wrapper)
+├── scriptshotweb           # Script legacy Python
+├── install.sh              # Script legacy de instalación
+├── .gitignore              # Archivos a ignorar en Git
+├── LICENSE                 # Licencia MIT
+└── README.md               # Este archivo
 ```
 
 ### Ejecutar en modo desarrollo:
 ```bash
+# Instalar en modo editable
+pip install -e .
+playwright install chromium
+
+# Ejecutar
+wshot https://example.com --device mobile-17
+
+# O usando el modo super para pruebas completas:
+wshot https://example.com --super
+```
+
+### Modo desarrollo legacy (con scripts):
+```bash
 source .venv/bin/activate
 python scriptshotweb https://example.com --device mobile-17
 
-# O usando el modo super para pruebas completas:
-python scriptshotweb https://example.com --super
+# O usando el wrapper:
+./scriptshotweb.sh https://example.com --super
 ```
 
 ---
 
 ## 🎉 Changelog
+
+### v1.0.0 - Refactorización a paquete pip 📦
+- ✅ Reorganización del proyecto como paquete Python instalable
+- ✅ Nuevo comando `wshot` disponible globalmente tras instalación con pip
+- ✅ Estructura de paquete con `setup.py` y `pyproject.toml`
+- ✅ Soporte para instalación desde repositorio Git
+- ✅ Instalación en modo editable para desarrollo
+- ✅ Compatibilidad con instalación legacy mantenida
+- ✅ Scripts de instalación y wrapper legacy preservados
 
 ### v2.5 - Extracción de Metadatos OpenGraph 📊
 - ✅ Nuevo parámetro `--open-graph` (alias `--og`) para extraer metadatos
@@ -638,10 +682,10 @@ sudo apt install python3-venv
 ./check.sh
 
 # 2. Aumentar tiempo de espera
-./scriptshotweb.sh https://sitio.com --device desktop --wait-time 10
+wshot https://sitio.com --device desktop --wait-time 10
 
 # 3. Usar modo super con scroll suave
-./scriptshotweb.sh https://sitio.com --super
+wshot https://sitio.com --super
 ```
 
 ### Problema: "OS not officially supported by Playwright"
@@ -676,13 +720,13 @@ chmod +x scriptshotweb.sh scriptshotweb check.sh install-deps.sh
 **Soluciones:**
 ```bash
 # Aumentar tiempo de espera
-./scriptshotweb.sh https://sitio.com --device desktop --wait-time 15
+wshot https://sitio.com --device desktop --wait-time 15
 
 # Usar scroll suave
-./scriptshotweb.sh https://sitio.com --device desktop --smooth-scroll
+wshot https://sitio.com --device desktop --smooth-scroll
 
 # Probar con modo super
-./scriptshotweb.sh https://sitio.com --super
+wshot https://sitio.com --super
 ```
 
 ### Verificación completa del sistema
@@ -704,7 +748,7 @@ sudo ./install-deps.sh
 ./check.sh
 
 # 5. Prueba funcional
-./scriptshotweb.sh https://example.com --device desktop
+wshot https://example.com --device desktop
 ```
 
 ### Obtener ayuda adicional
@@ -713,7 +757,7 @@ Si ninguna solución funciona:
 
 1. **Revisa los logs detallados**:
    ```bash
-   ./scriptshotweb.sh https://sitio.com --device desktop 2>&1 | tee error.log
+   wshot https://sitio.com --device desktop 2>&1 | tee error.log
    ```
 
 2. **Información del sistema**:
@@ -731,15 +775,24 @@ Si ninguna solución funciona:
 
 ---
 
-## 📚 Scripts Disponibles
+## 📚 Comandos y Scripts Disponibles
 
+### Comando principal (después de instalación con pip):
+| Comando | Descripción |
+|---------|-------------|
+| `wshot` | Comando principal para capturas de pantalla web (instalable con pip) |
+
+### Scripts legacy (instalación tradicional):
 | Script | Propósito | Requiere sudo |
 |--------|-----------|---------------|
-| `install.sh` | Instalación completa del proyecto | No* |
+| `install.sh` | Instalación completa del proyecto con entorno virtual local | No* |
 | `install-deps.sh` | Instalar dependencias del sistema | Sí |
-| `check.sh` | Verificar instalación y funcionalidad | No |
-| `scriptshotweb.sh` | Ejecutar capturas (wrapper) | No |
-| `scriptshotweb` | Script principal Python | No |
+| `check.sh` | Verificar instalación y funcionalidad legacy | No |
+| `scriptshotweb.sh` | Ejecutar capturas usando wrapper (activa `.venv`) | No |
+| `scriptshotweb` | Script Python legacy (requiere `.venv` activo) | No |
 
 *El instalador puede pedir sudo solo para dependencias del sistema, pero continúa sin ellas.
+
+**Nota:** Si instalaste con pip (`pip install git+https://...`), usa el comando `wshot` directamente.  
+Los scripts legacy son para instalación tradicional con `./install.sh`.
 
