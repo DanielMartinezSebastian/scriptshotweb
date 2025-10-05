@@ -23,9 +23,17 @@ import time
 
 def mostrar_ayuda_extendida():
     """Muestra información adicional sobre el uso del script"""
-    ayuda = """
+    ayuda = r"""
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                               WSHOT - GUÍA COMPLETA                          ║
+║                                                                              ║
+║                                  _           _                               ║
+║                                 | |         | |                              ║
+║                    __      __ __| |__   ___ | |_                             ║
+║                    \ \ /\ / / __| '_ \ / _ \| __|                            ║
+║                     \ V  V /\__ \ | | | (_) | |_                             ║
+║                      \_/\_/ |___/_| |_|\___/ \__|                            ║
+║                                                                              ║
+║                    🚀 Plataforma de Auditoría Visual Empresarial             ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
 📖 DESCRIPCIÓN:
@@ -796,8 +804,16 @@ def abrir_explorador_archivos(ruta):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="""
-Wshot - Herramienta profesional para capturas de pantalla web
+        description=r"""
+                   _           _   
+                  | |         | |  
+     __      __ __| |__   ___ | |_ 
+     \ \ /\ / / __| '_ \ / _ \| __|
+      \ V  V /\__ \ | | | (_) | |_ 
+       \_/\_/ |___/_| |_|\___/ \__|
+                                     
+
+🚀 Plataforma de Auditoría Visual Empresarial
 
 Esta herramienta permite realizar capturas de pantalla optimizadas de sitios web
 en múltiples dispositivos y tamaños, con soporte para animaciones y efectos de scroll.
@@ -912,6 +928,15 @@ NOTAS:
     
     # Si no es --info, entonces URL es requerida
     if not args.url:
+        print(r"""
+                   _           _   
+                  | |         | |  
+     __      __ __| |__   ___ | |_ 
+     \ \ /\ / / __| '_ \ / _ \| __|
+      \ V  V /\__ \ | | | (_) | |_ 
+       \_/\_/ |___/_| |_|\___/ \__|
+                                     
+        """)
         print("❌ Error: URL es requerida")
         print("💡 Usa --help para ver opciones básicas o --info para guía completa")
         parser.print_help()
@@ -1032,7 +1057,18 @@ NOTAS:
         
         capturar_url(args.url, device_key, device_config, device_path, timestamp, args.wait_time, args.smooth_scroll, args.auto_dismiss)
     
-    print(f"\n🎉 ¡Capturas completadas!")
+    print(r"""
+    ╔══════════════════════════════════════════════════════════════════╗
+    ║                                                                  ║
+    ║                             _           _                        ║
+    ║                            | |         | |                       ║
+    ║               __      __ __| |__   ___ | |_                      ║
+    ║               \ \ /\ / / __| '_ \ / _ \| __|                     ║
+    ║                \ V  V /\__ \ | | | (_) | |_                      ║
+    ║                 \_/\_/ |___/_| |_|\___/ \__|                     ║
+    ║                                                                  ║
+    ║                   🎉 ¡Capturas completadas!                      ║
+    ╚══════════════════════════════════════════════════════════════════╝""")
     print(f"📂 Revisa las imágenes en: {base_path}")
     
     # Abrir explorador de archivos si se solicitó
