@@ -8,13 +8,19 @@ version = "1.0.0"
 description = "Professional automated web screenshot tool for multiple devices - Visual auditing and responsive testing"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "Daniel Martinez Sebastian", email = "daniel@martinezsebastian.com"}
 ]
 maintainers = [
     {name = "Daniel Martinez Sebastian", email = "daniel@martinezsebastian.com"}
 ]
+
+[tool.setuptools]
+packages = ["wshot"]
+
+[tool.setuptools.package-data]
+"*" = ["*.md", "*.txt"]
 keywords = ["screenshot", "web", "testing", "playwright", "automation", "responsive", "audit", "visual-testing"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -25,7 +31,6 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Browsers",
     "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
     "Topic :: Utilities",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",

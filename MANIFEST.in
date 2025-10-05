@@ -4,6 +4,13 @@ include DOCS.md
 include DEVICES.md
 include ROADMAP.md
 include TROUBLESHOOTING.md
-include requirements.txt
-include test_installation.py
 recursive-include wshot *.py
+exclude test_installation.py
+exclude pre_publish_check.py
+global-exclude capturas/*
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .git*
+global-exclude build/*
+global-exclude dist/*
+global-exclude *.egg-info/*
