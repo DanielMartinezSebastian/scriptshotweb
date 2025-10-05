@@ -124,103 +124,103 @@ pip install -e .
 playwright install chromium
 ```
 
-## 📂 Estructura de Salida Detallada
+## 📂 Detailed Output Structure
 
-**Ubicación por defecto:**
-- 📁 `~/Pictures/WSHOT/` (carpeta en Pictures del usuario)
-- 📁 O ruta personalizada con `--output-dir ~/Proyectos/Capturas`
+**Default location:**
+- 📁 `~/Pictures/WSHOT/` (folder in user's Pictures)
+- 📁 Or custom path with `--output-dir ~/Projects/Screenshots`
 
 ```
 ~/Pictures/WSHOT/
-├── example.com/                    # Dominio completo extraído de la URL
-│   ├── mobile/                     # Solo carpetas solicitadas
-│   │   ├── example.com_pagina-principal-mobile-20241005_142958.png           # Viewport
-│   │   └── example.com_pagina-principal-mobile-completa-20241005_142958.png  # Página completa
+├── example.com/                    # Complete domain extracted from URL
+│   ├── mobile/                     # Only requested folders
+│   │   ├── example.com_main-page-mobile-20241005_142958.png           # Viewport
+│   │   └── example.com_main-page-mobile-full-20241005_142958.png       # Full page
 │   ├── tablet/
-│   │   ├── example.com_contacto-tablet-20241005_142958.png
-│   │   └── example.com_contacto-tablet-completa-20241005_142958.png
+│   │   ├── example.com_contact-tablet-20241005_142958.png
+│   │   └── example.com_contact-tablet-full-20241005_142958.png
 │   ├── laptop/
-│   │   ├── example.com_servicios-laptop-20241005_142958.png
-│   │   └── example.com_servicios-laptop-completa-20241005_142958.png
+│   │   ├── example.com_services-laptop-20241005_142958.png
+│   │   └── example.com_services-laptop-full-20241005_142958.png
 │   ├── desktop/
-│   │   ├── example.com_pagina-principal-desktop-20241005_142958.png
-│   │   └── example.com_pagina-principal-desktop-completa-20241005_142958.png
-│   └── opengraph/                  # Metadatos OpenGraph (si se usa --og o --all)
-│       ├── opengraph-20241005_142958.json     # Todos los metadatos
-│       └── og-image-20241005_142958.jpg       # Imagen social descargada
+│   │   ├── example.com_main-page-desktop-20241005_142958.png
+│   │   └── example.com_main-page-desktop-full-20241005_142958.png
+│   └── opengraph/                  # OpenGraph metadata (if using --og or --all)
+│       ├── opengraph-20241005_142958.json     # All metadata
+│       └── og-image-20241005_142958.jpg       # Downloaded social image
 ```
 
-**Con `--all` o `--super` se crean todas las carpetas automáticamente:**
+**With `--all` or `--super` all folders are created automatically:**
 ```
 ~/Pictures/WSHOT/example.com/
-├── mobile/           # iPhone 15 (predeterminado móvil)
+├── mobile/           # iPhone 15 (default mobile)
 ├── iphone-se/
 ├── iphone-15-pro/
 ├── iphone-17/
 ├── galaxy-s23/
 ├── galaxy-s23-ultra/
 ├── pixel-7/
-├── tablet/           # iPad (predeterminado tablet)
+├── tablet/           # iPad (default tablet)
 ├── ipad-pro/
 ├── galaxy-tab-s9/
-├── laptop/           # Portátil 13" (predeterminado)
+├── laptop/           # 13" Laptop (default)
 ├── laptop-15/
 ├── laptop-16/
-├── desktop/          # Monitor Full HD (predeterminado)
+├── desktop/          # Full HD Monitor (default)
 ├── desktop-2k/
 ├── desktop-4k/
-└── opengraph/    ← Incluye JSON + imagen og:image
+└── opengraph/    ← Includes JSON + og:image
 ```
 
-## 🛡️ Validación de URLs
+## 🛡️ URL Validation
 
-Wshot verifica automáticamente que las URLs sean válidas antes de proceder:
+Wshot automatically verifies that URLs are valid before proceeding:
 
 ```bash
-# ✅ URL válida
+# ✅ Valid URL
 wshot https://google.com -all
-# 🔍 Validando URL...
-# ✅ URL válida (Status: 200)
-# 📁 Creando capturas...
+# 🔍 Validating URL...
+# ✅ Valid URL (Status: 200)
+# 📁 Creating screenshots...
 
-# ❌ URL inexistente
-wshot https://sitio-que-no-existe.com -all
-# 🔍 Validando URL...
-# ❌ Error: La URL no responde
-# ❌ No se crean carpetas
+# ❌ Non-existent URL
+wshot https://site-that-does-not-exist.com -all
+# 🔍 Validating URL...
+# ❌ Error: URL does not respond
+# ❌ No folders created
 ```
 
 ## ✨ Características Avanzadas
 
-### 🤖 **Cierre Automático de Pop-ups**
+### 🤖 **Automatic Pop-up Dismissal**
 ```bash
-# Cerrar automáticamente banners de cookies, avisos GDPR y otros pop-ups
+# Automatically close cookie banners, GDPR notices and other pop-ups
 wshot https://site.com --device desktop --auto-dismiss
 
-# Combinar con otras opciones para capturas perfectas
+# Combine with other options for perfect screenshots
 wshot https://site.com --super --auto-dismiss
 ```
 
-**¿Qué hace?**
+**What does it do?**
 - 🍪 Detecta y cierra automáticamente banners de cookies
 - 📋 Cierra avisos de privacidad y consentimiento GDPR
 - 🚫 Elimina pop-ups que bloquean la vista de la página
 - 🌍 Soporte multiidioma (español, inglés, francés, alemán, italiano, portugués)
 - 🎯 Compatible con frameworks populares: OneTrust, Cookiebot, Quantcast, TrustArc, Osano
 
-### 📊 **Extracción de Metadatos OpenGraph**
+### 📊 **OpenGraph Metadata Extraction**
 ```bash
-# Extraer metadatos OpenGraph de cualquier página
+# Extract OpenGraph metadata from any page
 wshot https://site.com --device desktop --open-graph
-# O usar el alias corto:
+# Or use the short alias:
 wshot https://site.com --device desktop --og
 
-# Se activa automáticamente con --all y --super
-wshot https://site.com --all  # ← OpenGraph incluido
-wshot https://site.com --super  # ← OpenGraph incluido
+# Automatically activated with --all and --super
+wshot https://site.com --all  # ← OpenGraph included
+wshot https://site.com --super  # ← OpenGraph included
 ```
 
-**¿Qué extrae?**
+**What does it extract?**
 - 🏷️ **og:title** - Título para redes sociales
 - 📝 **og:description** - Descripción optimizada
 - 🖼️ **og:image** - Imagen social (descargada automáticamente)
@@ -230,201 +230,200 @@ wshot https://site.com --super  # ← OpenGraph incluido
 - 🐦 **Twitter Card** - Metadatos de Twitter
 - 📄 Y muchos más...
 
-### ⏳ **Control de Animaciones**
+### ⏳ **Animation Control**
 ```bash
-# Tiempo de espera personalizado para que carguen animaciones (default: 3s)
+# Custom wait time for animations to load (default: 3s)
 wshot https://site.com --wait-time 5
 ```
-Perfecto para sitios con animaciones CSS, JavaScript o contenido que se carga con delay.
+Perfect for sites with CSS animations, JavaScript or content that loads with delay.
 
-### 📜 **Scroll Suave Inteligente**
+### 📜 **Smart Smooth Scroll**
 ```bash
-# Scroll gradual para disparar animaciones basadas en scroll
+# Gradual scroll to trigger scroll-based animations
 wshot https://site.com --smooth-scroll
 ```
-Ideal para:
-- Sitios con **lazy loading**
-- Efectos **parallax**
-- Animaciones activadas por **intersection observer**
-- Contenido que aparece al hacer scroll
+Ideal for:
+- Sites with **lazy loading**
+- **Parallax** effects
+- Animations triggered by **intersection observer**
+- Content that appears when scrolling
 
-### 🚀 **Modo Super (Todo-en-Uno)**
+### 🚀 **Super Mode (All-in-One)**
 ```bash
-# Un solo comando para captura completa optimizada
+# Single command for optimized complete capture
 wshot https://site.com --super
 ```
-**Activa automáticamente:**
-- ✅ **Todos los dispositivos** (`-all`) - Captura en mobile, tablet, laptop, desktop y todas las variantes
-- ✅ Scroll suave (`--smooth-scroll`)
-- ✅ Extracción OpenGraph (`--open-graph`)
-- ✅ Tiempo optimizado (`--wait-time 2`)
+**Automatically activates:**
+- ✅ **All devices** (`-all`) - Capture on mobile, tablet, laptop, desktop and all variants
+- ✅ Smooth scroll (`--smooth-scroll`)
+- ✅ OpenGraph extraction (`--open-graph`)
+- ✅ Optimized timing (`--wait-time 2`)
 
-### 📂 **Abrir Explorador de Archivos Automáticamente**
+### 📂 **Automatically Open File Explorer**
 ```bash
-# Abrir explorador al finalizar (multiplataforma)
+# Open explorer when finished (multiplatform)
 wshot https://site.com --super --open
 
-# En Windows abre Explorer
-# En macOS abre Finder  
-# En Linux detecta tu gestor: Dolphin (KDE), Nautilus (GNOME), Thunar (XFCE), etc.
+# On Windows opens Explorer
+# On macOS opens Finder  
+# On Linux detects your manager: Dolphin (KDE), Nautilus (GNOME), Thunar (XFCE), etc.
 ```
 
-## 🎛️ Lista Completa de Parámetros
+## 🎛️ Complete Parameters List
 
-| Parámetro | Descripción | Ejemplo |
+| Parameter | Description | Example |
 |-----------|-------------|---------|
-| `URL` | URL del sitio web a capturar | `https://example.com` |
-| `-all, --all-devices` | Capturar en todos los dispositivos | `-all` |
-| `--device DEVICE` | Dispositivo específico | `--device mobile` |
-| `--cliente NOMBRE` | Nombre personalizado del cliente | `--cliente "MiEmpresa"` |
-| `--output-dir PATH` | Directorio personalizado de salida | `--output-dir ~/Proyectos` |
-| `--wait-time SEGUNDOS` | Tiempo de espera para animaciones | `--wait-time 5` |
-| `--smooth-scroll` | Scroll suave antes de captura completa | `--smooth-scroll` |
-| `--auto-dismiss` | 🤖 Cerrar automáticamente banners de cookies y pop-ups | `--auto-dismiss` |
-| `--open-graph, --og` | 📊 Extraer metadatos OpenGraph y descargar imagen social | `--og` |
-| `--super` | 🚀 Modo completo optimizado (TODOS los dispositivos + OpenGraph + scroll suave) | `--super` |
-| `--open` | 📂 Abrir explorador de archivos al finalizar | `--open` |
-| `--help, -h` | Ayuda estándar | `--help` |
-| `--info` | Guía completa extendida | `--info` |
+| `URL` | URL of the website to capture | `https://example.com` |
+| `-all, --all-devices` | Capture on all devices | `-all` |
+| `--device DEVICE` | Specific device | `--device mobile` |
+| `--cliente NOMBRE` | Custom client name | `--cliente "MyCompany"` |
+| `--output-dir PATH` | Custom output directory | `--output-dir ~/Projects` |
+| `--wait-time SECONDS` | Wait time for animations | `--wait-time 5` |
+| `--smooth-scroll` | Smooth scroll before full page capture | `--smooth-scroll` |
+| `--auto-dismiss` | 🤖 Automatically close cookie banners and pop-ups | `--auto-dismiss` |
+| `--open-graph, --og` | 📊 Extract OpenGraph metadata and download social image | `--og` |
+| `--super` | 🚀 Complete optimized mode (ALL devices + OpenGraph + smooth scroll) | `--super` |
+| `--open` | 📂 Open file explorer when finished | `--open` |
+| `--help, -h` | Standard help | `--help` |
+| `--info` | Complete extended guide | `--info` |
 
-## 🎨 Tipos de Captura
+## 🎨 Capture Types
 
 ### 📏 **Viewport (Normal)**
-Captura el área visible del navegador según el tamaño del dispositivo.
+Captures the visible browser area according to device size.
 
-### 📜 **Completa (Full Page)**
-Captura toda la página incluyendo contenido scrolleable (`full_page=True`).
+### 📜 **Complete (Full Page)**
+Captures the entire page including scrollable content (`full_page=True`).
 
-## 🔧 Requisitos
+## 🔧 Requirements
 
-- Python 3.8+
-- Playwright (instalado automáticamente con pip)
-- Requests (instalado automáticamente con pip)
-- Conexión a internet
+- Python 3.8+  
+- Playwright (automatically installed with pip)
+- Requests (automatically installed with pip)
+- Internet connection
 
-## 📄 Ejemplos Prácticos Avanzados
+## 📄 Advanced Practical Examples
 
 ```bash
-# Capturar página de contacto en todos los dispositivos (básico)
-wshot https://miempresa.com/contacto -all
+# Capture contact page on all devices (basic)
+wshot https://mycompany.com/contact -all
 
-# Capturar en el móvil más popular (iPhone 15)
-wshot https://mitienda.com/productos --device mobile
+# Capture on most popular mobile (iPhone 15)
+wshot https://mystore.com/products --device mobile
 
-# Comparar en Android vs iPhone
-wshot https://miapp.com --device galaxy-s23
-wshot https://miapp.com --device mobile
+# Compare Android vs iPhone
+wshot https://myapp.com --device galaxy-s23
+wshot https://myapp.com --device mobile
 
-# Capturar en tablet profesional con tiempo de espera extra
-wshot https://miblog.com --device ipad-pro --wait-time 6
+# Capture on professional tablet with extra wait time
+wshot https://myblog.com --device ipad-pro --wait-time 6
 
-# Verificar en portátil más común (13 pulgadas)
-wshot https://mi-dashboard.com --device laptop
+# Verify on most common laptop (13 inches)
+wshot https://my-dashboard.com --device laptop
 
-# Auditoría en monitor 4K profesional
-wshot https://mi-portfolio.com --device desktop-4k
+# Audit on professional 4K monitor
+wshot https://my-portfolio.com --device desktop-4k
 
-# Sitio con banner de cookies - cerrar automáticamente
+# Site with cookie banner - close automatically
 wshot https://google.com --device desktop --auto-dismiss
 
-# Extraer solo metadatos OpenGraph sin capturas
-wshot https://miempresa.com --device mobile --og
+# Extract only OpenGraph metadata without screenshots
+wshot https://mycompany.com --device mobile --og
 
-# Sitio con muchas animaciones - usar modo super y abrir explorador
-wshot https://sitio-animado.com --super --open
+# Site with many animations - use super mode and open explorer
+wshot https://animated-site.com --super --open
 
-# Sitio con lazy loading, cookies y OpenGraph - combinación completa
-wshot https://sitio-parallax.com -all --smooth-scroll --auto-dismiss
+# Site with lazy loading, cookies and OpenGraph - complete combination
+wshot https://parallax-site.com -all --smooth-scroll --auto-dismiss
 
-# Auditoría SEO completa: capturas + metadatos OpenGraph
-wshot https://cliente-importante.com --super --cliente "ClienteVIP"
+# Complete SEO audit: screenshots + OpenGraph metadata
+wshot https://important-client.com --super --cliente "VIPClient"
 
-# Comparación móvil compacto vs premium
+# Compact vs premium mobile comparison
 wshot https://responsive.com --device iphone-se
 wshot https://responsive.com --device galaxy-s23-ultra
 
-# Verificación en dispositivos de trabajo más comunes
+# Verification on most common work devices
 wshot https://intranet.com --device laptop --auto-dismiss
 
-# Guardar en ubicación personalizada y abrir automáticamente
-wshot https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
+# Save to custom location and open automatically
+wshot https://project.com --super --output-dir ~/Projects/WebAudits --open
 ```
 
-### 🎯 Casos de Uso Empresariales
+### 🎯 Business Use Cases
 
-| Tipo de sitio | Comando recomendado | Razón |
-|---------------|---------------------|-------|
-| **Sitio estático simple** | `--device desktop` | Rápido y eficiente |
-| **Sitio responsive** | `-all` | Ver en todos los dispositivos + OpenGraph |
-| **App móvil/PWA** | `--device mobile --device galaxy-s23` | Probar en móviles más populares |
-| **Dashboard/Admin** | `--device laptop` | Resolución típica de trabajo |
-| **E-commerce** | `--device mobile --device tablet --device desktop` | Cubrir compras móviles y desktop |
-| **Portfolio/Landing** | `--device desktop-4k` | Mostrar máxima calidad visual |
-| **Sitio con animaciones** | `--super` | Tiempo optimizado + scroll + OpenGraph |
-| **Sitio con lazy loading** | `--smooth-scroll` | Activa el contenido diferido |
-| **Sitio con cookies/GDPR** | `--auto-dismiss` | Cierra banners automáticamente |
-| **Auditoría SEO** | `--super` | Capturas completas + metadatos OpenGraph |
-| **Google, Facebook, etc.** | `--super --auto-dismiss` | Capturas limpias sin pop-ups + metadatos |
-| **Auditoría completa** | `--super --auto-dismiss` | Captura exhaustiva sin obstrucciones + SEO |
-| **Sitio lento** | `--wait-time 7` | Más tiempo para cargar |
-| **Comparación de marcas** | `--device mobile --device galaxy-s23` | iPhone vs Android |
+| Site type | Recommended command | Reason |
+|-----------|---------------------|--------|
+| **Simple static site** | `--device desktop` | Fast and efficient |
+| **Responsive site** | `-all` | View on all devices + OpenGraph |
+| **Mobile app/PWA** | `--device mobile --device galaxy-s23` | Test on most popular mobiles |
+| **Dashboard/Admin** | `--device laptop` | Typical work resolution |
+| **E-commerce** | `--device mobile --device tablet --device desktop` | Cover mobile and desktop shopping |
+| **Portfolio/Landing** | `--device desktop-4k` | Show maximum visual quality |
+| **Site with animations** | `--super` | Optimized timing + scroll + OpenGraph |
+| **Site with lazy loading** | `--smooth-scroll` | Activates deferred content |
+| **Site with cookies/GDPR** | `--auto-dismiss` | Closes banners automatically |
+| **SEO audit** | `--super` | Complete screenshots + OpenGraph metadata |
+| **Google, Facebook, etc.** | `--super --auto-dismiss` | Clean screenshots without pop-ups + metadata |
+| **Complete audit** | `--super --auto-dismiss` | Exhaustive capture without obstructions + SEO |
+| **Slow site** | `--wait-time 7` | More time to load |
+| **Brand comparison** | `--device mobile --device galaxy-s23` | iPhone vs Android |
 
-## 🛠️ Desarrollo
+## 🛠️ Development
 
-### Estructura del proyecto:
+### Project structure:
 ```
 wshot/
-├── wshot/                   # Paquete Python principal
-│   ├── __init__.py         # Módulo del paquete
-│   └── cli.py              # Código principal CLI
-├── pyproject.toml          # Configuración del proyecto (PEP 621)
-├── MANIFEST.in             # Archivos incluidos en distribución
-├── test_installation.py    # Script de verificación
-├── .gitignore              # Archivos a ignorar en Git
-├── LICENSE                 # Licencia MIT
-└── README.md               # Este archivo
+├── wshot/                   # Main Python package
+│   ├── __init__.py         # Package module
+│   └── cli.py              # Main CLI code
+├── pyproject.toml          # Project configuration (PEP 621)
+├── MANIFEST.in             # Files included in distribution
+├── test_installation.py    # Verification script
+├── .gitignore              # Files to ignore in Git
+├── LICENSE                 # MIT License
+└── README.md               # This file
 ```
 
-### Ejecutar en modo desarrollo:
+### Run in development mode:
 ```bash
-# Instalar en modo editable
+# Install in editable mode
 pip install -e .
 playwright install chromium
 
-# Ejecutar
+# Run
 wshot https://example.com --device mobile-17
 
-# O usando el modo super para pruebas completas:
+# Or using super mode for complete testing:
 wshot https://example.com --super
 ```
 
-## 🤝 Contribuir
+## 🤝 Contributing
+1. Fork the project
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+## 🎉 Project Evolution
 
-## 🎉 Evolución del Proyecto
+### v1.0.0 - Enterprise Visual Audit Platform 🏢
+- ✅ **Enterprise architecture**: Complete refactoring as distributable Python platform
+- ✅ **Unified global command**: `wshot` available system-wide after pip installation
+- ✅ **Advanced organizational structure**: Elimination of redundancies and clean architecture
+- ✅ **Modern PEP 621 configuration**: `pyproject.toml` with industry standards
+- ✅ **Simplified installation**: `pip install git+https://...` for immediate deployment
+- ✅ **Verification suite**: `test_installation.py` for environment validation
+- ✅ **Development mode**: `pip install -e .` for contributors
 
-### v1.0.0 - Plataforma de Auditoría Visual Empresarial 🏢
-- ✅ **Arquitectura empresarial**: Refactorización completa como plataforma Python distribuible
-- ✅ **Comando global unificado**: `wshot` disponible sistema-wide tras instalación pip
-- ✅ **Estructura organizacional avanzada**: Eliminación de redundancias y arquitectura limpia
-- ✅ **Configuración moderna PEP 621**: `pyproject.toml` con estándares de industria
-- ✅ **Instalación simplificada**: `pip install git+https://...` para deploy inmediato
-- ✅ **Suite de verificación**: `test_installation.py` para validación de entornos
-- ✅ **Modo desarrollo**: `pip install -e .` para contribuidores
-
-### 🏗️ **Capacidades Técnicas Implementadas**
-- 📱 **Motor multi-dispositivo**: 15+ configuraciones desde móviles compactos hasta monitores 4K profesionales
-- 🛡️ **Sistema de validación robusto**: Verificación preventiva de URLs con manejo de errores
-- 📁 **Organización semántica**: Estructura automática por dominio completo con nomenclatura descriptiva
-- ⏳ **Motor de renderizado avanzado**: Control granular de timing para sitios con animaciones complejas
-- 📜 **Scroll progresivo inteligente**: Activación automática de lazy loading y efectos parallax
-- 🤖 **IA para eliminación de obstáculos**: Detección y cierre automático de banners GDPR/cookies multiidioma
-- 📊 **Extractor de metadatos estructurados**: Sistema completo OpenGraph con descarga automática de assets
-- 🚀 **Modo auditoría unificado**: Super-mode para evaluaciones empresariales completas
-- 📂 **Integración del sistema**: Apertura automática de exploradores de archivos multiplataforma
-- 📖 **Documentación técnica extensiva**: Sistema de ayuda contextual para equipos de desarrollo
+### 🏗️ **Implemented Technical Capabilities**
+- 📱 **Multi-device engine**: 15+ configurations from compact mobiles to professional 4K monitors
+- 🛡️ **Robust validation system**: Preventive URL verification with error handling
+- 📁 **Semantic organization**: Automatic structure by complete domain with descriptive nomenclature
+- ⏳ **Advanced rendering engine**: Granular timing control for sites with complex animations
+- 📜 **Smart progressive scroll**: Automatic activation of lazy loading and parallax effects
+- 🤖 **AI for obstacle removal**: Detection and automatic closure of multilingual GDPR/cookie banners
+- 📊 **Structured metadata extractor**: Complete OpenGraph system with automatic asset download
+- 🚀 **Unified audit mode**: Super-mode for complete enterprise evaluations
+- 📂 **System integration**: Automatic opening of multiplatform file explorers
+- 📖 **Extensive technical documentation**: Contextual help system for development teams
