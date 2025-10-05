@@ -1,16 +1,16 @@
 # 🔧 Troubleshooting - Wshot
 
-Guía completa para solucionar problemas comunes con Wshot.
+Complete guide to solve common issues with Wshot.
 
-## 🚨 Problemas Más Comunes
+## 🚨 Most Common Issues
 
-### 1. Error: "libicudata.so.66 not found" u otras librerías faltantes
+### 1. Error: "libicudata.so.66 not found" or other missing libraries
 
-**Síntoma:** Error al ejecutar capturas mencionando librerías `.so` faltantes.
+**Symptom:** Error when running captures mentioning missing `.so` libraries.
 
-**Causa:** Dependencias del sistema faltantes para Playwright/Chromium.
+**Cause:** Missing system dependencies for Playwright/Chromium.
 
-**Solución:**
+**Solution:**
 
 #### Ubuntu/Debian
 ```bash
@@ -33,46 +33,46 @@ sudo pacman -S nss nspr atk at-spi2-atk cups libdrm libxkbcommon \
 
 ### 2. Error: "playwright: command not found"
 
-**Síntoma:** No se encuentra el comando playwright.
+**Symptom:** Playwright command is not found.
 
-**Causa:** Playwright no está instalado o no está en el PATH.
+**Cause:** Playwright is not installed or not in PATH.
 
-**Solución:**
+**Solution:**
 ```bash
-# Reinstalar playwright
+# Reinstall playwright
 pip install playwright
 playwright install chromium
 
-# Si usaste pipx en Arch Linux
+# If you used pipx on Arch Linux
 ~/.local/share/pipx/venvs/wshot/bin/playwright install chromium
 ```
 
-### 3. Las capturas salen en negro o vacías
+### 3. Screenshots come out black or empty
 
-**Síntoma:** Las imágenes capturadas están en negro o no muestran contenido.
+**Symptom:** Captured images are black or show no content.
 
-**Posibles Causas:**
-- Sitio web requiere más tiempo para cargar
-- JavaScript necesita tiempo extra para renderizar
-- Problemas de permisos o configuración
+**Possible Causes:**
+- Website requires more time to load
+- JavaScript needs extra time to render
+- Permission or configuration issues
 
-**Soluciones:**
+**Solutions:**
 
-#### Aumentar tiempo de espera
+#### Increase wait time
 ```bash
-# Aumentar tiempo de espera a 10 segundos
-wshot https://sitio.com --device desktop --wait-time 10
+# Increase wait time to 10 seconds
+wshot https://site.com --device desktop --wait-time 10
 ```
 
-#### Usar modo super con optimizaciones
+#### Use super mode with optimizations
 ```bash
-# Modo super incluye scroll suave y timing optimizado
-wshot https://sitio.com --super
+# Super mode includes smooth scroll and optimized timing
+wshot https://site.com --super
 ```
 
-#### Verificar instalación
+#### Verify installation
 ```bash
-# Verificar que todo está correctamente instalado
+# Verify everything is correctly installed
 python test_installation.py
 ```
 

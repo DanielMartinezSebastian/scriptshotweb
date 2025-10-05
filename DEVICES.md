@@ -1,20 +1,20 @@
-# 📱 Dispositivos - Wshot
+# 📱 Devices - Wshot
 
-Referencia completa de todos los dispositivos disponibles para captura de pantallas.
+Complete reference of all available devices for screenshot capture.
 
-## 📱 Móviles
+## 📱 Mobile Devices
 
 ### iPhone
-| Dispositivo | Dimensiones | Descripción | Alias |
-|-------------|-------------|-------------|-------|
-| `mobile` | 393×852 | iPhone 15 (predeterminado móvil) | `iphone-15` |
+| Device | Dimensions | Description | Alias |
+|--------|------------|-------------|-------|
+| `mobile` | 393×852 | iPhone 15 (default mobile) | `iphone-15` |
 | `iphone-se` | 375×667 | iPhone SE (2022) | `mobile-se` |
 | `iphone-15-pro` | 393×852 | iPhone 15 Pro | - |
 | `iphone-17` | 402×874 | iPhone 17 (2025) | `mobile-17` |
 
 ### Android
-| Dispositivo | Dimensiones | Descripción | Alias |
-|-------------|-------------|-------------|-------|
+| Device | Dimensions | Description | Alias |
+|--------|------------|-------------|-------|
 | `galaxy-s23` | 360×780 | Samsung Galaxy S23 | - |
 | `galaxy-s23-ultra` | 412×915 | Samsung Galaxy S23 Ultra | - |
 | `pixel-7` | 412×892 | Google Pixel 7 | - |
@@ -22,31 +22,31 @@ Referencia completa de todos los dispositivos disponibles para captura de pantal
 ## 📟 Tablets
 
 ### iPad
-| Dispositivo | Dimensiones | Descripción | Alias |
-|-------------|-------------|-------------|-------|
-| `tablet` | 768×1024 | iPad (10.9") - predeterminado tablet | `ipad` |
+| Device | Dimensions | Description | Alias |
+|--------|------------|-------------|-------|
+| `tablet` | 768×1024 | iPad (10.9") - default tablet | `ipad` |
 | `ipad-pro` | 1024×1366 | iPad Pro (12.9") | - |
 
 ### Android Tablets
-| Dispositivo | Dimensiones | Descripción | Alias |
-|-------------|-------------|-------------|-------|
+| Device | Dimensions | Description | Alias |
+|--------|------------|-------------|-------|
 | `galaxy-tab-s9` | 800×1280 | Samsung Galaxy Tab S9 | - |
 
-## 💻 Portátiles
+## 💻 Laptops
 
-| Dispositivo | Dimensiones | Descripción | Alias |
-|-------------|-------------|-------------|-------|
-| `laptop` | 1280×800 | Portátil 13" (predeterminado laptop) | `laptop-13` |
+| Device | Dimensions | Description | Alias |
+|--------|------------|-------------|-------|
+| `laptop` | 1280×800 | 13" Laptop (default laptop) | `laptop-13` |
 | `laptop-15` | 1440×900 | MacBook Pro 15" / ThinkPad X1 | - |
 | `laptop-16` | 1728×1117 | MacBook Pro 16" | - |
 
-## 🖥️ Desktop/Monitores
+## 🖥️ Desktop/Monitors
 
-| Dispositivo | Dimensiones | Descripción | Alias |
-|-------------|-------------|-------------|-------|
-| `desktop` | 1920×1080 | Monitor Full HD (predeterminado) | `desktop-fhd` |
-| `desktop-2k` | 2560×1440 | Monitor 2K/QHD | - |
-| `desktop-4k` | 3840×2160 | Monitor 4K/UHD | - |
+| Device | Dimensions | Description | Alias |
+|--------|------------|-------------|-------|
+| `desktop` | 1920×1080 | Full HD Monitor (default) | `desktop-fhd` |
+| `desktop-2k` | 2560×1440 | 2K/QHD Monitor | - |
+| `desktop-4k` | 3840×2160 | 4K/UHD Monitor | - |
 
 ## 🎯 Dispositivos Recomendados por Categoría
 

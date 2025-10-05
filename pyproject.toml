@@ -5,18 +5,25 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "wshot"
 version = "1.0.0"
-description = "Herramienta profesional para capturas de pantalla web en múltiples dispositivos"
+description = "Professional automated web screenshot tool for multiple devices - Visual auditing and responsive testing"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Daniel Martinez Sebastian"}
+    {name = "Daniel Martinez Sebastian", email = "daniel@martinezsebastian.com"}
 ]
-keywords = ["screenshot", "web", "testing", "playwright", "automation"]
+maintainers = [
+    {name = "Daniel Martinez Sebastian", email = "daniel@martinezsebastian.com"}
+]
+keywords = ["screenshot", "web", "testing", "playwright", "automation", "responsive", "audit", "visual-testing"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
     "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Internet :: WWW/HTTP :: Browsers",
+    "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
     "Topic :: Utilities",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -26,6 +33,10 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Environment :: Console",
 ]
 dependencies = [
     "playwright>=1.40.0",
@@ -33,9 +44,13 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DanielMartinezSebastian/scriptshotweb"
-"Bug Reports" = "https://github.com/DanielMartinezSebastian/scriptshotweb/issues"
-Source = "https://github.com/DanielMartinezSebastian/scriptshotweb"
+Homepage = "https://github.com/DanielMartinezSebastian/wshot"
+"Author Website" = "https://martinezsebastian.com"
+Documentation = "https://github.com/DanielMartinezSebastian/wshot/blob/main/DOCS.md"
+Repository = "https://github.com/DanielMartinezSebastian/wshot"
+"Bug Reports" = "https://github.com/DanielMartinezSebastian/wshot/issues"
+"Source Code" = "https://github.com/DanielMartinezSebastian/wshot"
+Changelog = "https://github.com/DanielMartinezSebastian/wshot/blob/main/ROADMAP.md"
 
 [project.scripts]
 wshot = "wshot.cli:main"

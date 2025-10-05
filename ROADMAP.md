@@ -1,26 +1,26 @@
 # 🗺️ Roadmap - Wshot
 
-Plan de evolución y desarrollo futuro de la plataforma de auditoría visual web.
+Development plan and future evolution of the visual web audit platform.
 
-## 🎯 Roadmap de Evolución Tecnológica
+## 🎯 Technology Evolution Roadmap
 
-### ✅ **Fundamentos Completados**
-- [x] ~~Sistema de renderizado avanzado con scroll progresivo~~ ✅ **COMPLETADO**
-- [x] ~~Motor de timing inteligente para animaciones complejas~~ ✅ **COMPLETADO**
-- [x] ~~Modo auditoría empresarial unificado~~ ✅ **COMPLETADO**
-- [x] ~~Arquitectura de almacenamiento profesional en Pictures/WSHOT/~~ ✅ **COMPLETADO**
-- [x] ~~Refactorización para distribución mediante pip~~ ✅ **COMPLETADO**
+### ✅ **Completed Foundations**
+- [x] ~~Advanced rendering system with progressive scroll~~ ✅ **COMPLETED**
+- [x] ~~Intelligent timing engine for complex animations~~ ✅ **COMPLETED**
+- [x] ~~Unified enterprise audit mode~~ ✅ **COMPLETED**
+- [x] ~~Professional storage architecture in Pictures/WSHOT/~~ ✅ **COMPLETED**
+- [x] ~~Refactoring for pip distribution~~ ✅ **COMPLETED**
 
-### 🔮 **Expansión de Capacidades**
-- [ ] **Motor multiidioma**: Unificación completa español/inglés en toda la interfaz
-- [ ] **Analizador SEO avanzado**: Extracción y análisis de JSON-LD, microdata y schema.org
-- [ ] **Optimización WebP**: Compresión inteligente y formatos optimizados para web
-- [ ] **Sistema de headers personalizados**: Bypass de bloqueos y detección anti-bot
-- [ ] **Motor de cookies inteligente**: Inyección automática para sitios conocidos
-- [ ] **Spider de sitio completo**: Crawling y captura automática de toda la arquitectura web
-- [ ] **Extractor de media avanzado**: Recopilación automática de todos los assets multimedia
-- [ ] **Generador de reportes Markdown**: Documentación automática con análisis visual
-- [ ] **Sistema de autenticación**: Soporte para login automático y sesiones persistentes
+### 🔮 **Capability Expansion**
+- [ ] **Multilingual engine**: Complete Spanish/English unification across the entire interface
+- [ ] **Advanced SEO analyzer**: JSON-LD, microdata and schema.org extraction and analysis
+- [ ] **WebP optimization**: Smart compression and web-optimized formats
+- [ ] **Custom headers system**: Bypass blocking and anti-bot detection
+- [ ] **Smart cookie engine**: Automatic injection for known sites
+- [ ] **Full site spider**: Crawling and automatic capture of entire web architecture
+- [ ] **Advanced media extractor**: Automatic collection of all multimedia assets
+- [ ] **Markdown report generator**: Automatic documentation with visual analysis
+- [ ] **Authentication system**: Support for automatic login and persistent sessions
 
 ## 🏗️ Refactorización Arquitectónica Futura
 

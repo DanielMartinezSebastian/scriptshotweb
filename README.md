@@ -1,96 +1,105 @@
 # 📸 Wshot
 
-Herramienta de captura de pantallas web automatizada para múltiples dispositivos. Ideal para auditorías visuales, testing responsive y documentación de proyectos web.
+Automated web screenshot tool for multiple devices. Perfect for visual audits, responsive testing, and web project documentation.
 
-## 🚀 Instalación Rápida
+## 🚀 Quick Installation
+
+```bash
+pip install wshot
+playwright install chromium
+```
+
+<details>
+<summary>Install from source</summary>
 
 ```bash
 pip install git+https://github.com/DanielMartinezSebastian/wshot.git
 playwright install chromium
 ```
+</details>
 
-> ¿Problemas de instalación? Ver [DOCS.md](DOCS.md#-instalación-detallada) o [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+> Installation issues? See [DOCS.md](DOCS.md#-detailed-installation) or [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
-## ⚡ Uso Básico
+## ⚡ Basic Usage
 
 ```bash
-# Capturar en todos los dispositivos
+# Capture on all devices
 wshot https://example.com -all
 
-# Dispositivo específico
+# Specific device
 wshot https://example.com --device mobile
 wshot https://example.com --device desktop
 
-# Modo super (recomendado)
+# Super mode (recommended)
 wshot https://example.com --super
 ```
 
-> Ver todos los comandos y opciones en [DOCS.md](DOCS.md#️-lista-completa-de-parámetros)
+> See all commands and options in [DOCS.md](DOCS.md#️-complete-parameters-list)
 
-## 📱 Dispositivos Principales
+## 📱 Main Devices
 
-| Dispositivo | Dimensiones | Uso |
-|-------------|-------------|-----|
-| `mobile` | 393×852 | iPhone 15 (móvil estándar) |
-| `tablet` | 768×1024 | iPad (tablet estándar) |
-| `laptop` | 1280×800 | Portátil 13" (estándar) |
-| `desktop` | 1920×1080 | Monitor Full HD (estándar) |
-| `desktop-4k` | 3840×2160 | Monitor 4K profesional |
+| Device | Dimensions | Usage |
+|--------|------------|-------|
+| `mobile` | 393×852 | iPhone 15 (mobile standard) |
+| `tablet` | 768×1024 | iPad (tablet standard) |
+| `laptop` | 1280×800 | 13" Laptop (standard) |
+| `desktop` | 1920×1080 | Full HD Monitor (standard) |
+| `desktop-4k` | 3840×2160 | 4K Professional Monitor |
 
-> Ver lista completa en [DEVICES.md](DEVICES.md)
+> See complete list in [DEVICES.md](DEVICES.md)
 
-## 📂 Estructura de Salida
+## 📂 Output Structure
 
 ```
 ~/Pictures/WSHOT/
 └── example.com/
     ├── mobile/
     │   ├── example.com_mobile-20241005_142958.png
-    │   └── example.com_mobile-completa-20241005_142958.png
+    │   └── example.com_mobile-complete-20241005_142958.png
     └── desktop/
         ├── example.com_desktop-20241005_142958.png
-        └── example.com_desktop-completa-20241005_142958.png
+        └── example.com_desktop-complete-20241005_142958.png
 ```
 
-## ⚙️ Opciones Principales
+## ⚙️ Main Options
 
 ```bash
-# Todos los dispositivos
+# All devices
 wshot https://example.com -all
 
-# Dispositivo específico
+# Specific device
 wshot https://example.com --device mobile
 
-# Modo super (recomendado para sitios complejos)
+# Super mode (recommended for complex sites)
 wshot https://example.com --super
 
-# Con tiempo de espera personalizado
+# Custom wait time
 wshot https://example.com --device desktop --wait-time 5
 
-# Cerrar automáticamente banners de cookies
+# Auto-dismiss cookie banners
 wshot https://example.com --device desktop --auto-dismiss
 
-# Extraer metadatos OpenGraph
+# Extract OpenGraph metadata
 wshot https://example.com --device desktop --og
 
-# Abrir explorador al finalizar
+# Open file explorer when finished
 wshot https://example.com --super --open
 ```
 
-## 📖 Ayuda
+## 📖 Help
 
 ```bash
-wshot --help      # Ayuda rápida
-wshot --info      # Guía completa
+wshot --help      # Quick help
+wshot --info      # Complete guide
 ```
 
-## 📚 Documentación
+## 📚 Documentation
 
-- **[DOCS.md](DOCS.md)** - Documentación completa y características avanzadas
-- **[DEVICES.md](DEVICES.md)** - Lista completa de dispositivos disponibles
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Solución de problemas comunes
-- **[ROADMAP.md](ROADMAP.md)** - Evolución y planes futuros del proyecto
+- **[DOCS.md](DOCS.md)** - Complete documentation and advanced features
+- **[DEVICES.md](DEVICES.md)** - Complete list of available devices
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common problem solutions
+- **[ROADMAP.md](ROADMAP.md)** - Project evolution and future plans
 
-## 📄 Licencia
+## 📄 License
 
-MIT License - ver [LICENSE](LICENSE) para detalles.
+MIT License - see [LICENSE](LICENSE) for details.

@@ -1,100 +1,100 @@
-# 📚 Documentación Completa - Wshot
+# 📚 Complete Documentation - Wshot
 
-Una plataforma integral de auditoría visual y análisis web que automatiza la captura, análisis y documentación de sitios web a escala empresarial. Diseñada para equipos de desarrollo, QA, diseñadores y consultores digitales que requieren evaluaciones exhaustivas de experiencia de usuario multiplataforma.
+A comprehensive visual audit and web analysis platform that automates capture, analysis, and documentation of websites at enterprise scale. Designed for development teams, QA, designers, and digital consultants requiring exhaustive cross-platform user experience evaluations.
 
-## 🎯 Características Principales
+## 🎯 Main Features
 
-### 🎯 **Auditoría Visual Automatizada**
-- 🚀 **Sintaxis ultra-simple**: `wshot URL -all` para auditorías completas
-- 📱 **Ecosistema de dispositivos**: 15+ configuraciones incluyendo iPhone (SE, 15, 15 Pro), Samsung Galaxy (S23, S23 Ultra), Google Pixel, iPad (estándar, Pro), Galaxy Tab, MacBooks, ThinkPads, monitores profesionales (FHD, 2K, 4K)
-- 🔄 **Captura dual inteligente**: Viewport fijo + página completa con scroll automático
-- 🛡️ **Validación robusta**: Sistema de verificación de URLs con detección de errores antes del procesamiento
+### 🎯 **Automated Visual Auditing**
+- 🚀 **Ultra-simple syntax**: `wshot URL -all` for complete audits
+- 📱 **Device ecosystem**: 15+ configurations including iPhone (SE, 15, 15 Pro), Samsung Galaxy (S23, S23 Ultra), Google Pixel, iPad (standard, Pro), Galaxy Tab, MacBooks, ThinkPads, professional monitors (FHD, 2K, 4K)
+- 🔄 **Smart dual capture**: Fixed viewport + full page with automatic scroll
+- 🛡️ **Robust validation**: URL verification system with error detection before processing
 
-### 🏗️ **Arquitectura Empresarial**
-- 📁 **Organización automática avanzada**: Estructura jerárquica por dominio, dispositivo y timestamp con nomenclatura semántica
-- ⚡ **Motor de configuración cero**: Automatización completa sin intervención manual
-- 📂 **Sistema de archivos inteligente**: Guarda en `~/Pictures/WSHOT/` con organización por dominio completo
-- 🎪 **Multiplataforma nativo**: Compatibilidad total Windows, macOS, Linux
+### 🏗️ **Enterprise Architecture**
+- 📁 **Advanced automatic organization**: Hierarchical structure by domain, device and timestamp with semantic nomenclature
+- ⚡ **Zero-configuration engine**: Complete automation without manual intervention
+- 📂 **Smart file system**: Saves to `~/Pictures/WSHOT/` with full domain organization
+- 🎪 **Native multiplatform**: Full compatibility Windows, macOS, Linux
 
-### 🤖 **Inteligencia Automatizada**
-- ⏳ **Control avanzado de renderizado**: Sistema de timing configurable para animaciones complejas (3s por defecto)
-- 📜 **Scroll inteligente progresivo**: Activación de lazy loading, parallax y intersection observers
-- 🤖 **Detección y eliminación de obstáculos**: Auto-cierre de banners GDPR, cookies y pop-ups en múltiples idiomas
-- 📊 **Extracción de metadatos estructurados**: Sistema completo OpenGraph con descarga automática de assets sociales
+### 🤖 **Automated Intelligence**
+- ⏳ **Advanced rendering control**: Configurable timing system for complex animations (3s default)
+- 📜 **Progressive smart scroll**: Activation of lazy loading, parallax and intersection observers
+- 🤖 **Obstacle detection and removal**: Auto-close GDPR banners, cookies and pop-ups in multiple languages
+- 📊 **Structured metadata extraction**: Complete OpenGraph system with automatic social assets download
 
-### 🚀 **Modo Empresarial**
-- 🚀 **Modo Super**: Auditoría completa automatizada (todos los dispositivos + scroll + OpenGraph + timing optimizado)
-- 📖 **Sistema de documentación extensivo**: Ayuda contextual con `--help` e `--info` para equipos técnicos
-- 🔧 **API extensible**: Arquitectura modular preparada para integración en pipelines CI/CD
+### 🚀 **Enterprise Mode**
+- 🚀 **Super Mode**: Complete automated audit (all devices + scroll + OpenGraph + optimized timing)
+- 📖 **Extensive documentation system**: Contextual help with `--help` and `--info` for technical teams
+- 🔧 **Extensible API**: Modular architecture ready for CI/CD pipeline integration
 
-## 🚀 Instalación Detallada
+## 🚀 Detailed Installation
 
-### Instalación mediante pip (Recomendada) ⭐
+### Installation via pip (Recommended) ⭐
 
-Instala wshot como un paquete Python global o en un entorno virtual:
+Install wshot as a global Python package or in a virtual environment:
 
-**Para la mayoría de sistemas:**
+**For most systems:**
 ```bash
-pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+pip install wshot
 
-# O en un entorno virtual (recomendado)
+# Or in a virtual environment (recommended)
 python3 -m venv wshot-env
-source wshot-env/bin/activate  # En Windows: wshot-env\Scripts\activate
-pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+source wshot-env/bin/activate  # On Windows: wshot-env\Scripts\activate
+pip install wshot
 ```
 
-**Para Arch Linux (recomendado - pipx):**
+**For Arch Linux (recommended - pipx):**
 ```bash
-# Instalar pipx si no lo tienes
+# Install pipx if you don't have it
 sudo pacman -S python-pipx
 
-# Instalar wshot globalmente con pipx
-pipx install git+https://github.com/DanielMartinezSebastian/wshot.git
+# Install wshot globally with pipx
+pipx install wshot
 
-# Instalar Chromium
+# Install Chromium
 ~/.local/share/pipx/venvs/wshot/bin/playwright install chromium
 ```
 
-**Para Arch Linux (alternativa - entorno virtual):**
+**For Arch Linux (alternative - virtual environment):**
 ```bash
-# Crear entorno virtual
+# Create virtual environment
 python3 -m venv ~/.wshot-env
 source ~/.wshot-env/bin/activate
-pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+pip install wshot
 playwright install chromium
 
-# Crear alias en tu .zshrc o .bashrc para uso global
+# Create alias in your .zshrc or .bashrc for global usage
 echo 'alias wshot="~/.wshot-env/bin/wshot"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-**Paso adicional necesario:**
+**Required additional step:**
 
-Después de instalar con pip, debes instalar el navegador Chromium de Playwright:
+After installing with pip, you must install Playwright's Chromium browser:
 
 ```bash
-# Si instalaste con pip normal
+# If you installed with normal pip
 playwright install chromium
 
-# Si instalaste con pipx en Arch Linux
+# If you installed with pipx on Arch Linux
 ~/.local/share/pipx/venvs/wshot/bin/playwright install chromium
 ```
 
-**Verificar instalación:**
+**Verify installation:**
 
-Puedes verificar que todo está instalado correctamente ejecutando:
+You can verify everything is installed correctly by running:
 
 ```bash
-# Verificación básica
+# Basic verification
 wshot --help
 
-# Verificación completa con script de test
+# Complete verification with test script
 python test_installation.py
 ```
 
-**Dependencias del sistema (opcional):**
+**System dependencies (optional):**
 
-Si encuentras errores relacionados con librerías del sistema faltantes, instálalas según tu distribución:
+If you encounter errors related to missing system libraries, install them according to your distribution:
 
 ```bash
 # Ubuntu/Debian
@@ -111,15 +111,15 @@ sudo pacman -S nss nspr atk at-spi2-atk cups libdrm libxkbcommon \
   libxcomposite libxdamage libxrandr mesa pango cairo alsa-lib
 ```
 
-### Instalación desde el repositorio (Desarrollo)
+### Installation from repository (Development)
 
-Si quieres desarrollar o contribuir al proyecto:
+If you want to develop or contribute to the project:
 
 ```bash
 git clone https://github.com/DanielMartinezSebastian/wshot.git
 cd wshot
 
-# Instalar en modo desarrollo
+# Install in development mode
 pip install -e .
 playwright install chromium
 ```

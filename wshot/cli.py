@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Wshot - Herramienta simplificada para capturas de pantalla web
-Uso: wshot URL [-all] [--device DEVICE] [--wait-time SECONDS] [--smooth-scroll] [--super]
+Wshot - Simplified tool for web screenshots
+Usage: wshot URL [-all] [--device DEVICE] [--wait-time SECONDS] [--smooth-scroll] [--super]
 
-Ejemplos:
+Examples:
   wshot http://mariadelasmercedes.com/contacto -all
   wshot https://mecalito.com --device mobile-17
   wshot https://example.com --device tablet --wait-time 5 --smooth-scroll
-  wshot https://site.com --super  # Modo completo optimizado
+  wshot https://site.com --super  # Complete optimized mode
 """
 
 import argparse
@@ -19,11 +19,11 @@ from urllib.parse import urlparse
 from datetime import datetime
 import re
 import time
-# Importaciones de playwright y requests se harán más tarde para permitir que --help funcione
+# Playwright and requests imports will be done later to allow --help to work
 
-def mostrar_ayuda_extendida():
-    """Muestra información adicional sobre el uso del script"""
-    ayuda = r"""
+def display_extended_help():
+    """Show additional information about script usage"""
+    extended_help_text = r"""
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
 ║                                  _           _                               ║
@@ -33,102 +33,102 @@ def mostrar_ayuda_extendida():
 ║                     \ V  V /\__ \ | | | (_) | |_                             ║
 ║                      \_/\_/ |___/_| |_|\___/ \__|                            ║
 ║                                                                              ║
-║                    🚀 Plataforma de Auditoría Visual Empresarial             ║
+║                    🚀 Enterprise Visual Audit Platform                      ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-📖 DESCRIPCIÓN:
-   Wshot es una herramienta profesional para realizar capturas de pantalla
-   de sitios web en múltiples dispositivos, optimizada para sitios modernos con
-   animaciones, efectos de scroll y contenido dinámico.
+📖 DESCRIPTION:
+   Wshot is a professional tool for taking website screenshots
+   across multiple devices, optimized for modern sites with
+   animations, scroll effects and dynamic content.
 
-🎯 CARACTERÍSTICAS PRINCIPALES:
-   • Capturas en 15+ dispositivos y resoluciones predefinidos
-   • Soporte para animaciones y contenido que se carga con delay
-   • Scroll suave para disparar animaciones basadas en scroll
-   • Cierre automático de banners de cookies y pop-ups 🤖
-   • Extracción de metadatos OpenGraph para SEO y redes sociales 📊
-   • Organización automática de archivos por cliente y dispositivo
-   • Modo super para captura completa optimizada
+🎯 MAIN FEATURES:
+   • Screenshots on 15+ predefined devices and resolutions
+   • Support for animations and delayed loading content
+   • Smooth scroll to trigger scroll-based animations
+   • Automatic closure of cookie banners and pop-ups 🤖
+   • OpenGraph metadata extraction for SEO and social media 📊
+   • Automatic file organization by client and device
+   • Super mode for optimized complete capture
 
-📱 DISPOSITIVOS DISPONIBLES:
+📱 AVAILABLE DEVICES:
 
-   🔥 NOMBRES CORTOS (recomendados):
-   mobile      │ iPhone 15       │ 393 × 852   │ Móvil predeterminado
-   tablet      │ iPad            │ 768 × 1024  │ Tablet predeterminado
-   laptop      │ Portátil 13"    │ 1280 × 800  │ Laptop predeterminado
-   desktop     │ Monitor Full HD │ 1920 × 1080 │ Desktop predeterminado
+   🔥 SHORT NAMES (recommended):
+   mobile      │ iPhone 15       │ 393 × 852   │ Default mobile
+   tablet      │ iPad            │ 768 × 1024  │ Default tablet
+   laptop      │ Laptop 13"      │ 1280 × 800  │ Default laptop
+   desktop     │ Full HD Monitor │ 1920 × 1080 │ Default desktop
 
-   📱 MÓVILES ESPECÍFICOS:
-   iphone-se        │ iPhone SE (2022)      │ 375 × 667   │ Móvil compacto
-   iphone-15-pro    │ iPhone 15 Pro         │ 393 × 852   │ Móvil premium
-   iphone-17        │ iPhone 17 (2025)      │ 402 × 874   │ Móvil futuro
-   galaxy-s23       │ Samsung Galaxy S23    │ 360 × 780   │ Android estándar
-   galaxy-s23-ultra │ Samsung Galaxy S23 U. │ 412 × 915   │ Android premium
-   pixel-7          │ Google Pixel 7        │ 412 × 892   │ Android puro
+   📱 SPECIFIC MOBILES:
+   iphone-se        │ iPhone SE (2022)      │ 375 × 667   │ Compact mobile
+   iphone-15-pro    │ iPhone 15 Pro         │ 393 × 852   │ Premium mobile
+   iphone-17        │ iPhone 17 (2025)      │ 402 × 874   │ Future mobile
+   galaxy-s23       │ Samsung Galaxy S23    │ 360 × 780   │ Standard Android
+   galaxy-s23-ultra │ Samsung Galaxy S23 U. │ 412 × 915   │ Premium Android
+   pixel-7          │ Google Pixel 7        │ 412 × 892   │ Pure Android
 
-   📱 TABLETS ESPECÍFICOS:
-   ipad-pro         │ iPad Pro (12.9")      │ 1024 × 1366 │ Tablet profesional
+   📱 SPECIFIC TABLETS:
+   ipad-pro         │ iPad Pro (12.9")      │ 1024 × 1366 │ Professional tablet
    galaxy-tab-s9    │ Samsung Galaxy Tab S9 │ 800 × 1280  │ Android tablet
 
-   💻 PORTÁTILES ESPECÍFICOS:
-   laptop-15        │ MacBook Pro 15"       │ 1440 × 900  │ Portátil estándar
-   laptop-16        │ MacBook Pro 16"       │ 1728 × 1117 │ Portátil premium
+   💻 SPECIFIC LAPTOPS:
+   laptop-15        │ MacBook Pro 15"       │ 1440 × 900  │ Standard laptop
+   laptop-16        │ MacBook Pro 16"       │ 1728 × 1117 │ Premium laptop
 
-   🖥️ DESKTOP ESPECÍFICOS:
-   desktop-2k       │ Monitor 2K/QHD        │ 2560 × 1440 │ Desktop premium
-   desktop-4k       │ Monitor 4K/UHD        │ 3840 × 2160 │ Desktop profesional
+   🖥️ SPECIFIC DESKTOPS:
+   desktop-2k       │ 2K/QHD Monitor        │ 2560 × 1440 │ Premium desktop
+   desktop-4k       │ 4K/UHD Monitor        │ 3840 × 2160 │ Professional desktop
 
-🚀 MODOS DE USO:
+🚀 USAGE MODES:
 
-   Básico (un dispositivo):
+   Basic (one device):
    $ wshot https://example.com --device desktop
 
-   Completo (todos los dispositivos):  
+   Complete (all devices):  
    $ wshot https://example.com --all-devices
 
-   Super optimizado (recomendado para sitios complejos):
+   Super optimized (recommended for complex sites):
    $ wshot https://example.com --super
 
-⚙️  OPCIONES AVANZADAS:
-   --wait-time SEGUNDOS    │ Tiempo de espera para animaciones (default: 3s)
-   --smooth-scroll         │ Scroll suave antes de captura completa
-   --auto-dismiss          │ Cerrar automáticamente banners de cookies y pop-ups 🤖
-   --open-graph, --og      │ Extraer metadatos OpenGraph (og:*, Twitter Card) 📊
-   --cliente NOMBRE        │ Nombre personalizado para organizar archivos
-   --output-dir PATH       │ Directorio personalizado de salida
-   --open                  │ Abrir explorador de archivos al finalizar
+⚙️  ADVANCED OPTIONS:
+   --wait-time SECONDS     │ Wait time for animations (default: 3s)
+   --smooth-scroll         │ Smooth scroll before full page capture
+   --auto-dismiss          │ Automatically close cookie banners and pop-ups 🤖
+   --open-graph, --og      │ Extract OpenGraph metadata (og:*, Twitter Card) 📊
+   --client NAME           │ Custom name to organize files
+   --output-dir PATH       │ Custom output directory
+   --open                  │ Open file explorer when finished
 
-📂 ESTRUCTURA DE ARCHIVOS:
-   Las capturas se guardan por defecto en:
-   ~/Pictures/WSHOT/ (carpeta en Pictures del usuario)
-   └── [cliente]/
+📂 FILE STRUCTURE:
+   Screenshots are saved by default in:
+   ~/Pictures/WSHOT/ (folder in user Pictures)
+   └── [client]/
        ├── mobile-se/
        ├── mobile-17/ 
        ├── tablet/
        └── desktop/
-           ├── pagina-viewport-20241004_143025.png
-           └── pagina-completa-20241004_143025.png
+           ├── page-viewport-20241004_143025.png
+           └── page-fullpage-20241004_143025.png
    
-   Usa --output-dir para guardar en otra ubicación como:
-   ~/Pictures/Wshot o ~/Downloads/Wshot
+   Use --output-dir to save in another location like:
+   ~/Pictures/Wshot or ~/Downloads/Wshot
 
-💡 CONSEJOS:
-   • Usa --super para sitios con muchas animaciones
-   • Usa --wait-time mayor para sitios lentos
-   • El scroll suave es ideal para lazy loading y parallax
-   • Usa --auto-dismiss para sitios con banners de cookies molestos
-   • Combina --auto-dismiss con --super para capturas perfectas sin pop-ups
-   • Usa --og o --open-graph para extraer metadatos SEO y redes sociales
-   • El modo --all y --super incluyen automáticamente extracción OpenGraph
-   • Las URLs deben incluir http:// o https://
+💡 TIPS:
+   • Use --super for sites with many animations
+   • Use higher --wait-time for slow sites
+   • Smooth scroll is ideal for lazy loading and parallax
+   • Use --auto-dismiss for sites with annoying cookie banners
+   • Combine --auto-dismiss with --super for perfect captures without pop-ups
+   • Use --og or --open-graph to extract SEO and social media metadata
+   • --all and --super modes automatically include OpenGraph extraction
+   • URLs must include http:// or https://
 
 """
-    print(ayuda)
+    print(extended_help_text)
 
-# Configuración de dispositivos/tamaños
-TAMAÑOS = {
-    # 📱 Móviles - nombres cortos predeterminados
-    "mobile": {"width": 393, "height": 852, "nombre": "iPhone 15 (predeterminado móvil)"},
+# Device/size configuration
+DEVICE_SIZES = {
+    # 📱 Mobile devices - default short names
+    "mobile": {"width": 393, "height": 852, "nombre": "iPhone 15 (default mobile)"},
     "iphone-se": {"width": 375, "height": 667, "nombre": "iPhone SE (2022)"},
     "iphone-15-pro": {"width": 393, "height": 852, "nombre": "iPhone 15 Pro"},
     "iphone-17": {"width": 402, "height": 874, "nombre": "iPhone 17 (2025)"},
@@ -136,145 +136,145 @@ TAMAÑOS = {
     "galaxy-s23-ultra": {"width": 412, "height": 915, "nombre": "Samsung Galaxy S23 Ultra"},
     "pixel-7": {"width": 412, "height": 892, "nombre": "Google Pixel 7"},
     
-    # 📱 Tablets - nombres cortos predeterminados
-    "tablet": {"width": 768, "height": 1024, "nombre": "iPad (predeterminado tablet)"},
+    # 📱 Tablets - default short names
+    "tablet": {"width": 768, "height": 1024, "nombre": "iPad (default tablet)"},
     "ipad-pro": {"width": 1024, "height": 1366, "nombre": "iPad Pro (12.9\")"},
     "galaxy-tab-s9": {"width": 800, "height": 1280, "nombre": "Samsung Galaxy Tab S9"},
     
-    # 💻 Portátiles - nombres cortos predeterminados
-    "laptop": {"width": 1280, "height": 800, "nombre": "Portátil 13\" (predeterminado laptop)"},
+    # 💻 Laptops - default short names
+    "laptop": {"width": 1280, "height": 800, "nombre": "Laptop 13\" (default laptop)"},
     "laptop-15": {"width": 1440, "height": 900, "nombre": "MacBook Pro 15\" / ThinkPad X1"},
     "laptop-16": {"width": 1728, "height": 1117, "nombre": "MacBook Pro 16\""},
     
-    # 🖥️ Desktop - nombres cortos predeterminados
-    "desktop": {"width": 1920, "height": 1080, "nombre": "Monitor Full HD (predeterminado)"},
+    # 🖥️ Desktop - default short names
+    "desktop": {"width": 1920, "height": 1080, "nombre": "Full HD Monitor (default)"},
     "desktop-2k": {"width": 2560, "height": 1440, "nombre": "Monitor 2K/QHD"},
     "desktop-4k": {"width": 3840, "height": 2160, "nombre": "Monitor 4K/UHD"},
     
-    # 🏷️ Alias para nombres largos (compatibilidad)
-    "iphone-15": {"width": 393, "height": 852, "nombre": "iPhone 15 (alias para mobile)"},
-    "ipad": {"width": 768, "height": 1024, "nombre": "iPad (alias para tablet)"},
-    "laptop-13": {"width": 1280, "height": 800, "nombre": "Portátil 13\" (alias para laptop)"},
-    "desktop-fhd": {"width": 1920, "height": 1080, "nombre": "Monitor Full HD (alias para desktop)"},
+    # 🏷️ Aliases for long names (compatibility)
+    "iphone-15": {"width": 393, "height": 852, "nombre": "iPhone 15 (alias for mobile)"},
+    "ipad": {"width": 768, "height": 1024, "nombre": "iPad (alias for tablet)"},
+    "laptop-13": {"width": 1280, "height": 800, "nombre": "Laptop 13\" (alias for laptop)"},
+    "desktop-fhd": {"width": 1920, "height": 1080, "nombre": "Monitor Full HD (alias for desktop)"},
     
-    # 🏷️ Alias legacy (compatibilidad total)
-    "mobile-se": {"width": 375, "height": 667, "nombre": "iPhone SE (alias para iphone-se)"},
+    # 🏷️ Legacy aliases (full compatibility)
+    "mobile-se": {"width": 375, "height": 667, "nombre": "iPhone SE (alias for iphone-se)"},
     "mobile-17": {"width": 393, "height": 852, "nombre": "iPhone 15 (legacy alias)"}
 }
 
 def validar_url(url):
-    """Valida que la URL responda antes de proceder con las capturas"""
-    # Importar requests solo cuando se necesite
+    """Validates that the URL responds before proceeding with captures"""
+    # Import requests only when needed
     try:
         import requests
         from requests.exceptions import RequestException, Timeout, ConnectionError
     except ImportError:
-        print("❌ Error: La librería 'requests' no está instalada")
-        print("💡 Instala con: pip install requests")
+        print("❌ Error: The 'requests' library is not installed")
+        print("💡 Install with: pip install requests")
         return False
     
-    print(f"🔍 Validando URL: {url}")
+    print(f"🔍 Validating URL: {url}")
     
     try:
-        # Intentar una petición HEAD primero (más rápida)
+        # Try a HEAD request first (faster)
         response = requests.head(url, timeout=10, allow_redirects=True)
         
-        # Si HEAD no es soportado, intentar GET
+        # If HEAD is not supported, try GET
         if response.status_code == 405:  # Method Not Allowed
             response = requests.get(url, timeout=10, allow_redirects=True)
         
         if response.status_code == 200:
-            print(f"✅ URL válida (Status: {response.status_code})")
+            print(f"✅ Valid URL (Status: {response.status_code})")
             return True
         else:
-            print(f"⚠️ URL responde pero con status: {response.status_code}")
-            # Permitir algunos códigos que pueden funcionar con Playwright
+            print(f"⚠️ URL responds but with status: {response.status_code}")
+            # Allow some codes that might work with Playwright
             if response.status_code in [301, 302, 303, 307, 308]:
-                print(f"📝 Redireccionamiento detectado, continuando...")
+                print(f"📝 Redirection detected, continuing...")
                 return True
             return False
             
     except (ConnectionError, Timeout) as e:
-        print(f"❌ Error de conexión: {e}")
+        print(f"❌ Connection error: {e}")
         return False
     except RequestException as e:
-        print(f"❌ Error en la petición: {e}")
+        print(f"❌ Request error: {e}")
         return False
     except Exception as e:
-        print(f"❌ Error inesperado validando URL: {e}")
+        print(f"❌ Unexpected error validating URL: {e}")
         return False
 
 def extraer_nombre_cliente(url):
-    """Extrae el nombre del cliente desde la URL del dominio completo"""
+    """Extracts the client name from the complete domain URL"""
     try:
         parsed = urlparse(url)
         domain = parsed.netloc.lower()
-        # Remover www. si existe
+        # Remove www. if it exists
         if domain.startswith('www.'):
             domain = domain[4:]
-        # Usar el dominio completo (ej: example.com en lugar de solo example)
-        nombre = domain
-        # Limpiar caracteres especiales pero mantener puntos
-        nombre = re.sub(r'[^a-zA-Z0-9\.]', '', nombre)
-        return nombre
+        # Use the complete domain (ex: example.com instead of just example)
+        client_domain = domain
+        # Clean special characters but keep dots
+        client_domain = re.sub(r'[^a-zA-Z0-9\.]', '', client_domain)
+        return client_domain
     except:
-        return "sitio_web"
+        return "website"
 
-def crear_nombre_archivo(url, device, timestamp, es_completa=False):
-    """Crea nombre descriptivo para el archivo incluyendo dominio y ruta"""
+def generate_capture_filename(url, device, timestamp, es_completa=False):
+    """Creates descriptive filename including domain and path"""
     try:
         parsed = urlparse(url)
         
-        # Extraer dominio (sin www.)
+        # Extract domain (without www.)
         domain = parsed.netloc.lower()
         if domain.startswith('www.'):
             domain = domain[4:]
         
-        # Extraer path y limpiar
+        # Extract path and clean
         path = parsed.path.strip('/')
         if not path:
-            descripcion = "pagina-principal"
+            path_description = "main-page"
         else:
-            descripcion = path.replace('/', '-').replace('#', '-seccion-')
+            path_description = path.replace('/', '-').replace('#', '-section-')
         
-        # Limpiar caracteres especiales del path
-        descripcion = re.sub(r'[^a-zA-Z0-9\-]', '', descripcion)
-        if not descripcion:
-            descripcion = "pagina-principal"
+        # Clean special characters from path
+        path_description = re.sub(r'[^a-zA-Z0-9\-]', '', path_description)
+        if not path_description:
+            path_description = "main-page"
         
-        # Limpiar caracteres especiales del dominio pero mantener puntos
+        # Clean special characters from domain but keep dots
         domain_clean = re.sub(r'[^a-zA-Z0-9\.]', '', domain)
         
-        # Crear nombre con formato: dominio.com_ruta-device-timestamp
-        nombre_base = f"{domain_clean}_{descripcion}"
+        # Create name with format: domain.com_path-device-timestamp
+        nombre_base = f"{domain_clean}_{path_description}"
             
-        # Añadir sufijo si es captura completa
-        sufijo = "-completa" if es_completa else ""
+        # Add suffix if it's a full capture
+        suffix = "-fullpage" if es_completa else ""
         
-        return f"{nombre_base}-{device}{sufijo}-{timestamp}.png"
+        return f"{nombre_base}-{device}{suffix}-{timestamp}.png"
     except:
-        sufijo = "-completa" if es_completa else ""
-        return f"captura-{device}{sufijo}-{timestamp}.png"
+        suffix = "-fullpage" if es_completa else ""
+        return f"capture-{device}{suffix}-{timestamp}.png"
 
 def wait_for_animations(page, wait_time):
-    """Espera el tiempo especificado para que carguen las animaciones"""
+    """Waits the specified time for animations to load"""
     if wait_time > 0:
-        print(f"⏳ Esperando {wait_time} segundos para que carguen las animaciones...")
+        print(f"⏳ Waiting {wait_time} seconds for animations to load...")
         time.sleep(wait_time)
 
 def auto_dismiss_popups(page):
     """
-    Detecta y cierra automáticamente banners de cookies, avisos de privacidad 
-    y otros pop-ups que bloqueen la pantalla.
+    Automatically detects and closes cookie banners, privacy notices 
+    and other pop-ups that block the screen.
     
-    Busca botones comunes de aceptar/cerrar en múltiples idiomas y frameworks populares.
+    Searches for common accept/close buttons in multiple languages and popular frameworks.
     """
-    print("🔍 Detectando y cerrando pop-ups automáticamente...")
+    print("🔍 Detecting and closing pop-ups automatically...")
     
-    # Lista completa de selectores CSS para botones de aceptar/cerrar cookies
-    # Incluye selectores comunes de frameworks, textos en múltiples idiomas, y clases típicas
-    selectores = [
-        # Selectores por texto en español
+    # Complete list of CSS selectors for accept/close cookie buttons
+    # Includes common framework selectors, multilingual texts, and typical classes
+    close_button_selectors = [
+        # Selectors by text in Spanish
         'button:has-text("Aceptar")',
         'button:has-text("Aceptar todo")',
         'button:has-text("Aceptar todas")',
@@ -287,7 +287,7 @@ def auto_dismiss_popups(page):
         'a:has-text("Aceptar todo")',
         'a:has-text("Cerrar")',
         
-        # Selectores por texto en inglés
+        # Selectors by text in English
         'button:has-text("Accept")',
         'button:has-text("Accept all")',
         'button:has-text("Accept All")',
@@ -306,14 +306,14 @@ def auto_dismiss_popups(page):
         'a:has-text("Accept all")',
         'a:has-text("Close")',
         
-        # Selectores por texto en francés
+        # Selectors by text in French
         'button:has-text("Accepter")',
         'button:has-text("Tout accepter")',
         'button:has-text("J\'accepte")',
         'button:has-text("Fermer")',
         'button:has-text("D\'accord")',
         
-        # Selectores por texto en alemán
+        # Selectors by text in German
         'button:has-text("Akzeptieren")',
         'button:has-text("Alle akzeptieren")',
         'button:has-text("Ich akzeptiere")',
@@ -327,14 +327,14 @@ def auto_dismiss_popups(page):
         'button:has-text("Chiudi")',
         'button:has-text("Ho capito")',
         
-        # Selectores por texto en portugués
+        # Selectors by text in Portuguese
         'button:has-text("Aceitar")',
         'button:has-text("Aceitar tudo")',
         'button:has-text("Eu aceito")',
         'button:has-text("Fechar")',
         'button:has-text("Entendi")',
         
-        # Selectores por clases comunes (insensitive a mayúsculas)
+        # Selectors by common classes (case insensitive)
         '[class*="cookie" i][class*="accept" i]',
         '[class*="cookie" i][class*="consent" i]',
         '[class*="cookie" i][class*="agree" i]',
@@ -348,7 +348,7 @@ def auto_dismiss_popups(page):
         '[class*="popup" i][class*="accept" i]',
         '[class*="notice" i][class*="accept" i]',
         
-        # Selectores por clases específicas comunes
+        # Selectors by specific common classes
         '.cookie-consent-accept',
         '.cookie-accept',
         '.cookie-accept-all',
@@ -416,100 +416,100 @@ def auto_dismiss_popups(page):
         '[class*="close-button" i]',
         '[class*="dismiss" i]',
         
-        # Selectores genéricos para modales/overlays
+        # Generic selectors for modals/overlays
         '.modal-footer button:first-child',
         '.modal-actions button:first-child',
         'div[role="dialog"] button:first-child',
         'div[role="alertdialog"] button:first-child',
     ]
     
-    cerrados = 0
-    intentos = 0
-    max_intentos = len(selectores)
+    closed_popups_count = 0
+    attempts = 0
+    max_attempts = len(close_button_selectors)
     
-    # Intentar cerrar pop-ups con cada selector
-    for selector in selectores:
-        if intentos >= max_intentos:
+    # Try to close pop-ups with each selector
+    for selector in close_button_selectors:
+        if attempts >= max_attempts:
             break
             
         try:
-            # Buscar elementos que coincidan con el selector (timeout muy corto)
-            elementos = page.locator(selector)
-            count = elementos.count()
+            # Search for elements matching the selector (very short timeout)
+            popup_elements = page.locator(selector)
+            count = popup_elements.count()
             
             if count > 0:
-                # Intentar hacer clic en el primer elemento visible
+                # Try to click the first visible element
                 for i in range(count):
                     try:
-                        elemento = elementos.nth(i)
-                        # Verificar si es visible antes de hacer clic
-                        if elemento.is_visible(timeout=500):
-                            elemento.click(timeout=1000)
-                            cerrados += 1
+                        popup_element = popup_elements.nth(i)
+                        # Check if visible before clicking
+                        if popup_element.is_visible(timeout=500):
+                            popup_element.click(timeout=1000)
+                            closed_popups_count += 1
                             print(f"✅ Pop-up cerrado: {selector}")
-                            # Esperar un momento para que se cierre la animación
+                            # Wait a moment for the animation to close
                             time.sleep(0.5)
                             break
                     except:
-                        # Si falla con este elemento, probar con el siguiente
+                        # If it fails with this element, try the next one
                         continue
                         
         except Exception as e:
-            # Ignorar errores y continuar con el siguiente selector
+            # Ignore errors and continue with the next selector
             pass
         
-        intentos += 1
+        attempts += 1
     
-    if cerrados > 0:
-        print(f"✅ Se cerraron {cerrados} pop-up(s) automáticamente")
-        # Esperar un momento adicional para que termine cualquier animación de cierre
+    if closed_popups_count > 0:
+        print(f"✅ {closed_popups_count} pop-up(s) closed automatically")
+        # Wait an additional moment for any closing animation to finish
         time.sleep(1.0)
     else:
-        print("ℹ️  No se detectaron pop-ups que cerrar (o ya estaban cerrados)")
+        print("ℹ️  No pop-ups detected to close (or already closed)")
     
-    return cerrados
+    return closed_popups_count
 
-def extraer_opengraph(page, url, base_path, timestamp):
+def extract_opengraph_metadata(page, url, base_path, timestamp):
     """
-    Extrae todos los metadatos OpenGraph de la página y los guarda en JSON.
-    También descarga las imágenes og:image si están disponibles.
+    Extracts all OpenGraph metadata from the page and saves it to JSON.
+    Also downloads og:image images if available.
     
     Args:
-        page: Objeto page de Playwright
-        url: URL de la página
-        base_path: Ruta base donde guardar los archivos
-        timestamp: Timestamp para nombrar archivos
+        page: Playwright page object
+        url: Page URL
+        base_path: Base path where to save files
+        timestamp: Timestamp for naming files
     
     Returns:
-        dict: Diccionario con los metadatos extraídos
+        dict: Dictionary with extracted metadata
     """
     import json
     
-    print("🔍 Extrayendo metadatos OpenGraph...")
+    print("🔍 Extracting OpenGraph metadata...")
     
-    # Extraer todos los metadatos og:* de la página
+    # Extract all og:* metadata from the page
     og_data = page.evaluate("""
         () => {
             const metaTags = document.querySelectorAll('meta[property^="og:"], meta[name^="og:"]');
             const data = {};
             
             metaTags.forEach(tag => {
-                const property = tag.getAttribute('property') || tag.getAttribute('name');
+                const property = tag.getAttribute('property') || tag.getAttribute('name'); 
                 const content = tag.getAttribute('content');
                 if (property && content) {
-                    // Remover el prefijo 'og:' para simplificar
+                    // Remove 'og:' prefix to simplify
                     const key = property.replace('og:', '');
                     data[key] = content;
                 }
             });
             
-            // También extraer metadatos estándar relevantes
+            // Also extract relevant standard metadata 
             const title = document.querySelector('title');
             const description = document.querySelector('meta[name="description"]');
             const keywords = document.querySelector('meta[name="keywords"]');
             const canonical = document.querySelector('link[rel="canonical"]');
             
-            // Añadir metadatos adicionales si no están en og:
+            // Add additional metadata if not present in og:
             if (title && !data.title) {
                 data.title = title.textContent;
             }
@@ -523,7 +523,7 @@ def extraer_opengraph(page, url, base_path, timestamp):
                 data.canonical_url = canonical.getAttribute('href');
             }
             
-            // Twitter Card metadata (complementario)
+            // Twitter Card metadata (complementary)
             const twitterCard = document.querySelector('meta[name="twitter:card"]');
             const twitterSite = document.querySelector('meta[name="twitter:site"]');
             const twitterCreator = document.querySelector('meta[name="twitter:creator"]');
@@ -536,40 +536,40 @@ def extraer_opengraph(page, url, base_path, timestamp):
         }
     """)
     
-    # Añadir información adicional
+    # Add additional information
     og_data['extracted_at'] = datetime.now().isoformat()
     og_data['source_url'] = url
     og_data['timestamp'] = timestamp
     
-    # Crear carpeta opengraph
+    # Create opengraph folder
     og_path = base_path / 'opengraph'
     og_path.mkdir(parents=True, exist_ok=True)
     
-    # Guardar JSON con los metadatos
+    # Save JSON with metadata
     json_filename = f"opengraph-{timestamp}.json"
     json_path = og_path / json_filename
     
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(og_data, f, indent=2, ensure_ascii=False)
     
-    print(f"✅ Metadatos OpenGraph guardados: {json_path}")
+    print(f"✅ OpenGraph metadata saved: {json_path}")
     
-    # Descargar imagen og:image si existe
+    # Download og:image if it exists
     if 'image' in og_data and og_data['image']:
         try:
             import requests
             from urllib.parse import urljoin
             
             image_url = og_data['image']
-            # Convertir URL relativa a absoluta si es necesario
+            # Convert relative URL to absolute if necessary
             if not image_url.startswith('http'):
                 image_url = urljoin(url, image_url)
             
-            print(f"📥 Descargando imagen OpenGraph: {image_url}")
+            print(f"📥 Downloading OpenGraph image: {image_url}")
             
             response = requests.get(image_url, timeout=10, stream=True)
             if response.status_code == 200:
-                # Obtener extensión de la imagen
+                # Get image extension
                 ext = image_url.split('.')[-1].split('?')[0]
                 if ext not in ['jpg', 'jpeg', 'png', 'gif', 'webp']:
                     ext = 'jpg'  # Default
@@ -581,67 +581,67 @@ def extraer_opengraph(page, url, base_path, timestamp):
                     for chunk in response.iter_content(chunk_size=8192):
                         f.write(chunk)
                 
-                print(f"✅ Imagen OpenGraph descargada: {image_path}")
+                print(f"✅ OpenGraph image downloaded: {image_path}")
                 og_data['image_local_path'] = str(image_path)
             else:
-                print(f"⚠️  No se pudo descargar la imagen (Status: {response.status_code})")
+                print(f"⚠️  Could not download image (Status: {response.status_code})")
         except Exception as e:
-            print(f"⚠️  Error descargando imagen OpenGraph: {e}")
+            print(f"⚠️  Error downloading OpenGraph image: {e}")
     
-    # Mostrar resumen de los metadatos encontrados
-    print(f"\n📊 Metadatos OpenGraph encontrados:")
+    # Show summary of found metadata
+    print(f"\n📊 OpenGraph metadata found:")
     if 'title' in og_data:
-        print(f"   📌 Título: {og_data['title'][:80]}{'...' if len(og_data['title']) > 80 else ''}")
+        print(f"   📌 Title: {og_data['title'][:80]}{'...' if len(og_data['title']) > 80 else ''}")
     if 'description' in og_data:
-        print(f"   📝 Descripción: {og_data['description'][:80]}{'...' if len(og_data['description']) > 80 else ''}")
+        print(f"   📝 Description: {og_data['description'][:80]}{'...' if len(og_data['description']) > 80 else ''}")
     if 'type' in og_data:
-        print(f"   🏷️  Tipo: {og_data['type']}")
+        print(f"   🏷️  Type: {og_data['type']}")
     if 'image' in og_data:
-        print(f"   🖼️  Imagen: ✅")
+        print(f"   🖼️  Image: ✅")
     if 'site_name' in og_data:
-        print(f"   🌐 Sitio: {og_data['site_name']}")
+        print(f"   🌐 Site: {og_data['site_name']}")
     
-    print(f"   ℹ️  Total: {len(og_data)} campos extraídos\n")
+    print(f"   ℹ️  Total: {len(og_data)} fields extracted\n")
     
     return og_data
 
 def smooth_scroll_page(page):
-    """Realiza scroll suave hacia abajo para disparar animaciones basadas en scroll"""
-    print("📜 Realizando scroll suave para disparar animaciones...")
+    """Performs smooth scroll down to trigger scroll-based animations"""
+    print("📜 Performing smooth scroll to trigger animations...")
     
-    # Obtener la altura total de la página
+    # Get total page height
     total_height = page.evaluate("document.body.scrollHeight")
     viewport_height = page.evaluate("window.innerHeight")
     
-    print(f"📏 Altura total de la página: {total_height}px, Viewport: {viewport_height}px")
+    print(f"📏 Total page height: {total_height}px, Viewport: {viewport_height}px")
     
-    # Scroll optimizado - pasos de 80px (balance entre velocidad y efectividad)
+    # Optimized scroll - 80px steps (balance between speed and effectiveness)
     step_size = 80
     steps = int(total_height / step_size)
     
-    print(f"🔄 Realizando scroll suave en {steps} pasos de {step_size}px...")
+    print(f"🔄 Performing smooth scroll in {steps} steps of {step_size}px...")
     
     for i in range(steps):
-        # Usar scrollBy para scroll incremental natural
+        # Use scrollBy for natural incremental scroll
         page.evaluate(f"""
             window.scrollBy(0, {step_size});
             window.dispatchEvent(new Event('scroll'));
         """)
         
-        # Pausa corta optimizada (0.08s - rápido pero efectivo)
+        # Optimized short pause (0.08s - fast but effective)
         time.sleep(0.08)
         
-        # Mostrar progreso cada 20% del recorrido
+        # Show progress every 20% of the journey
         progress = (i / steps) * 100
         if progress % 20 < (100 / steps):
-            print(f"📍 Progreso: {int(progress)}% ({i * step_size}px de {total_height}px)")
+            print(f"📍 Progress: {int(progress)}% ({i * step_size}px of {total_height}px)")
     
-    # Asegurar que llegamos al final
+    # Ensure we reach the end
     page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-    print("📍 Llegado al final de la página")
+    print("📍 Reached end of page")
     
-    # Forzar estado final de animaciones comunes
-    print("✨ Forzando estado final de animaciones...")
+    # Force final state of common animations
+    print("✨ Forcing final state of animations...")
     page.evaluate("""
         // AOS (Animate On Scroll)
         document.querySelectorAll('[data-aos]').forEach(el => {
@@ -655,7 +655,7 @@ def smooth_scroll_page(page):
             ScrollTrigger.getAll().forEach(st => st.refresh());
         }
         
-        // Intersection Observer - forzar visibilidad
+        // Intersection Observer - force visibility
         document.querySelectorAll('[class*="fade"], [class*="slide"], [class*="animate"]').forEach(el => {
             if (el.style.opacity === '0' || el.style.opacity === '') {
                 el.style.opacity = '1';
@@ -665,141 +665,141 @@ def smooth_scroll_page(page):
             }
         });
         
-        // Disparar scroll event final
+        // Trigger final scroll event
         window.dispatchEvent(new Event('scroll'));
         window.dispatchEvent(new Event('resize'));
     """)
     
-    # Pausa final para que se completen las animaciones
+    # Final pause for animations to complete
     time.sleep(1.0)
-    print("✅ Scroll completado - página lista para captura desde el final")
+    print("✅ Scroll completed - page ready for capture from the bottom")
 
-def capturar_url(url, device_key, device_config, base_path, timestamp, wait_time=3.0, smooth_scroll=False, auto_dismiss=False):
-    """Captura screenshots de una URL en un dispositivo específico"""
-    # Importar playwright solo cuando se necesite
+def capture_screenshot(url, device_key, device_config, base_path, timestamp, wait_time=3.0, smooth_scroll=False, auto_dismiss=False):
+    """Captures screenshots of a URL for a specific device"""
+    # Only import playwright when needed
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("❌ Error: La librería 'playwright' no está instalada")
-        print("💡 Instala con: pip install playwright")
-        print("💡 Luego ejecuta: playwright install")
+        print("❌ Error: The 'playwright' library is not installed")
+        print("💡 Install with: pip install playwright")
+        print("💡 Then run: playwright install")
         return
     
-    print(f"📱 Configurando: {device_config['nombre']} ({device_config['width']}x{device_config['height']})")
+    print(f"📱 Configuring: {device_config['nombre']} ({device_config['width']}x{device_config['height']})")
     
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport=device_config)
         
         try:
-            print(f"📸 Navegando a: {url}")
+            print(f"📸 Navigating to: {url}")
             page.goto(url, wait_until="networkidle")
             
-            # Esperar tiempo especificado para animaciones
+            # Wait specified time for animations
             wait_for_animations(page, wait_time)
             
-            # Cerrar pop-ups automáticamente si está activado
+            # Close pop-ups automatically if activated
             if auto_dismiss:
                 auto_dismiss_popups(page)
             
             # Captura normal (viewport)
-            archivo_normal = crear_nombre_archivo(url, device_key, timestamp, False)
-            ruta_normal = base_path / archivo_normal
-            page.screenshot(path=str(ruta_normal))
-            print(f"✅ Captura viewport: {ruta_normal}")
+            normal_capture_filename = generate_capture_filename(url, device_key, timestamp, False)
+            normal_capture_path = base_path / normal_capture_filename
+            page.screenshot(path=str(normal_capture_path))
+            print(f"✅ Viewport capture: {normal_capture_path}")
             
-            # Captura completa (página scrolleable)
+            # Full capture (scrollable page)
             if smooth_scroll:
                 smooth_scroll_page(page)
-                # Esperar tiempo mínimo después del scroll suave
-                wait_for_animations(page, 1.0)  # Tiempo mínimo optimizado
+                # Wait minimum time after smooth scroll
+                wait_for_animations(page, 1.0)  # Optimized minimum time
             
-            archivo_completa = crear_nombre_archivo(url, device_key, timestamp, True)
-            ruta_completa = base_path / archivo_completa
-            page.screenshot(path=str(ruta_completa), full_page=True)
-            print(f"✅ Captura completa: {ruta_completa}")
+            full_capture_filename = generate_capture_filename(url, device_key, timestamp, True)
+            full_capture_path = base_path / full_capture_filename
+            page.screenshot(path=str(full_capture_path), full_page=True)
+            print(f"✅ Full page capture: {full_capture_path}")
             
         except Exception as e:
-            print(f"❌ Error capturando {url} en {device_key}: {e}")
+            print(f"❌ Error capturing {url} on {device_key}: {e}")
         finally:
             browser.close()
 
-def crear_estructura_carpetas(cliente, devices_a_usar, output_dir=None):
-    """Crea la estructura de carpetas solo para los dispositivos que se van a usar"""
-    # Determinar el directorio base de salida
+def create_device_folder_structure(client_name, devices_to_use, output_dir=None):
+    """Creates folder structure only for devices that will be used"""
+    # Determine the base output directory
     if output_dir:
-        # Si se especifica un directorio personalizado
+        # If a custom directory is specified
         base_output = Path(output_dir).expanduser()
     else:
-        # Por defecto: carpeta 'WSHOT' en la carpeta Pictures del usuario (multiplataforma)
+        # Default: 'WSHOT' folder in user's Pictures folder (cross-platform)
         home_dir = Path.home()
         pictures_dir = home_dir / "Pictures"
         base_output = pictures_dir / "WSHOT"
     
-    # Crear la ruta completa con el nombre del cliente
-    base_path = base_output / cliente
+    # Create the complete path with the client name
+    base_path = base_output / client_name
     
-    for device_key in devices_a_usar:
+    for device_key in devices_to_use:
         device_path = base_path / device_key
         device_path.mkdir(parents=True, exist_ok=True)
-        print(f"📁 Carpeta verificada: {device_path}")
+        print(f"📁 Folder verified: {device_path}")
     
     return base_path
 
-def abrir_explorador_archivos(ruta):
+def open_file_explorer(file_path):
     """
-    Abre el explorador de archivos del sistema en la ruta especificada.
-    Funciona en Windows, macOS y Linux (detecta automáticamente el gestor de archivos).
+    Opens the system file explorer at the specified path.
+    Works on Windows, macOS and Linux (automatically detects file manager).
     """
-    ruta = Path(ruta).resolve()
+    file_path = Path(file_path).resolve()
     
-    if not ruta.exists():
-        print(f"⚠️  La ruta {ruta} no existe, no se puede abrir el explorador")
+    if not file_path.exists():
+        print(f"⚠️  Path {file_path} does not exist, cannot open explorer")
         return False
     
-    sistema = platform.system()
+    operating_system = platform.system()
     
     try:
-        if sistema == "Windows":
-            # Windows: usar explorer
-            subprocess.run(["explorer", str(ruta)], check=False)
-            print(f"📂 Abriendo Explorer en: {ruta}")
+        if operating_system == "Windows":
+            # Windows: use explorer
+            subprocess.run(["explorer", str(file_path)], check=False)
+            print(f"📂 Opening Explorer at: {file_path}")
             
-        elif sistema == "Darwin":  # macOS
-            # macOS: usar open
-            subprocess.run(["open", str(ruta)], check=False)
-            print(f"📂 Abriendo Finder en: {ruta}")
+        elif operating_system == "Darwin":  # macOS
+            # macOS: use open
+            subprocess.run(["open", str(file_path)], check=False)
+            print(f"📂 Opening Finder at: {file_path}")
             
-        elif sistema == "Linux":
-            # Linux: intentar xdg-open (funciona con cualquier gestor de archivos predeterminado)
-            # xdg-open detecta automáticamente el gestor de archivos del entorno de escritorio
+        elif operating_system == "Linux":
+            # Linux: try xdg-open (works with any default file manager)
+            # xdg-open automatically detects the desktop environment file manager
             # (Dolphin en KDE, Nautilus en GNOME, Thunar en XFCE, etc.)
             try:
-                subprocess.run(["xdg-open", str(ruta)], check=False, 
+                subprocess.run(["xdg-open", str(file_path)], check=False, 
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                print(f"📂 Abriendo explorador de archivos en: {ruta}")
+                print(f"📂 Opening file explorer at: {file_path}")
             except FileNotFoundError:
-                # Si xdg-open no está disponible, intentar gestores comunes
-                gestores = ["dolphin", "nautilus", "thunar", "nemo", "caja", "pcmanfm"]
-                for gestor in gestores:
+                # If xdg-open is not available, try common managers
+                managers = ["dolphin", "nautilus", "thunar", "nemo", "caja", "pcmanfm"]
+                for manager in managers:
                     try:
-                        subprocess.run([gestor, str(ruta)], check=False,
+                        subprocess.run([manager, str(file_path)], check=False,
                                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        print(f"📂 Abriendo {gestor} en: {ruta}")
+                        print(f"📂 Opening {manager} at: {file_path}")
                         break
                     except FileNotFoundError:
                         continue
                 else:
-                    print(f"⚠️  No se pudo detectar un explorador de archivos. Ruta: {ruta}")
+                    print(f"⚠️  Could not detect a file explorer. Path: {file_path}")
                     return False
         else:
-            print(f"⚠️  Sistema operativo no soportado: {sistema}")
+            print(f"⚠️  Unsupported operating system: {operating_system}")
             return False
         
         return True
         
     except Exception as e:
-        print(f"⚠️  Error al abrir explorador de archivos: {e}")
+        print(f"⚠️  Error opening file explorer: {e}")
         return False
 
 def main():
@@ -813,120 +813,120 @@ def main():
        \_/\_/ |___/_| |_|\___/ \__|
                                      
 
-🚀 Plataforma de Auditoría Visual Empresarial
+🚀 Enterprise Visual Audit Platform
 
-Esta herramienta permite realizar capturas de pantalla optimizadas de sitios web
-en múltiples dispositivos y tamaños, con soporte para animaciones y efectos de scroll.
+This tool allows you to take optimized screenshots of websites
+across multiple devices and sizes, with support for animations and scroll effects.
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-EJEMPLOS DE USO:
+USAGE EXAMPLES:
   
-  Captura básica en un dispositivo:
+  Basic capture on one device:
     wshot https://example.com --device desktop
     wshot https://site.com --device mobile-17
   
-  Captura en todos los dispositivos:
+  Capture on all devices:
     wshot https://example.com --all-devices
   
-  Captura con tiempo de espera personalizado:
+  Capture with custom wait time:
     wshot https://site.com --device tablet --wait-time 7
   
-  Captura con scroll suave para animaciones:
+  Capture with smooth scroll for animations:
     wshot https://animated-site.com --all-devices --smooth-scroll
   
-  Cerrar automáticamente banners de cookies:
+  Automatically close cookie banners:
     wshot https://google.com --device desktop --auto-dismiss
   
-  Extraer metadatos OpenGraph:
-    wshot https://miempresa.com --device desktop --og
+  Extract OpenGraph metadata:
+    wshot https://mycompany.com --device desktop --og
   
-  Modo super (completo y optimizado):
+  Super mode (complete and optimized):
     wshot https://complex-site.com --super
   
-  Combinando opciones:
+  Combining options:
     wshot https://site.com --device desktop --wait-time 4 --smooth-scroll --auto-dismiss --og
   
-  Guardar en directorio personalizado:
-    wshot https://site.com --super --output-dir ~/Proyectos/Capturas
+  Save to custom directory:
+    wshot https://site.com --super --output-dir ~/Projects/Screenshots
 
-  Abrir explorador de archivos automáticamente:
+  Open file explorer automatically:
     wshot https://site.com --super --open --auto-dismiss
     wshot https://site.com --device desktop --open
 
-DISPOSITIVOS DISPONIBLES:
+AVAILABLE DEVICES:
   mobile-se    iPhone SE (375x667)
   mobile-17    iPhone 17 (393x852)  
   tablet       iPad (768x1024)
   desktop      Desktop (1920x1080)
 
-NOTAS:
-  • Las capturas se guardan en carpetas organizadas por cliente y dispositivo
-  • El nombre del cliente se extrae automáticamente de la URL
-  • Se generan dos tipos de captura: viewport y página completa
-  • El modo --super activa automáticamente: all-devices + smooth-scroll + open-graph + wait-time 2s
-  • El modo --all incluye automáticamente extracción de OpenGraph
-  • Usa --auto-dismiss para cerrar automáticamente banners de cookies y pop-ups (ideal para Google, Facebook, etc.)
-  • Los metadatos OpenGraph se guardan en carpeta opengraph/ con JSON e imagen descargada
+NOTES:
+  • Screenshots are saved in folders organized by client and device
+  • Client name is automatically extracted from URL
+  • Two types of capture are generated: viewport and full page
+  • --super mode automatically activates: all-devices + smooth-scroll + open-graph + wait-time 2s
+  • --all mode automatically includes OpenGraph extraction
+  • Use --auto-dismiss to automatically close cookie banners and pop-ups (ideal for Google, Facebook, etc.)
+  • OpenGraph metadata is saved in opengraph/ folder with JSON and downloaded image
         """
     )
     
     parser.add_argument('url', 
                        nargs='?',  # Hacer que URL sea opcional
-                       help='URL completa del sitio web a capturar (ej: https://example.com)')
+                       help='Complete URL of the website to capture (ex: https://example.com)')
     
     parser.add_argument('-all', '--all-devices', 
                        action='store_true',
-                       help='Capturar en todos los dispositivos disponibles (mobile-se, mobile-17, tablet, desktop)')
+                       help='Capture on all available devices (mobile-se, mobile-17, tablet, desktop)')
     
     parser.add_argument('--device', 
-                       choices=list(TAMAÑOS.keys()),
-                       help='Dispositivo específico para capturar. Opciones: mobile-se, mobile-17, tablet, desktop')
+                       choices=list(DEVICE_SIZES.keys()),
+                       help='Specific device to capture. Options: mobile-se, mobile-17, tablet, desktop')
     
-    parser.add_argument('--cliente',
-                       help='Nombre personalizado del cliente para organizar capturas (se detecta automáticamente desde URL si no se especifica)')
+    parser.add_argument('--client',
+                       help='Custom client name to organize captures (automatically detected from URL if not specified)')
     
     parser.add_argument('--output-dir',
-                       help='Directorio personalizado para guardar las capturas (default: ~/Pictures/WSHOT/ en la carpeta Pictures del usuario)')
+                       help='Custom directory to save captures (default: ~/Pictures/WSHOT/ in user Pictures folder)')
     
     parser.add_argument('--wait-time',
                        type=float,
                        default=3.0,
-                       help='Tiempo de espera en segundos para que carguen animaciones y contenido dinámico (default: 3.0)')
+                       help='Wait time in seconds for animations and dynamic content to load (default: 3.0)')
     
     parser.add_argument('--smooth-scroll',
                        action='store_true',
-                       help='Realizar scroll suave hacia abajo antes de captura completa para disparar animaciones basadas en scroll')
+                       help='Perform smooth scroll down before full page capture to trigger scroll-based animations')
     
     parser.add_argument('--auto-dismiss',
                        action='store_true',
-                       help='🤖 Cerrar automáticamente banners de cookies, avisos de privacidad y otros pop-ups que bloqueen la pantalla. Detecta y cierra botones comunes en múltiples idiomas (Aceptar, Accept, Accepter, etc.)')
+                       help='🤖 Automatically close cookie banners, privacy notices and other pop-ups that block the screen. Detects and closes common buttons in multiple languages (Accept, Aceptar, Accepter, etc.)')
     
     parser.add_argument('--open-graph', '--og',
                        dest='open_graph',
                        action='store_true',
-                       help='📊 Extraer metadatos OpenGraph (og:title, og:description, og:image, etc.) y guardarlos en JSON. También descarga la imagen og:image. Se activa automáticamente con --all y --super')
+                       help='📊 Extract OpenGraph metadata (og:title, og:description, og:image, etc.) and save to JSON. Also downloads og:image. Automatically activated with --all and --super')
     
     parser.add_argument('--super',
                        action='store_true',
-                       help='🚀 Modo super: activa automáticamente --all-devices + --smooth-scroll + --open-graph + wait-time optimizado (2s) para capturas completas y rápidas')
+                       help='🚀 Super mode: automatically activates --all-devices + --smooth-scroll + --open-graph + optimized wait-time (2s) for complete and fast captures')
     
     parser.add_argument('--info',
                        action='store_true',
-                       help='📖 Mostrar guía completa y ejemplos detallados de uso')
+                       help='📖 Show complete guide and detailed usage examples')
     
     parser.add_argument('--open',
                        action='store_true',
-                       help='📂 Abrir el explorador de archivos al finalizar las capturas (detecta automáticamente: Explorer en Windows, Finder en macOS, o tu gestor de archivos en Linux como Dolphin, Nautilus, etc.)')
+                       help='📂 Open file explorer when captures are finished (automatically detects: Explorer on Windows, Finder on macOS, or your file manager on Linux like Dolphin, Nautilus, etc.)')
     
     args = parser.parse_args()
     
-    # Si se solicita información extendida, mostrarla y salir
+    # If extended information is requested, show it and exit
     if args.info:
-        mostrar_ayuda_extendida()
+        display_extended_help()
         sys.exit(0)
     
-    # Si no es --info, entonces URL es requerida
+    # If not --info, then URL is required
     if not args.url:
         print(r"""
                    _           _   
@@ -937,125 +937,125 @@ NOTAS:
        \_/\_/ |___/_| |_|\___/ \__|
                                      
         """)
-        print("❌ Error: URL es requerida")
-        print("💡 Usa --help para ver opciones básicas o --info para guía completa")
+        print("❌ Error: URL is required")
+        print("💡 Use --help for basic options or --info for complete guide")
         parser.print_help()
         sys.exit(1)
     
-    # Si se usa --super, activar automáticamente las opciones optimizadas
+    # If --super is used, automatically activate optimized options
     if args.super:
         args.all_devices = True
         args.smooth_scroll = True
         args.open_graph = True  # Activar OpenGraph automáticamente en modo super
-        # Si no se especificó wait_time personalizado, usar 2 segundos para modo super (optimizado)
-        if args.wait_time == 3.0:  # valor default
+        # If no custom wait_time was specified, use 2 seconds for super mode (optimized)
+        if args.wait_time == 3.0:  # default value
             args.wait_time = 2.0
     
-    # Si se usa --all, activar automáticamente OpenGraph
+    # If --all is used, automatically activate OpenGraph
     if args.all_devices and not args.open_graph:
         args.open_graph = True
     
-    # Validar argumentos
+    # Validate arguments
     if not args.all_devices and not args.device and not args.super:
-        print("❌ Error: Debes especificar -all, --device o --super")
-        print("💡 Usa --help para ver opciones básicas o --info para guía completa")
+        print("❌ Error: You must specify -all, --device or --super")
+        print("💡 Use --help for basic options or --info for complete guide")
         parser.print_help()
         sys.exit(1)
     
-    # VALIDAR URL ANTES DE CREAR CARPETAS
+    # VALIDATE URL BEFORE CREATING FOLDERS
     if not validar_url(args.url):
-        print(f"❌ Error: La URL {args.url} no responde o no es accesible")
-        print("💡 Verifica que la URL sea correcta y esté disponible")
+        print(f"❌ Error: URL {args.url} does not respond or is not accessible")
+        print("💡 Verify that the URL is correct and available")
         sys.exit(1)
     
-    # Detectar cliente automáticamente o usar el proporcionado
-    cliente = args.cliente or extraer_nombre_cliente(args.url)
+    # Auto-detect client or use provided one
+    client_name = args.client or extraer_nombre_cliente(args.url)
     
-    # Generar timestamp
+    # Generate timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    # Determinar dispositivos a usar
+    # Determine devices to use
     if args.all_devices:
-        devices_a_usar = list(TAMAÑOS.keys())
+        selected_devices = list(DEVICE_SIZES.keys())
         if args.super:
-            print(f"🚀 MODO SUPER ACTIVADO 🚀")
-            print(f"📱 Capturando URL: {args.url}")
-            print(f"👤 Cliente: {cliente}")
-            print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
-            print(f"⏳ Tiempo de espera: {args.wait_time}s")
-            print(f"📜 Scroll suave: ✅ Activado")
-            print(f"📊 Extracción OpenGraph: ✅ Activado")
+            print(f"🚀 SUPER MODE ACTIVATED 🚀")
+            print(f"📱 Capturing URL: {args.url}")
+            print(f"👤 Client: {client_name}")
+            print(f"📱 Devices: {', '.join(selected_devices)}")
+            print(f"⏳ Wait time: {args.wait_time}s")
+            print(f"📜 Smooth scroll: ✅ Activated")
+            print(f"📊 OpenGraph extraction: ✅ Activated")
             if args.auto_dismiss:
-                print(f"🤖 Cierre automático de pop-ups: ✅ Activado")
+                print(f"🤖 Auto-dismiss pop-ups: ✅ Activated")
         else:
-            print(f"🚀 Capturando URL: {args.url}")
-            print(f"👤 Cliente: {cliente}")
-            print(f"📱 Dispositivos: {', '.join(devices_a_usar)}")
+            print(f"🚀 Capturing URL: {args.url}")
+            print(f"👤 Client: {client_name}")
+            print(f"📱 Devices: {', '.join(selected_devices)}")
             if args.open_graph:
-                print(f"📊 Extracción OpenGraph: ✅ Activado")
+                print(f"📊 OpenGraph extraction: ✅ Activated")
             if args.auto_dismiss:
-                print(f"🤖 Cierre automático de pop-ups: ✅ Activado")
+                print(f"🤖 Auto-dismiss pop-ups: ✅ Activated")
     else:
-        devices_a_usar = [args.device]
-        print(f"🚀 Capturando URL: {args.url}")
-        print(f"👤 Cliente: {cliente}")
-        print(f"📱 Dispositivo: {args.device}")
+        selected_devices = [args.device]
+        print(f"🚀 Capturing URL: {args.url}")
+        print(f"👤 Client: {client_name}")
+        print(f"📱 Device: {args.device}")
         if args.smooth_scroll:
-            print(f"📜 Scroll suave: ✅ Activado")
+            print(f"📜 Smooth scroll: ✅ Activated")
         if args.wait_time != 3.0:
-            print(f"⏳ Tiempo de espera: {args.wait_time}s")
+            print(f"⏳ Wait time: {args.wait_time}s")
         if args.open_graph:
-            print(f"📊 Extracción OpenGraph: ✅ Activado")
+            print(f"📊 OpenGraph extraction: ✅ Activated")
         if args.auto_dismiss:
-            print(f"🤖 Cierre automático de pop-ups: ✅ Activado")
+            print(f"🤖 Auto-dismiss pop-ups: ✅ Activated")
     
-    # Crear estructura de carpetas SOLO para dispositivos solicitados
-    base_path = crear_estructura_carpetas(cliente, devices_a_usar, args.output_dir)
+    # Create folder structure ONLY for requested devices
+    base_path = create_device_folder_structure(client_name, selected_devices, args.output_dir)
     
-    print(f"📁 Carpeta base: {base_path}")
+    print(f"📁 Base folder: {base_path}")
     print("="*60)
     
-    # Extraer OpenGraph si está activado (antes de las capturas)
+    # Extract OpenGraph if activated (before captures)
     og_data = None
     if args.open_graph:
-        # Importar playwright para extraer OpenGraph
+        # Import playwright for OpenGraph extraction
         try:
             from playwright.sync_api import sync_playwright
             
-            print(f"\n📊 Extrayendo metadatos OpenGraph...")
+            print(f"\n📊 Extracting OpenGraph metadata...")
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
-                # Usar desktop viewport para OpenGraph
-                page = browser.new_page(viewport=TAMAÑOS['desktop'])
+                # Use desktop viewport for OpenGraph
+                page = browser.new_page(viewport=DEVICE_SIZES['desktop'])
                 
                 try:
                     page.goto(args.url, wait_until="networkidle")
-                    # Esperar un poco para que cargue todo
+                    # Wait a bit for everything to load
                     time.sleep(2)
                     
-                    # Cerrar pop-ups si auto-dismiss está activado
+                    # Close pop-ups if auto-dismiss is activated
                     if args.auto_dismiss:
                         auto_dismiss_popups(page)
                     
-                    # Extraer OpenGraph
-                    og_data = extraer_opengraph(page, args.url, base_path, timestamp)
+                    # Extract OpenGraph
+                    og_data = extract_opengraph_metadata(page, args.url, base_path, timestamp)
                     
                 except Exception as e:
-                    print(f"❌ Error extrayendo OpenGraph: {e}")
+                    print(f"❌ Error extracting OpenGraph: {e}")
                 finally:
                     browser.close()
                     
         except ImportError:
-            print("❌ Error: La librería 'playwright' no está instalada")
-            print("💡 Instala con: pip install playwright")
+            print("❌ Error: The 'playwright' library is not installed")
+            print("💡 Install with: pip install playwright")
     
-    # Realizar capturas
-    for i, device_key in enumerate(devices_a_usar, 1):
-        print(f"\n[{i}/{len(devices_a_usar)}] Procesando {device_key}...")
-        device_config = TAMAÑOS[device_key]
+    # Perform captures
+    for i, device_key in enumerate(selected_devices, 1):
+        print(f"\n[{i}/{len(selected_devices)}] Processing {device_key}...")
+        device_config = DEVICE_SIZES[device_key]
         device_path = base_path / device_key
         
-        capturar_url(args.url, device_key, device_config, device_path, timestamp, args.wait_time, args.smooth_scroll, args.auto_dismiss)
+        capture_screenshot(args.url, device_key, device_config, device_path, timestamp, args.wait_time, args.smooth_scroll, args.auto_dismiss)
     
     print(r"""
     ╔══════════════════════════════════════════════════════════════════╗
@@ -1067,14 +1067,14 @@ NOTAS:
     ║                \ V  V /\__ \ | | | (_) | |_                      ║
     ║                 \_/\_/ |___/_| |_|\___/ \__|                     ║
     ║                                                                  ║
-    ║                   🎉 ¡Capturas completadas!                      ║
+    ║                   🎉 Screenshots completed!                      ║
     ╚══════════════════════════════════════════════════════════════════╝""")
-    print(f"📂 Revisa las imágenes en: {base_path}")
+    print(f"📂 Check images at: {base_path}")
     
-    # Abrir explorador de archivos si se solicitó
+    # Open file explorer if requested
     if args.open:
         print("")
-        abrir_explorador_archivos(base_path)
+        open_file_explorer(base_path)
 
 if __name__ == "__main__":
     main()

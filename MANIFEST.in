@@ -1,4 +1,9 @@
 include README.md
 include LICENSE
+include DOCS.md
+include DEVICES.md
+include ROADMAP.md
+include TROUBLESHOOTING.md
 include requirements.txt
+include test_installation.py
 recursive-include wshot *.py
