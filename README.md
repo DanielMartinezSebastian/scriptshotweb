@@ -1,35 +1,51 @@
 # 📸 Wshot
 
-Una herramienta profesional para capturar pantallas de sitios web en múltiples dispositivos y resoluciones, optimizada para sitios modernos con animaciones y contenido dinámico.
+Una plataforma integral de auditoría visual y análisis web que automatiza la captura, análisis y documentación de sitios web a escala empresarial. Diseñada para equipos de desarrollo, QA, diseñadores y consultores digitales que requieren evaluaciones exhaustivas de experiencia de usuario multiplataforma.
 
-## ✨ Características
+## ✨ Características Principales
 
-- 🚀 **Sintaxis ultra-simple**: `wshot URL -all`
-- 📱 **Múltiples dispositivos**: iPhone SE, iPhone 17, iPad, Desktop
-- 🔄 **Doble captura**: Viewport + página completa scrolleable
-- 🛡️ **Validación inteligente**: Verifica URLs antes de crear carpetas
-- 📁 **Organización automática**: Carpetas por cliente y dispositivo
-- ⚡ **Sin configuración manual**: Todo automatizado
-- 📂 **Capturas organizadas**: Guarda en ./capturas/ del proyecto por defecto
-- ⏳ **Control de animaciones**: Tiempo de espera configurable para animaciones (3s por defecto)
-- 📜 **Scroll inteligente**: Scroll suave para disparar animaciones basadas en scroll
-- 🤖 **Cierre automático de pop-ups**: Detecta y cierra banners de cookies y avisos automáticamente
-- 📊 **Extracción OpenGraph**: Obtiene metadatos og:* y descarga imágenes sociales
-- 🚀 **Modo Super**: Captura optimizada completa con un solo comando
-- 📖 **Ayuda completa**: Sistema de ayuda extensivo con `--help` e `--info`
+### 🎯 **Auditoría Visual Automatizada**
+- 🚀 **Sintaxis ultra-simple**: `wshot URL -all` para auditorías completas
+- 📱 **Ecosistema de dispositivos**: 15+ configuraciones incluyendo iPhone (SE, 15, 15 Pro), Samsung Galaxy (S23, S23 Ultra), Google Pixel, iPad (estándar, Pro), Galaxy Tab, MacBooks, ThinkPads, monitores profesionales (FHD, 2K, 4K)
+- 🔄 **Captura dual inteligente**: Viewport fijo + página completa con scroll automático
+- 🛡️ **Validación robusta**: Sistema de verificación de URLs con detección de errores antes del procesamiento
 
-## 🚩 Próximas Features
+### 🏗️ **Arquitectura Empresarial**
+- 📁 **Organización automática avanzada**: Estructura jerárquica por dominio, dispositivo y timestamp con nomenclatura semántica
+- ⚡ **Motor de configuración cero**: Automatización completa sin intervención manual
+- 📂 **Sistema de archivos inteligente**: Guarda en `~/Pictures/WSHOT/` con organización por dominio completo
+- 🎪 **Multiplataforma nativo**: Compatibilidad total Windows, macOS, Linux
 
-- [x] ~~Realizar captura completa de la url navegando primero hasta abajo para disparar animaciones basadas en scroll~~ ✅ **COMPLETADO**
-- [x] ~~Control de tiempo de espera para animaciones~~ ✅ **COMPLETADO**
-- [x] ~~Modo super para captura completa optimizada~~ ✅ **COMPLETADO**
-- [x] ~~Alojar las capturas dentro de una carpeta general como downloads o similar en lugar de simplemente en la carpeta del script~~ ✅ **COMPLETADO**
-- [x] ~~Refactorización para uso mediante pip~~ ✅ **COMPLETADO**
-- [ ] Refactorizar para homogeneizar uso de idioma castellano vs ingles
-- [ ] Obtener capturas en webp optimizado
-- [ ] Capturar webs completas navegando por todos los links bajo ese dominio para obtener toda la web
-- [ ] Scrapear contenido en formato .md
-- [ ] Obtener todo el contenido media que exista en la url objetivo
+### 🤖 **Inteligencia Automatizada**
+- ⏳ **Control avanzado de renderizado**: Sistema de timing configurable para animaciones complejas (3s por defecto)
+- 📜 **Scroll inteligente progresivo**: Activación de lazy loading, parallax y intersection observers
+- 🤖 **Detección y eliminación de obstáculos**: Auto-cierre de banners GDPR, cookies y pop-ups en múltiples idiomas
+- 📊 **Extracción de metadatos estructurados**: Sistema completo OpenGraph con descarga automática de assets sociales
+
+### 🚀 **Modo Empresarial**
+- 🚀 **Modo Super**: Auditoría completa automatizada (todos los dispositivos + scroll + OpenGraph + timing optimizado)
+- 📖 **Sistema de documentación extensivo**: Ayuda contextual con `--help` e `--info` para equipos técnicos
+- 🔧 **API extensible**: Arquitectura modular preparada para integración en pipelines CI/CD
+
+## 🎯 Roadmap de Evolución Tecnológica
+
+### ✅ **Fundamentos Completados**
+- [x] ~~Sistema de renderizado avanzado con scroll progresivo~~ ✅ **COMPLETADO**
+- [x] ~~Motor de timing inteligente para animaciones complejas~~ ✅ **COMPLETADO**
+- [x] ~~Modo auditoría empresarial unificado~~ ✅ **COMPLETADO**
+- [x] ~~Arquitectura de almacenamiento profesional en Pictures/WSHOT/~~ ✅ **COMPLETADO**
+- [x] ~~Refactorización para distribución mediante pip~~ ✅ **COMPLETADO**
+
+### 🔮 **Expansión de Capacidades**
+- [ ] **Motor multiidioma**: Unificación completa español/inglés en toda la interfaz
+- [ ] **Analizador SEO avanzado**: Extracción y análisis de JSON-LD, microdata y schema.org
+- [ ] **Optimización WebP**: Compresión inteligente y formatos optimizados para web
+- [ ] **Sistema de headers personalizados**: Bypass de bloqueos y detección anti-bot
+- [ ] **Motor de cookies inteligente**: Inyección automática para sitios conocidos
+- [ ] **Spider de sitio completo**: Crawling y captura automática de toda la arquitectura web
+- [ ] **Extractor de media avanzado**: Recopilación automática de todos los assets multimedia
+- [ ] **Generador de reportes Markdown**: Documentación automática con análisis visual
+- [ ] **Sistema de autenticación**: Soporte para login automático y sesiones persistentes
 
 <details>
 <summary><strong>🏗️ Refactorización Arquitectónica Futura</strong> (haz clic para expandir)</summary>
@@ -225,15 +241,36 @@ wshot https://example.com -all
 
 ### Capturar dispositivo específico:
 ```bash
-wshot https://example.com --device mobile-17
-wshot https://example.com --device tablet
-wshot https://example.com --device desktop
+# Dispositivos más comunes (nombres cortos)
+wshot https://example.com --device mobile     # iPhone 15 (predeterminado móvil)
+wshot https://example.com --device tablet     # iPad (predeterminado tablet)
+wshot https://example.com --device laptop     # Portátil 13" (predeterminado)
+wshot https://example.com --device desktop    # Monitor Full HD (predeterminado)
+
+# Móviles específicos
+wshot https://example.com --device iphone-se
+wshot https://example.com --device iphone-17
+wshot https://example.com --device galaxy-s23
+wshot https://example.com --device pixel-7
+
+# Tablets específicos
+wshot https://example.com --device ipad-pro
+wshot https://example.com --device galaxy-tab-s9
+
+# Portátiles específicos
+wshot https://example.com --device laptop-15
+wshot https://example.com --device laptop-16
+
+# Desktop/Monitores específicos
+wshot https://example.com --device desktop-2k
+wshot https://example.com --device desktop-4k
 ```
 
 ### 🚀 Modo Super (Recomendado para sitios complejos):
 ```bash
 wshot https://example.com --super
-# Activa automáticamente: todos los dispositivos + scroll suave + tiempo optimizado (2s) + OpenGraph
+# Activa automáticamente: TODOS los dispositivos + scroll suave + tiempo optimizado (2s) + OpenGraph
+# Equivale a: -all + --smooth-scroll + --open-graph + --wait-time 2
 ```
 
 ### ⚙️ Opciones avanzadas:
@@ -267,42 +304,88 @@ wshot --info      # Guía completa con ejemplos
 
 ## 📱 Dispositivos Disponibles
 
+| Dispositivo | Dimensiones | Descripción | Categoría |
+|-------------|-------------|-------------|-----------|
+| **📱 Móviles** ||||
+| `mobile` | 393×852 | iPhone 15 (predeterminado móvil) | Móvil estándar |
+| `iphone-se` | 375×667 | iPhone SE (2022) | Móvil compacto |
+| `iphone-15-pro` | 393×852 | iPhone 15 Pro | Móvil premium |
+| `iphone-17` | 402×874 | iPhone 17 (2025) | Móvil futuro |
+| `galaxy-s23` | 360×780 | Samsung Galaxy S23 | Android estándar |
+| `galaxy-s23-ultra` | 412×915 | Samsung Galaxy S23 Ultra | Android premium |
+| `pixel-7` | 412×892 | Google Pixel 7 | Android puro |
+| **📱 Tablets** ||||
+| `tablet` | 768×1024 | iPad (10.9") - predeterminado tablet | Tablet estándar |
+| `ipad-pro` | 1024×1366 | iPad Pro (12.9") | Tablet profesional |
+| `galaxy-tab-s9` | 800×1280 | Samsung Galaxy Tab S9 | Android tablet |
+| **💻 Portátiles** ||||
+| `laptop` | 1280×800 | Portátil 13" (predeterminado laptop) | Portátil compacto |
+| `laptop-15` | 1440×900 | MacBook Pro 15" / ThinkPad X1 | Portátil estándar |
+| `laptop-16` | 1728×1117 | MacBook Pro 16" | Portátil premium |
+| **🖥️ Desktop** ||||
+| `desktop` | 1920×1080 | Monitor Full HD (predeterminado) | Desktop estándar |
+| `desktop-2k` | 2560×1440 | Monitor 2K/QHD | Desktop premium |
+| `desktop-4k` | 3840×2160 | Monitor 4K/UHD | Desktop profesional |
+
+### 🏷️ Dispositivos Específicos (nombres largos)
 | Dispositivo | Dimensiones | Descripción |
 |-------------|-------------|-------------|
-| `mobile-se` | 375×667 | iPhone SE |
-| `mobile-17` | 393×852 | iPhone 17 |
-| `tablet` | 768×1024 | iPad |
-| `desktop` | 1920×1080 | Desktop |
+| `iphone-15` | 393×852 | Alias para `mobile` |
+| `ipad` | 768×1024 | Alias para `tablet` |
+| `laptop-13` | 1280×800 | Alias para `laptop` |
+| `desktop-fhd` | 1920×1080 | Alias para `desktop` |
+
+### 🏷️ Dispositivos Legacy (compatibilidad)
+| Dispositivo | Dimensiones | Descripción |
+|-------------|-------------|-------------|
+| `mobile-se` | 375×667 | Alias para `iphone-se` |
+| `mobile-17` | 393×852 | Alias para `iphone-15` (legacy) |
 
 ## 📂 Estructura de Salida
 
 **Ubicación por defecto:**
-- 📁 `./capturas/` (carpeta en el directorio actual)
-- 📁 O ruta personalizada con `--output-dir ~/Pictures/Wshot`
+- 📁 `~/Pictures/WSHOT/` (carpeta en Pictures del usuario)
+- 📁 O ruta personalizada con `--output-dir ~/Proyectos/Capturas`
 
 ```
-wshot/
-├── capturas/
-│   └── example/                    # Nombre extraído de la URL
-│       ├── mobile-17/             # Solo carpetas solicitadas
-│       │   ├── pagina-mobile-17-20241005_142958.png           # Viewport
-│       │   └── pagina-mobile-17-completa-20241005_142958.png  # Página completa
-│       ├── tablet/
-│       │   ├── pagina-tablet-20241005_142958.png
-│       │   └── pagina-tablet-completa-20241005_142958.png
-│       └── opengraph/             # Metadatos OpenGraph (si se usa --og o --all)
-│           ├── opengraph-20241005_142958.json     # Todos los metadatos
-│           └── og-image-20241005_142958.jpg       # Imagen social descargada
-└── wshot/
+~/Pictures/WSHOT/
+├── example.com/                    # Dominio completo extraído de la URL
+│   ├── mobile/                     # Solo carpetas solicitadas
+│   │   ├── example.com_pagina-principal-mobile-20241005_142958.png           # Viewport
+│   │   └── example.com_pagina-principal-mobile-completa-20241005_142958.png  # Página completa
+│   ├── tablet/
+│   │   ├── example.com_contacto-tablet-20241005_142958.png
+│   │   └── example.com_contacto-tablet-completa-20241005_142958.png
+│   ├── laptop/
+│   │   ├── example.com_servicios-laptop-20241005_142958.png
+│   │   └── example.com_servicios-laptop-completa-20241005_142958.png
+│   ├── desktop/
+│   │   ├── example.com_pagina-principal-desktop-20241005_142958.png
+│   │   └── example.com_pagina-principal-desktop-completa-20241005_142958.png
+│   └── opengraph/                  # Metadatos OpenGraph (si se usa --og o --all)
+│       ├── opengraph-20241005_142958.json     # Todos los metadatos
+│       └── og-image-20241005_142958.jpg       # Imagen social descargada
 ```
 
 **Con `--all` o `--super` se crean todas las carpetas automáticamente:**
 ```
-capturas/example/
-├── mobile-se/
-├── mobile-17/
-├── tablet/
-├── desktop/
+~/Pictures/WSHOT/example.com/
+├── mobile/           # iPhone 15 (predeterminado móvil)
+├── iphone-se/
+├── iphone-15-pro/
+├── iphone-17/
+├── galaxy-s23/
+├── galaxy-s23-ultra/
+├── pixel-7/
+├── tablet/           # iPad (predeterminado tablet)
+├── ipad-pro/
+├── galaxy-tab-s9/
+├── laptop/           # Portátil 13" (predeterminado)
+├── laptop-15/
+├── laptop-16/
+├── desktop/          # Monitor Full HD (predeterminado)
+├── desktop-2k/
+├── desktop-4k/
 └── opengraph/    ← Incluye JSON + imagen og:image
 ```
 
@@ -340,6 +423,7 @@ wshot https://example.com -all --smooth-scroll
 # Modo super (combina lo mejor de todo):
 wshot https://example.com --super
 # Equivale a: -all + --smooth-scroll + --open-graph + --wait-time 2
+# ↑ Captura TODOS los dispositivos disponibles automáticamente
 ```
 
 ### 📖 Sistema de ayuda:
@@ -353,14 +437,14 @@ wshot --info      # Guía completa con ejemplos detallados
 |-----------|-------------|---------|
 | `URL` | URL del sitio web a capturar | `https://example.com` |
 | `-all, --all-devices` | Capturar en todos los dispositivos | `-all` |
-| `--device DEVICE` | Dispositivo específico | `--device mobile-17` |
+| `--device DEVICE` | Dispositivo específico | `--device mobile` |
 | `--cliente NOMBRE` | Nombre personalizado del cliente | `--cliente "MiEmpresa"` |
 | `--output-dir PATH` | Directorio personalizado de salida | `--output-dir ~/Proyectos` |
 | `--wait-time SEGUNDOS` | Tiempo de espera para animaciones | `--wait-time 5` |
 | `--smooth-scroll` | Scroll suave antes de captura completa | `--smooth-scroll` |
 | `--auto-dismiss` | 🤖 Cerrar automáticamente banners de cookies y pop-ups | `--auto-dismiss` |
 | `--open-graph, --og` | 📊 Extraer metadatos OpenGraph y descargar imagen social | `--og` |
-| `--super` | 🚀 Modo completo optimizado (incluye OpenGraph) | `--super` |
+| `--super` | 🚀 Modo completo optimizado (TODOS los dispositivos + OpenGraph + scroll suave) | `--super` |
 | `--open` | 📂 Abrir explorador de archivos al finalizar | `--open` |
 | `--help, -h` | Ayuda estándar | `--help` |
 | `--info` | Guía completa extendida | `--info` |
@@ -437,7 +521,7 @@ Ideal para:
 wshot https://site.com --super
 ```
 **Activa automáticamente:**
-- ✅ Todos los dispositivos (`-all`)
+- ✅ **Todos los dispositivos** (`-all`) - Captura en mobile, tablet, laptop, desktop y todas las variantes
 - ✅ Scroll suave (`--smooth-scroll`)
 - ✅ Extracción OpenGraph (`--open-graph`)
 - ✅ Tiempo optimizado (`--wait-time 2`)
@@ -465,17 +549,27 @@ wshot https://site.com --super --open
 # Capturar página de contacto en todos los dispositivos (básico)
 wshot https://miempresa.com/contacto -all
 
-# Capturar solo en móvil iPhone 17
-wshot https://mitienda.com/productos --device mobile-17
+# Capturar en el móvil más popular (iPhone 15)
+wshot https://mitienda.com/productos --device mobile
 
-# Capturar página principal en tablet con tiempo de espera extra
-wshot https://miblog.com --device tablet --wait-time 6
+# Comparar en Android vs iPhone
+wshot https://miapp.com --device galaxy-s23
+wshot https://miapp.com --device mobile
+
+# Capturar en tablet profesional con tiempo de espera extra
+wshot https://miblog.com --device ipad-pro --wait-time 6
+
+# Verificar en portátil más común (13 pulgadas)
+wshot https://mi-dashboard.com --device laptop
+
+# Auditoría en monitor 4K profesional
+wshot https://mi-portfolio.com --device desktop-4k
 
 # Sitio con banner de cookies - cerrar automáticamente
 wshot https://google.com --device desktop --auto-dismiss
 
 # Extraer solo metadatos OpenGraph sin capturas
-wshot https://miempresa.com --device desktop --og
+wshot https://miempresa.com --device mobile --og
 
 # Sitio con muchas animaciones - usar modo super y abrir explorador
 wshot https://sitio-animado.com --super --open
@@ -485,6 +579,13 @@ wshot https://sitio-parallax.com -all --smooth-scroll --auto-dismiss
 
 # Auditoría SEO completa: capturas + metadatos OpenGraph
 wshot https://cliente-importante.com --super --cliente "ClienteVIP"
+
+# Comparación móvil compacto vs premium
+wshot https://responsive.com --device iphone-se
+wshot https://responsive.com --device galaxy-s23-ultra
+
+# Verificación en dispositivos de trabajo más comunes
+wshot https://intranet.com --device laptop --auto-dismiss
 
 # Guardar en ubicación personalizada y abrir automáticamente
 wshot https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
@@ -496,6 +597,10 @@ wshot https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
 |---------------|---------------------|-------|
 | **Sitio estático simple** | `--device desktop` | Rápido y eficiente |
 | **Sitio responsive** | `-all` | Ver en todos los dispositivos + OpenGraph |
+| **App móvil/PWA** | `--device mobile --device galaxy-s23` | Probar en móviles más populares |
+| **Dashboard/Admin** | `--device laptop` | Resolución típica de trabajo |
+| **E-commerce** | `--device mobile --device tablet --device desktop` | Cubrir compras móviles y desktop |
+| **Portfolio/Landing** | `--device desktop-4k` | Mostrar máxima calidad visual |
 | **Sitio con animaciones** | `--super` | Tiempo optimizado + scroll + OpenGraph |
 | **Sitio con lazy loading** | `--smooth-scroll` | Activa el contenido diferido |
 | **Sitio con cookies/GDPR** | `--auto-dismiss` | Cierra banners automáticamente |
@@ -503,6 +608,7 @@ wshot https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
 | **Google, Facebook, etc.** | `--super --auto-dismiss` | Capturas limpias sin pop-ups + metadatos |
 | **Auditoría completa** | `--super --auto-dismiss` | Captura exhaustiva sin obstrucciones + SEO |
 | **Sitio lento** | `--wait-time 7` | Más tiempo para cargar |
+| **Comparación de marcas** | `--device mobile --device galaxy-s23` | iPhone vs Android |
 
 ## 🤝 Contribuir
 
@@ -634,26 +740,25 @@ Si ninguna solución funciona:
 
 ---
 
-## 🎉 Changelog
+## 🎉 Evolución del Proyecto
 
-### v1.0.0 - Paquete pip production-ready 📦
-- ✅ Proyecto refactorizado como paquete Python instalable
-- ✅ Comando `wshot` disponible globalmente tras instalación pip
-- ✅ Estructura limpia sin archivos legacy redundantes
-- ✅ Configuración moderna con `pyproject.toml`
-- ✅ Instalación simplificada: `pip install git+https://...`
-- ✅ Script de verificación `test_installation.py`
-- ✅ Compatible con desarrollo: `pip install -e .`
+### v1.0.0 - Plataforma de Auditoría Visual Empresarial 🏢
+- ✅ **Arquitectura empresarial**: Refactorización completa como plataforma Python distribuible
+- ✅ **Comando global unificado**: `wshot` disponible sistema-wide tras instalación pip
+- ✅ **Estructura organizacional avanzada**: Eliminación de redundancias y arquitectura limpia
+- ✅ **Configuración moderna PEP 621**: `pyproject.toml` con estándares de industria
+- ✅ **Instalación simplificada**: `pip install git+https://...` para deploy inmediato
+- ✅ **Suite de verificación**: `test_installation.py` para validación de entornos
+- ✅ **Modo desarrollo**: `pip install -e .` para contribuidores
 
-### Características principales incluidas:
-- 📱 Capturas multi-dispositivo (iPhone SE, iPhone 17, iPad, Desktop)
-- 🛡️ Validación inteligente de URLs
-- 📁 Organización automática de archivos por cliente y dispositivo
-- ⏳ Control de animaciones y tiempo de espera configurable
-- 📜 Scroll suave para disparar animaciones basadas en scroll
-- 🤖 Cierre automático de banners de cookies y pop-ups
-- 📊 Extracción de metadatos OpenGraph con descarga de imágenes
-- 🚀 Modo Super (all-devices + smooth-scroll + open-graph + optimizado)
-- 📂 Apertura automática del explorador de archivos
-- 📖 Sistema de ayuda extensivo (`--help` e `--info`)
-- 🎨 Doble captura: viewport + página completa
+### 🏗️ **Capacidades Técnicas Implementadas**
+- 📱 **Motor multi-dispositivo**: 15+ configuraciones desde móviles compactos hasta monitores 4K profesionales
+- 🛡️ **Sistema de validación robusto**: Verificación preventiva de URLs con manejo de errores
+- 📁 **Organización semántica**: Estructura automática por dominio completo con nomenclatura descriptiva
+- ⏳ **Motor de renderizado avanzado**: Control granular de timing para sitios con animaciones complejas
+- 📜 **Scroll progresivo inteligente**: Activación automática de lazy loading y efectos parallax
+- 🤖 **IA para eliminación de obstáculos**: Detección y cierre automático de banners GDPR/cookies multiidioma
+- 📊 **Extractor de metadatos estructurados**: Sistema completo OpenGraph con descarga automática de assets
+- 🚀 **Modo auditoría unificado**: Super-mode para evaluaciones empresariales completas
+- 📂 **Integración del sistema**: Apertura automática de exploradores de archivos multiplataforma
+- 📖 **Documentación técnica extensiva**: Sistema de ayuda contextual para equipos de desarrollo

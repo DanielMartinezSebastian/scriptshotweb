@@ -34,7 +34,7 @@ def mostrar_ayuda_extendida():
    animaciones, efectos de scroll y contenido dinámico.
 
 🎯 CARACTERÍSTICAS PRINCIPALES:
-   • Capturas en 4 tamaños de dispositivo predefinidos
+   • Capturas en 15+ dispositivos y resoluciones predefinidos
    • Soporte para animaciones y contenido que se carga con delay
    • Scroll suave para disparar animaciones basadas en scroll
    • Cierre automático de banners de cookies y pop-ups 🤖
@@ -43,10 +43,32 @@ def mostrar_ayuda_extendida():
    • Modo super para captura completa optimizada
 
 📱 DISPOSITIVOS DISPONIBLES:
-   mobile-se  │ iPhone SE      │ 375 × 667   │ Móvil pequeño
-   mobile-17  │ iPhone 17      │ 393 × 852   │ Móvil moderno  
-   tablet     │ iPad           │ 768 × 1024  │ Tablet estándar
-   desktop    │ Desktop        │ 1920 × 1080 │ Escritorio HD
+
+   🔥 NOMBRES CORTOS (recomendados):
+   mobile      │ iPhone 15       │ 393 × 852   │ Móvil predeterminado
+   tablet      │ iPad            │ 768 × 1024  │ Tablet predeterminado
+   laptop      │ Portátil 13"    │ 1280 × 800  │ Laptop predeterminado
+   desktop     │ Monitor Full HD │ 1920 × 1080 │ Desktop predeterminado
+
+   📱 MÓVILES ESPECÍFICOS:
+   iphone-se        │ iPhone SE (2022)      │ 375 × 667   │ Móvil compacto
+   iphone-15-pro    │ iPhone 15 Pro         │ 393 × 852   │ Móvil premium
+   iphone-17        │ iPhone 17 (2025)      │ 402 × 874   │ Móvil futuro
+   galaxy-s23       │ Samsung Galaxy S23    │ 360 × 780   │ Android estándar
+   galaxy-s23-ultra │ Samsung Galaxy S23 U. │ 412 × 915   │ Android premium
+   pixel-7          │ Google Pixel 7        │ 412 × 892   │ Android puro
+
+   📱 TABLETS ESPECÍFICOS:
+   ipad-pro         │ iPad Pro (12.9")      │ 1024 × 1366 │ Tablet profesional
+   galaxy-tab-s9    │ Samsung Galaxy Tab S9 │ 800 × 1280  │ Android tablet
+
+   💻 PORTÁTILES ESPECÍFICOS:
+   laptop-15        │ MacBook Pro 15"       │ 1440 × 900  │ Portátil estándar
+   laptop-16        │ MacBook Pro 16"       │ 1728 × 1117 │ Portátil premium
+
+   🖥️ DESKTOP ESPECÍFICOS:
+   desktop-2k       │ Monitor 2K/QHD        │ 2560 × 1440 │ Desktop premium
+   desktop-4k       │ Monitor 4K/UHD        │ 3840 × 2160 │ Desktop profesional
 
 🚀 MODOS DE USO:
 
@@ -70,7 +92,7 @@ def mostrar_ayuda_extendida():
 
 📂 ESTRUCTURA DE ARCHIVOS:
    Las capturas se guardan por defecto en:
-   ./capturas/ (carpeta en el proyecto)
+   ~/Pictures/WSHOT/ (carpeta en Pictures del usuario)
    └── [cliente]/
        ├── mobile-se/
        ├── mobile-17/ 
@@ -97,10 +119,39 @@ def mostrar_ayuda_extendida():
 
 # Configuración de dispositivos/tamaños
 TAMAÑOS = {
-    "mobile-se": {"width": 375, "height": 667, "nombre": "iPhone SE"},
-    "mobile-17": {"width": 393, "height": 852, "nombre": "iPhone 17"},
-    "tablet": {"width": 768, "height": 1024, "nombre": "iPad"},
-    "desktop": {"width": 1920, "height": 1080, "nombre": "Desktop"}
+    # 📱 Móviles - nombres cortos predeterminados
+    "mobile": {"width": 393, "height": 852, "nombre": "iPhone 15 (predeterminado móvil)"},
+    "iphone-se": {"width": 375, "height": 667, "nombre": "iPhone SE (2022)"},
+    "iphone-15-pro": {"width": 393, "height": 852, "nombre": "iPhone 15 Pro"},
+    "iphone-17": {"width": 402, "height": 874, "nombre": "iPhone 17 (2025)"},
+    "galaxy-s23": {"width": 360, "height": 780, "nombre": "Samsung Galaxy S23"},
+    "galaxy-s23-ultra": {"width": 412, "height": 915, "nombre": "Samsung Galaxy S23 Ultra"},
+    "pixel-7": {"width": 412, "height": 892, "nombre": "Google Pixel 7"},
+    
+    # 📱 Tablets - nombres cortos predeterminados
+    "tablet": {"width": 768, "height": 1024, "nombre": "iPad (predeterminado tablet)"},
+    "ipad-pro": {"width": 1024, "height": 1366, "nombre": "iPad Pro (12.9\")"},
+    "galaxy-tab-s9": {"width": 800, "height": 1280, "nombre": "Samsung Galaxy Tab S9"},
+    
+    # 💻 Portátiles - nombres cortos predeterminados
+    "laptop": {"width": 1280, "height": 800, "nombre": "Portátil 13\" (predeterminado laptop)"},
+    "laptop-15": {"width": 1440, "height": 900, "nombre": "MacBook Pro 15\" / ThinkPad X1"},
+    "laptop-16": {"width": 1728, "height": 1117, "nombre": "MacBook Pro 16\""},
+    
+    # 🖥️ Desktop - nombres cortos predeterminados
+    "desktop": {"width": 1920, "height": 1080, "nombre": "Monitor Full HD (predeterminado)"},
+    "desktop-2k": {"width": 2560, "height": 1440, "nombre": "Monitor 2K/QHD"},
+    "desktop-4k": {"width": 3840, "height": 2160, "nombre": "Monitor 4K/UHD"},
+    
+    # 🏷️ Alias para nombres largos (compatibilidad)
+    "iphone-15": {"width": 393, "height": 852, "nombre": "iPhone 15 (alias para mobile)"},
+    "ipad": {"width": 768, "height": 1024, "nombre": "iPad (alias para tablet)"},
+    "laptop-13": {"width": 1280, "height": 800, "nombre": "Portátil 13\" (alias para laptop)"},
+    "desktop-fhd": {"width": 1920, "height": 1080, "nombre": "Monitor Full HD (alias para desktop)"},
+    
+    # 🏷️ Alias legacy (compatibilidad total)
+    "mobile-se": {"width": 375, "height": 667, "nombre": "iPhone SE (alias para iphone-se)"},
+    "mobile-17": {"width": 393, "height": 852, "nombre": "iPhone 15 (legacy alias)"}
 }
 
 def validar_url(url):
@@ -146,25 +197,31 @@ def validar_url(url):
         return False
 
 def extraer_nombre_cliente(url):
-    """Extrae el nombre del cliente desde la URL del dominio"""
+    """Extrae el nombre del cliente desde la URL del dominio completo"""
     try:
         parsed = urlparse(url)
         domain = parsed.netloc.lower()
         # Remover www. si existe
         if domain.startswith('www.'):
             domain = domain[4:]
-        # Remover extensión del dominio
-        nombre = domain.split('.')[0]
-        # Limpiar caracteres especiales
-        nombre = re.sub(r'[^a-zA-Z0-9]', '', nombre)
+        # Usar el dominio completo (ej: example.com en lugar de solo example)
+        nombre = domain
+        # Limpiar caracteres especiales pero mantener puntos
+        nombre = re.sub(r'[^a-zA-Z0-9\.]', '', nombre)
         return nombre
     except:
         return "sitio_web"
 
 def crear_nombre_archivo(url, device, timestamp, es_completa=False):
-    """Crea nombre descriptivo para el archivo"""
+    """Crea nombre descriptivo para el archivo incluyendo dominio y ruta"""
     try:
         parsed = urlparse(url)
+        
+        # Extraer dominio (sin www.)
+        domain = parsed.netloc.lower()
+        if domain.startswith('www.'):
+            domain = domain[4:]
+        
         # Extraer path y limpiar
         path = parsed.path.strip('/')
         if not path:
@@ -172,15 +229,21 @@ def crear_nombre_archivo(url, device, timestamp, es_completa=False):
         else:
             descripcion = path.replace('/', '-').replace('#', '-seccion-')
         
-        # Limpiar caracteres especiales
+        # Limpiar caracteres especiales del path
         descripcion = re.sub(r'[^a-zA-Z0-9\-]', '', descripcion)
         if not descripcion:
-            descripcion = "captura"
+            descripcion = "pagina-principal"
+        
+        # Limpiar caracteres especiales del dominio pero mantener puntos
+        domain_clean = re.sub(r'[^a-zA-Z0-9\.]', '', domain)
+        
+        # Crear nombre con formato: dominio.com_ruta-device-timestamp
+        nombre_base = f"{domain_clean}_{descripcion}"
             
         # Añadir sufijo si es captura completa
         sufijo = "-completa" if es_completa else ""
         
-        return f"{descripcion}-{device}{sufijo}-{timestamp}.png"
+        return f"{nombre_base}-{device}{sufijo}-{timestamp}.png"
     except:
         sufijo = "-completa" if es_completa else ""
         return f"captura-{device}{sufijo}-{timestamp}.png"
@@ -660,8 +723,10 @@ def crear_estructura_carpetas(cliente, devices_a_usar, output_dir=None):
         # Si se especifica un directorio personalizado
         base_output = Path(output_dir).expanduser()
     else:
-        # Por defecto: carpeta 'capturas' en el directorio del proyecto
-        base_output = Path.cwd() / "capturas"
+        # Por defecto: carpeta 'WSHOT' en la carpeta Pictures del usuario (multiplataforma)
+        home_dir = Path.home()
+        pictures_dir = home_dir / "Pictures"
+        base_output = pictures_dir / "WSHOT"
     
     # Crear la ruta completa con el nombre del cliente
     base_path = base_output / cliente
@@ -806,7 +871,7 @@ NOTAS:
                        help='Nombre personalizado del cliente para organizar capturas (se detecta automáticamente desde URL si no se especifica)')
     
     parser.add_argument('--output-dir',
-                       help='Directorio personalizado para guardar las capturas (default: ./capturas/ en el directorio actual)')
+                       help='Directorio personalizado para guardar las capturas (default: ~/Pictures/WSHOT/ en la carpeta Pictures del usuario)')
     
     parser.add_argument('--wait-time',
                        type=float,
