@@ -18,7 +18,7 @@ playwright install chromium
 ```
 </details>
 
-> Installation issues? See [DOCS.md](DOCS.md#-detailed-installation) or [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+> Installation issues? See [DOCS.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/DOCS.md#-detailed-installation) or [TROUBLESHOOTING.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/TROUBLESHOOTING.md)
 
 ## ⚡ Basic Usage
 
@@ -34,7 +34,7 @@ wshot https://example.com --device desktop
 wshot https://example.com --super
 ```
 
-> See all commands and options in [DOCS.md](DOCS.md#️-complete-parameters-list)
+> See all commands and options in [DOCS.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/DOCS.md#️-complete-parameters-list)
 
 ## 📱 Main Devices
 
@@ -46,7 +46,7 @@ wshot https://example.com --super
 | `desktop` | 1920×1080 | Full HD Monitor (standard) |
 | `desktop-4k` | 3840×2160 | 4K Professional Monitor |
 
-> See complete list in [DEVICES.md](DEVICES.md)
+> See complete list in [DEVICES.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/DEVICES.md)
 
 ## 📂 Output Structure
 
@@ -95,11 +95,11 @@ wshot --info      # Complete guide
 
 ## 📚 Documentation
 
-- **[DOCS.md](DOCS.md)** - Complete documentation and advanced features
-- **[DEVICES.md](DEVICES.md)** - Complete list of available devices
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common problem solutions
-- **[ROADMAP.md](ROADMAP.md)** - Project evolution and future plans
+- **[DOCS.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/DOCS.md)** - Complete documentation and advanced features
+- **[DEVICES.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/DEVICES.md)** - Complete list of available devices
+- **[TROUBLESHOOTING.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/TROUBLESHOOTING.md)** - Common problem solutions
+- **[ROADMAP.md](https://github.com/DanielMartinezSebastian/wshot/blob/main/ROADMAP.md)** - Project evolution and future plans
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT License - see [LICENSE](https://github.com/DanielMartinezSebastian/wshot/blob/main/LICENSE) for details.
