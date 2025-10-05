@@ -29,14 +29,52 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - [ ] Obtener todo el contenido media que exista en la url objetivo
 ## 🚀 Instalación
 
-### Opción 1: Instalación Automática (Recomendada)
+### Opción 1: Instalación Automática (Recomendada) ⭐
+
+El nuevo instalador mejorado maneja automáticamente errores y proporciona instrucciones claras:
+
 ```bash
 git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
 cd scriptshotweb
 ./install.sh
 ```
 
+**Características del nuevo instalador:**
+- ✅ Instalación paso a paso con mensajes claros
+- ✅ Solo instala Chromium (más rápido y ligero)
+- ✅ Manejo inteligente de errores sin detener el proceso
+- ✅ Instrucciones específicas para cada distribución Linux
+- ✅ No requiere sudo durante la instalación inicial
+
+### Verificar instalación
+
+Después de instalar, verifica que todo funcione correctamente:
+
+```bash
+./check.sh
+```
+
+Este script verifica:
+- Python y entorno virtual
+- Dependencias Python (playwright, requests)
+- Navegador Chromium
+- Dependencias del sistema
+- Realiza un test funcional básico
+
+### Instalar dependencias del sistema (si es necesario)
+
+Si `check.sh` reporta dependencias faltantes, ejecuta:
+
+```bash
+sudo ./install-deps.sh
+```
+
+Este script detecta automáticamente tu distribución (Ubuntu, Debian, Fedora, Arch) e instala las librerías necesarias.
+
 ### Opción 2: Instalación Manual
+
+Si prefieres más control:
+
 1. **Clonar repositorio**:
 ```bash
 git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
@@ -51,9 +89,21 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
-3. **Hacer ejecutable**:
+3. **Instalar dependencias del sistema** (Ubuntu/Debian):
 ```bash
-chmod +x scriptshotweb.sh
+sudo apt install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+  libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
+```
+
+4. **Hacer ejecutables**:
+```bash
+chmod +x scriptshotweb.sh scriptshotweb
+```
+
+5. **Verificar**:
+```bash
+./check.sh
 ```
 
 ## 🎯 Uso Básico
@@ -325,6 +375,14 @@ python scriptshotweb https://example.com --super
 
 ## 🎉 Changelog
 
+### v2.2 - Mejoras en el Proceso de Instalación
+- ✅ Nuevo instalador mejorado con mejor manejo de errores
+- ✅ Script de verificación completo (`check.sh`)
+- ✅ Script auxiliar para dependencias del sistema (`install-deps.sh`)
+- ✅ Instalación optimizada (solo Chromium por defecto)
+- ✅ Instrucciones claras para múltiples distribuciones Linux
+- ✅ Documentación de troubleshooting mejorada
+
 ### v2.1 - Mejoras de Organización
 - ✅ Organización en carpeta ./capturas/ por defecto
 - ✅ Soporte para directorios personalizados (`--output-dir`)
@@ -343,3 +401,186 @@ python scriptshotweb https://example.com --super
 - ✅ Validación inteligente de URLs
 - ✅ Organización automática de archivos
 - ✅ Capturas viewport y página completa
+
+---
+
+## 🔧 Troubleshooting (Solución de Problemas)
+
+### Problema: "libicudata.so.66 not found" u otras librerías faltantes
+
+**Síntoma:** Error al ejecutar capturas mencionando librerías `.so` faltantes.
+
+**Solución:**
+```bash
+# Opción 1: Script automático (recomendado)
+sudo ./install-deps.sh
+
+# Opción 2: Manual para Ubuntu/Debian
+sudo apt update
+sudo apt install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 \
+  libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
+
+# Opción 3: Manual para Fedora
+sudo dnf install -y nss nspr atk at-spi2-atk cups-libs libdrm \
+  libxkbcommon libXcomposite libXdamage libXrandr libgbm pango cairo alsa-lib
+```
+
+### Problema: "playwright: command not found"
+
+**Síntoma:** No se encuentra el comando playwright.
+
+**Solución:**
+```bash
+# Activar entorno virtual
+source .venv/bin/activate
+
+# Reinstalar playwright
+pip install playwright
+playwright install chromium
+```
+
+### Problema: "Python3 not found"
+
+**Síntoma:** Python3 no está instalado.
+
+**Solución:**
+```bash
+# Ubuntu/Debian
+sudo apt install python3 python3-venv python3-pip
+
+# Fedora
+sudo dnf install python3 python3-pip
+
+# Arch Linux
+sudo pacman -S python python-pip
+```
+
+### Problema: "Entorno virtual no se puede crear"
+
+**Síntoma:** Error al ejecutar `python3 -m venv .venv`.
+
+**Solución:**
+```bash
+# Ubuntu/Debian - instalar módulo venv
+sudo apt install python3-venv
+
+# Luego reintentar
+./install.sh
+```
+
+### Problema: Las capturas salen en negro o vacías
+
+**Síntoma:** Las imágenes capturadas están en negro o no muestran contenido.
+
+**Solución:**
+```bash
+# 1. Verificar instalación
+./check.sh
+
+# 2. Aumentar tiempo de espera
+./scriptshotweb.sh https://sitio.com --device desktop --wait-time 10
+
+# 3. Usar modo super con scroll suave
+./scriptshotweb.sh https://sitio.com --super
+```
+
+### Problema: "OS not officially supported by Playwright"
+
+**Síntoma:** Advertencia sobre sistema operativo no soportado.
+
+**Solución:**
+Esta es solo una advertencia. Playwright intentará usar una versión compatible. Si funciona, puedes ignorarla. Si tienes problemas:
+
+1. Asegúrate de tener todas las dependencias: `sudo ./install-deps.sh`
+2. Verifica con: `./check.sh`
+3. Si persiste, considera actualizar tu distribución Linux
+
+### Problema: Permisos denegados al ejecutar scripts
+
+**Síntoma:** "Permission denied" al ejecutar `./scriptshotweb.sh`.
+
+**Solución:**
+```bash
+chmod +x scriptshotweb.sh scriptshotweb check.sh install-deps.sh
+```
+
+### Problema: URL válida pero no captura
+
+**Síntoma:** La URL responde pero las capturas fallan.
+
+**Causas comunes:**
+1. **Sitio con captcha o protección anti-bot**
+2. **Contenido dinámico que tarda en cargar**
+3. **Sitio requiere JavaScript específico**
+
+**Soluciones:**
+```bash
+# Aumentar tiempo de espera
+./scriptshotweb.sh https://sitio.com --device desktop --wait-time 15
+
+# Usar scroll suave
+./scriptshotweb.sh https://sitio.com --device desktop --smooth-scroll
+
+# Probar con modo super
+./scriptshotweb.sh https://sitio.com --super
+```
+
+### Verificación completa del sistema
+
+Si tienes múltiples problemas, ejecuta una verificación completa:
+
+```bash
+# 1. Verificar estado actual
+./check.sh
+
+# 2. Reinstalar desde cero
+rm -rf .venv
+./install.sh
+
+# 3. Instalar dependencias del sistema
+sudo ./install-deps.sh
+
+# 4. Verificar nuevamente
+./check.sh
+
+# 5. Prueba funcional
+./scriptshotweb.sh https://example.com --device desktop
+```
+
+### Obtener ayuda adicional
+
+Si ninguna solución funciona:
+
+1. **Revisa los logs detallados**:
+   ```bash
+   ./scriptshotweb.sh https://sitio.com --device desktop 2>&1 | tee error.log
+   ```
+
+2. **Información del sistema**:
+   ```bash
+   python3 --version
+   lsb_release -a  # o cat /etc/os-release
+   uname -a
+   ```
+
+3. **Abre un issue en GitHub** con:
+   - Salida de `./check.sh`
+   - Contenido de `error.log`
+   - Información del sistema
+   - Comando que estabas ejecutando
+
+---
+
+## 📚 Scripts Disponibles
+
+| Script | Propósito | Requiere sudo |
+|--------|-----------|---------------|
+| `install.sh` | Instalación completa del proyecto | No* |
+| `install-deps.sh` | Instalar dependencias del sistema | Sí |
+| `check.sh` | Verificar instalación y funcionalidad | No |
+| `scriptshotweb.sh` | Ejecutar capturas (wrapper) | No |
+| `scriptshotweb` | Script principal Python | No |
+
+*El instalador puede pedir sudo solo para dependencias del sistema, pero continúa sin ellas.
+
