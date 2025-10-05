@@ -13,6 +13,7 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - 📂 **Capturas organizadas**: Guarda en ./capturas/ del proyecto por defecto
 - ⏳ **Control de animaciones**: Tiempo de espera configurable para animaciones (3s por defecto)
 - 📜 **Scroll inteligente**: Scroll suave para disparar animaciones basadas en scroll
+- 🤖 **Cierre automático de pop-ups**: Detecta y cierra banners de cookies y avisos automáticamente
 - 🚀 **Modo Super**: Captura optimizada completa con un solo comando
 - 📖 **Ayuda completa**: Sistema de ayuda extensivo con `--help` e `--info`
 
@@ -134,8 +135,14 @@ chmod +x scriptshotweb.sh scriptshotweb
 # Con scroll suave para disparar animaciones basadas en scroll  
 ./scriptshotweb.sh https://example.com -all --smooth-scroll
 
-# Combinando opciones
-./scriptshotweb.sh https://example.com --device tablet --wait-time 4 --smooth-scroll
+# Cerrar automáticamente banners de cookies y pop-ups
+./scriptshotweb.sh https://example.com --device desktop --auto-dismiss
+
+# Abrir explorador de archivos automáticamente al finalizar
+./scriptshotweb.sh https://example.com --super --open
+
+# Combinando opciones (recomendado para sitios con cookies)
+./scriptshotweb.sh https://example.com --device tablet --wait-time 4 --smooth-scroll --auto-dismiss --open
 ```
 
 ### 📖 Ver ayuda:
@@ -224,7 +231,9 @@ ScriptShotWeb verifica automáticamente que las URLs sean válidas antes de proc
 | `--output-dir PATH` | Directorio personalizado de salida | `--output-dir ~/Proyectos` |
 | `--wait-time SEGUNDOS` | Tiempo de espera para animaciones | `--wait-time 5` |
 | `--smooth-scroll` | Scroll suave antes de captura completa | `--smooth-scroll` |
+| `--auto-dismiss` | 🤖 Cerrar automáticamente banners de cookies y pop-ups | `--auto-dismiss` |
 | `--super` | 🚀 Modo completo optimizado | `--super` |
+| `--open` | 📂 Abrir explorador de archivos al finalizar | `--open` |
 | `--help, -h` | Ayuda estándar | `--help` |
 | `--info` | Guía completa extendida | `--info` |
 
@@ -237,6 +246,35 @@ Captura el área visible del navegador según el tamaño del dispositivo.
 Captura toda la página incluyendo contenido scrolleable (`full_page=True`).
 
 ## ✨ Nuevas Características (v2.0)
+
+### 🤖 **Cierre Automático de Pop-ups (NUEVO en v2.4)**
+```bash
+# Cerrar automáticamente banners de cookies, avisos GDPR y otros pop-ups
+./scriptshotweb.sh https://site.com --device desktop --auto-dismiss
+
+# Combinar con otras opciones para capturas perfectas
+./scriptshotweb.sh https://site.com --super --auto-dismiss
+```
+
+**¿Qué hace?**
+- 🍪 Detecta y cierra automáticamente banners de cookies
+- 📋 Cierra avisos de privacidad y consentimiento GDPR
+- 🚫 Elimina pop-ups que bloquean la vista de la página
+- 🌍 Soporte multiidioma (español, inglés, francés, alemán, italiano, portugués)
+- 🎯 Compatible con frameworks populares: OneTrust, Cookiebot, Quantcast, TrustArc, Osano
+
+**Ideal para:**
+- Sitios con banners de cookies molestos (Google, Facebook, etc.)
+- Páginas con avisos GDPR obligatorios
+- Sitios con pop-ups de marketing o suscripciones
+- Auditorías visuales sin obstrucciones
+- Capturas profesionales para presentaciones
+
+**Selectores detectados:**
+- Botones: "Aceptar", "Accept", "Accepter", "Akzeptieren", "Accetta", "Aceitar"
+- Clases comunes: `.cookie-consent`, `.gdpr-accept`, `.cc-allow`
+- Frameworks: OneTrust, Cookiebot, Cookie Consent, Quantcast, TrustArc, Osano
+- Atributos ARIA: `aria-label="Accept"`, `aria-label="Close"`
 
 ### ⏳ **Control de Animaciones**
 ```bash
@@ -277,6 +315,20 @@ Ideal para:
 ./scriptshotweb.sh --info      # Guía completa con ejemplos
 ```
 
+### 📂 **Abrir Explorador de Archivos Automáticamente**
+```bash
+# Abrir explorador al finalizar (multiplataforma)
+./scriptshotweb.sh https://site.com --super --open
+
+# En Windows abre Explorer
+# En macOS abre Finder  
+# En Linux detecta tu gestor: Dolphin (KDE), Nautilus (GNOME), Thunar (XFCE), etc.
+```
+**Detecta automáticamente tu sistema operativo y gestor de archivos:**
+- ✅ Windows: Explorer
+- ✅ macOS: Finder
+- ✅ Linux: xdg-open (detecta Dolphin, Nautilus, Thunar, Nemo, Caja, PCManFM, etc.)
+
 ### 📂 **Ubicación de Archivos**
 ```bash
 # Por defecto guarda en ./capturas/ dentro del proyecto
@@ -311,17 +363,20 @@ Ideal para:
 # Capturar página principal en tablet con tiempo de espera extra
 ./scriptshotweb.sh https://miblog.com --device tablet --wait-time 6
 
-# Sitio con muchas animaciones - usar modo super
-./scriptshotweb.sh https://sitio-animado.com --super
+# Sitio con banner de cookies - cerrar automáticamente
+./scriptshotweb.sh https://google.com --device desktop --auto-dismiss
 
-# Sitio con lazy loading - usar scroll suave
-./scriptshotweb.sh https://sitio-parallax.com -all --smooth-scroll
+# Sitio con muchas animaciones - usar modo super y abrir explorador
+./scriptshotweb.sh https://sitio-animado.com --super --open
 
-# Captura completa optimizada para auditoría
-./scriptshotweb.sh https://cliente-importante.com --super --cliente "ClienteVIP"
+# Sitio con lazy loading y cookies - combinación perfecta
+./scriptshotweb.sh https://sitio-parallax.com -all --smooth-scroll --auto-dismiss
 
-# Guardar en ubicación personalizada
-./scriptshotweb.sh https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb
+# Captura completa optimizada para auditoría (con cierre de pop-ups)
+./scriptshotweb.sh https://cliente-importante.com --super --auto-dismiss --cliente "ClienteVIP"
+
+# Guardar en ubicación personalizada y abrir automáticamente
+./scriptshotweb.sh https://proyecto.com --super --output-dir ~/Proyectos/AuditoriasWeb --open
 ```
 
 ### 🎯 Casos de uso recomendados:
@@ -332,7 +387,9 @@ Ideal para:
 | **Sitio responsive** | `-all` | Ver en todos los dispositivos |
 | **Sitio con animaciones** | `--super` | Tiempo optimizado + scroll |
 | **Sitio con lazy loading** | `--smooth-scroll` | Activa el contenido diferido |
-| **Auditoría completa** | `--super` | Captura exhaustiva |
+| **Sitio con cookies/GDPR** | `--auto-dismiss` | Cierra banners automáticamente |
+| **Google, Facebook, etc.** | `--super --auto-dismiss` | Capturas limpias sin pop-ups |
+| **Auditoría completa** | `--super --auto-dismiss` | Captura exhaustiva sin obstrucciones |
 | **Sitio lento** | `--wait-time 7` | Más tiempo para cargar |
 
 ## 🤝 Contribuir
@@ -374,6 +431,19 @@ python scriptshotweb https://example.com --super
 ---
 
 ## 🎉 Changelog
+
+### v2.4 - Cierre Automático de Pop-ups 🤖
+- ✅ Nuevo parámetro `--auto-dismiss` para cerrar automáticamente pop-ups
+- ✅ Detección inteligente de banners de cookies en múltiples idiomas
+- ✅ Soporte para frameworks populares (OneTrust, Cookiebot, Quantcast, etc.)
+- ✅ Selectores ARIA y clases comunes incluidos
+- ✅ Ideal para sitios como Google, Facebook y otros con avisos GDPR
+
+### v2.3 - Apertura Automática del Explorador de Archivos
+- ✅ Nuevo parámetro `--open` para abrir explorador automáticamente
+- ✅ Detección inteligente multiplataforma (Windows, macOS, Linux)
+- ✅ Soporte para gestores de archivos Linux (Dolphin, Nautilus, Thunar, etc.)
+- ✅ Usa xdg-open en Linux para detectar automáticamente el gestor predeterminado
 
 ### v2.2 - Mejoras en el Proceso de Instalación
 - ✅ Nuevo instalador mejorado con mejor manejo de errores
