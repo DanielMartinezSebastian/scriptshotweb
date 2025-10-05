@@ -54,6 +54,18 @@ Después de instalar con pip, debes instalar el navegador Chromium de Playwright
 playwright install chromium
 ```
 
+**Verificar instalación:**
+
+Puedes verificar que todo está instalado correctamente ejecutando:
+
+```bash
+# Verificación básica
+wshot --help
+
+# Verificación completa con script de test
+python test_installation.py
+```
+
 **Dependencias del sistema (opcional):**
 
 Si encuentras errores relacionados con librerías del sistema faltantes, instálalas según tu distribución:

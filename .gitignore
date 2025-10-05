@@ -20,6 +20,7 @@ dist/
 *.egg-info/
 *.egg
 wheels/
+.eggs/
 
 # Archivos de desarrollo
 .pytest_cache/
