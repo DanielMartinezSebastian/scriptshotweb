@@ -40,15 +40,5 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Carpeta de capturas generadas por scriptshotweb
+# Carpeta de capturas generadas por wshot
 capturas/
-
-# Carpetas de capturas (ejemplos antiguos)
-# Descomenta si no quieres incluir las capturas en el repo
-# */
-# !scriptshotweb
-# !scriptshotweb.sh
-# !README.md
-# !LICENSE
-# !requirements.txt
-# !.gitignore

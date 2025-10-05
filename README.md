@@ -14,8 +14,8 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - ⏳ **Control de animaciones**: Tiempo de espera configurable para animaciones (3s por defecto)
 - 📜 **Scroll inteligente**: Scroll suave para disparar animaciones basadas en scroll
 - 🤖 **Cierre automático de pop-ups**: Detecta y cierra banners de cookies y avisos automáticamente
-- � **Extracción OpenGraph**: Obtiene metadatos og:* y descarga imágenes sociales
-- �🚀 **Modo Super**: Captura optimizada completa con un solo comando
+- 📊 **Extracción OpenGraph**: Obtiene metadatos og:* y descarga imágenes sociales
+- 🚀 **Modo Super**: Captura optimizada completa con un solo comando
 - 📖 **Ayuda completa**: Sistema de ayuda extensivo con `--help` e `--info`
 
 ## 🚩 Próximas Features
@@ -30,20 +30,47 @@ Una herramienta profesional para capturar pantallas de sitios web en múltiples 
 - [ ] Capturar webs completas navegando por todos los links bajo ese dominio para obtener toda la web
 - [ ] Scrapear contenido en formato .md
 - [ ] Obtener todo el contenido media que exista en la url objetivo
+
 ## 🚀 Instalación
 
-### Opción 1: Instalación mediante pip (Recomendada) ⭐
+### Instalación mediante pip (Recomendada) ⭐
 
 Instala wshot como un paquete Python global o en un entorno virtual:
 
+**Para la mayoría de sistemas:**
 ```bash
 # Instalación desde el repositorio con pip
-pip install git+https://github.com/DanielMartinezSebastian/scriptshotweb.git
+pip install git+https://github.com/DanielMartinezSebastian/wshot.git
 
 # O en un entorno virtual (recomendado)
 python3 -m venv wshot-env
 source wshot-env/bin/activate  # En Windows: wshot-env\Scripts\activate
-pip install git+https://github.com/DanielMartinezSebastian/scriptshotweb.git
+pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+```
+
+**Para Arch Linux (recomendado - pipx):**
+```bash
+# Instalar pipx si no lo tienes
+sudo pacman -S python-pipx
+
+# Instalar wshot globalmente con pipx
+pipx install git+https://github.com/DanielMartinezSebastian/wshot.git
+
+# Instalar Chromium
+~/.local/share/pipx/venvs/wshot/bin/playwright install chromium
+```
+
+**Para Arch Linux (alternativa - entorno virtual):**
+```bash
+# Crear entorno virtual
+python3 -m venv ~/.wshot-env
+source ~/.wshot-env/bin/activate
+pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+playwright install chromium
+
+# Crear alias en tu .zshrc o .bashrc para uso global
+echo 'alias wshot="~/.wshot-env/bin/wshot"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
 **Paso adicional necesario:**
@@ -51,7 +78,11 @@ pip install git+https://github.com/DanielMartinezSebastian/scriptshotweb.git
 Después de instalar con pip, debes instalar el navegador Chromium de Playwright:
 
 ```bash
+# Si instalaste con pip normal
 playwright install chromium
+
+# Si instalaste con pipx en Arch Linux
+~/.local/share/pipx/venvs/wshot/bin/playwright install chromium
 ```
 
 **Verificar instalación:**
@@ -85,35 +116,18 @@ sudo pacman -S nss nspr atk at-spi2-atk cups libdrm libxkbcommon \
   libxcomposite libxdamage libxrandr mesa pango cairo alsa-lib
 ```
 
-### Opción 2: Instalación desde el repositorio (Desarrollo)
+### Instalación desde el repositorio (Desarrollo)
 
 Si quieres desarrollar o contribuir al proyecto:
 
 ```bash
-git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
-cd scriptshotweb
+git clone https://github.com/DanielMartinezSebastian/wshot.git
+cd wshot
 
 # Instalar en modo desarrollo
 pip install -e .
 playwright install chromium
 ```
-
-### Opción 3: Scripts de instalación legacy
-
-Si prefieres usar los scripts de instalación tradicionales con entorno virtual local:
-
-```bash
-git clone https://github.com/DanielMartinezSebastian/scriptshotweb.git
-cd scriptshotweb
-./install.sh
-```
-
-**Scripts legacy disponibles:**
-- `./install.sh` - Instalación completa con entorno virtual local
-- `./install-deps.sh` - Instalar solo dependencias del sistema
-- `./check.sh` - Verificar instalación legacy
-- `./scriptshotweb.sh` - Wrapper para ejecutar (usa `.venv` local)
-- `./scriptshotweb` - Script Python directo (requiere `.venv` activo)
 
 ## 🎯 Uso Básico
 
@@ -132,7 +146,7 @@ wshot https://example.com --device desktop
 ### 🚀 Modo Super (Recomendado para sitios complejos):
 ```bash
 wshot https://example.com --super
-# Activa automáticamente: todos los dispositivos + scroll suave + tiempo optimizado (2s)
+# Activa automáticamente: todos los dispositivos + scroll suave + tiempo optimizado (2s) + OpenGraph
 ```
 
 ### ⚙️ Opciones avanzadas:
@@ -164,17 +178,6 @@ wshot --help      # Ayuda estándar
 wshot --info      # Guía completa con ejemplos
 ```
 
-### 🔧 Uso legacy (con scripts de instalación):
-
-Si instalaste usando `./install.sh`, puedes usar los scripts legacy:
-
-```bash
-wshot https://example.com -all  # Wrapper que activa .venv
-# O directamente:
-source .venv/bin/activate
-python scriptshotweb https://example.com -all
-```
-
 ## 📱 Dispositivos Disponibles
 
 | Dispositivo | Dimensiones | Descripción |
@@ -187,23 +190,23 @@ python scriptshotweb https://example.com -all
 ## 📂 Estructura de Salida
 
 **Ubicación por defecto:**
-- 📁 `./capturas/` (carpeta en el directorio del proyecto)
+- 📁 `./capturas/` (carpeta en el directorio actual)
 - 📁 O ruta personalizada con `--output-dir ~/Pictures/Wshot`
 
 ```
-scriptshotweb/
+wshot/
 ├── capturas/
 │   └── example/                    # Nombre extraído de la URL
 │       ├── mobile-17/             # Solo carpetas solicitadas
-│       │   ├── pagina-mobile-17-20231004_142958.png           # Viewport
-│       │   └── pagina-mobile-17-completa-20231004_142958.png  # Página completa
+│       │   ├── pagina-mobile-17-20241005_142958.png           # Viewport
+│       │   └── pagina-mobile-17-completa-20241005_142958.png  # Página completa
 │       ├── tablet/
-│       │   ├── pagina-tablet-20231004_142958.png
-│       │   └── pagina-tablet-completa-20231004_142958.png
+│       │   ├── pagina-tablet-20241005_142958.png
+│       │   └── pagina-tablet-completa-20241005_142958.png
 │       └── opengraph/             # Metadatos OpenGraph (si se usa --og o --all)
-│           ├── opengraph-20231004_142958.json     # Todos los metadatos
-│           └── og-image-20231004_142958.jpg       # Imagen social descargada
-└── scriptshotweb
+│           ├── opengraph-20241005_142958.json     # Todos los metadatos
+│           └── og-image-20241005_142958.jpg       # Imagen social descargada
+└── wshot/
 ```
 
 **Con `--all` o `--super` se crean todas las carpetas automáticamente:**
@@ -249,7 +252,7 @@ wshot https://example.com -all --smooth-scroll
 
 # Modo super (combina lo mejor de todo):
 wshot https://example.com --super
-# Equivale a: -all + --smooth-scroll + --wait-time 2
+# Equivale a: -all + --smooth-scroll + --open-graph + --wait-time 2
 ```
 
 ### 📖 Sistema de ayuda:
@@ -283,9 +286,9 @@ Captura el área visible del navegador según el tamaño del dispositivo.
 ### 📜 **Completa (Full Page)**
 Captura toda la página incluyendo contenido scrolleable (`full_page=True`).
 
-## ✨ Nuevas Características (v2.0)
+## ✨ Características Destacadas
 
-### 🤖 **Cierre Automático de Pop-ups (NUEVO en v2.4)**
+### 🤖 **Cierre Automático de Pop-ups**
 ```bash
 # Cerrar automáticamente banners de cookies, avisos GDPR y otros pop-ups
 wshot https://site.com --device desktop --auto-dismiss
@@ -301,20 +304,7 @@ wshot https://site.com --super --auto-dismiss
 - 🌍 Soporte multiidioma (español, inglés, francés, alemán, italiano, portugués)
 - 🎯 Compatible con frameworks populares: OneTrust, Cookiebot, Quantcast, TrustArc, Osano
 
-**Ideal para:**
-- Sitios con banners de cookies molestos (Google, Facebook, etc.)
-- Páginas con avisos GDPR obligatorios
-- Sitios con pop-ups de marketing o suscripciones
-- Auditorías visuales sin obstrucciones
-- Capturas profesionales para presentaciones
-
-**Selectores detectados:**
-- Botones: "Aceptar", "Accept", "Accepter", "Akzeptieren", "Accetta", "Aceitar"
-- Clases comunes: `.cookie-consent`, `.gdpr-accept`, `.cc-allow`
-- Frameworks: OneTrust, Cookiebot, Cookie Consent, Quantcast, TrustArc, Osano
-- Atributos ARIA: `aria-label="Accept"`, `aria-label="Close"`
-
-### 📊 **Extracción de Metadatos OpenGraph (NUEVO en v2.5)**
+### 📊 **Extracción de Metadatos OpenGraph**
 ```bash
 # Extraer metadatos OpenGraph de cualquier página
 wshot https://site.com --device desktop --open-graph
@@ -335,38 +325,6 @@ wshot https://site.com --super  # ← OpenGraph incluido
 - 📱 **og:site_name** - Nombre del sitio
 - 🐦 **Twitter Card** - Metadatos de Twitter
 - 📄 Y muchos más...
-
-**Archivos generados:**
-```
-capturas/
-└── [cliente]/
-    └── opengraph/
-        ├── opengraph-20241005_143025.json  ← Todos los metadatos
-        └── og-image-20241005_143025.jpg    ← Imagen social descargada
-```
-
-**Ejemplo de JSON generado:**
-```json
-{
-  "title": "Mi Sitio Web Increíble",
-  "description": "Descripción optimizada para compartir en redes sociales",
-  "image": "https://example.com/social-image.jpg",
-  "url": "https://example.com",
-  "type": "website",
-  "site_name": "Example",
-  "twitter_card": "summary_large_image",
-  "extracted_at": "2024-10-05T14:30:25",
-  "source_url": "https://example.com",
-  "image_local_path": "/path/to/og-image.jpg"
-}
-```
-
-**Ideal para:**
-- 🔍 Auditorías SEO completas
-- 📱 Verificar optimización para redes sociales
-- 🎨 Revisar imágenes compartidas (Facebook, Twitter, LinkedIn)
-- 📊 Análisis de contenido y metadatos
-- 🚀 Testing de Open Graph antes de publicar
 
 ### ⏳ **Control de Animaciones**
 ```bash
@@ -397,17 +355,6 @@ wshot https://site.com --super
 - ✅ Extracción OpenGraph (`--open-graph`)
 - ✅ Tiempo optimizado (`--wait-time 2`)
 
-**Recomendado para:**
-- Sitios complejos con animaciones
-- Auditorías completas (capturas + metadatos)
-- Sitios modernos con efectos avanzados
-
-### 📖 **Sistema de Ayuda Extendido**
-```bash
-wshot --help      # Ayuda rápida
-wshot --info      # Guía completa con ejemplos
-```
-
 ### 📂 **Abrir Explorador de Archivos Automáticamente**
 ```bash
 # Abrir explorador al finalizar (multiplataforma)
@@ -417,31 +364,12 @@ wshot https://site.com --super --open
 # En macOS abre Finder  
 # En Linux detecta tu gestor: Dolphin (KDE), Nautilus (GNOME), Thunar (XFCE), etc.
 ```
-**Detecta automáticamente tu sistema operativo y gestor de archivos:**
-- ✅ Windows: Explorer
-- ✅ macOS: Finder
-- ✅ Linux: xdg-open (detecta Dolphin, Nautilus, Thunar, Nemo, Caja, PCManFM, etc.)
-
-### 📂 **Ubicación de Archivos**
-```bash
-# Por defecto guarda en ./capturas/ dentro del proyecto
-wshot https://site.com --super
-
-# Especificar ubicación personalizada (ej: Pictures o Downloads)
-wshot https://site.com --super --output-dir ~/Pictures/Wshot
-wshot https://site.com --super --output-dir ~/Downloads/Capturas
-```
-**Beneficios:**
-- ✅ Mantiene las capturas organizadas en el proyecto
-- ✅ Fácil de encontrar y gestionar
-- ✅ Opción de mover a Pictures/Downloads si lo prefieres
-- ✅ Compatible con .gitignore para no subir capturas al repo
 
 ## 🔧 Requisitos
 
-- Python 3.7+
-- Playwright
-- Requests
+- Python 3.8+
+- Playwright (instalado automáticamente con pip)
+- Requests (instalado automáticamente con pip)
 - Conexión a internet
 
 ## 📄 Ejemplos Prácticos
@@ -503,18 +431,15 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 🛠️ Desarrollo
 
-### Estructura del proyecto (nueva estructura de paquete):
+### Estructura del proyecto:
 ```
-scriptshotweb/
+wshot/
 ├── wshot/                   # Paquete Python principal
 │   ├── __init__.py         # Módulo del paquete
 │   └── cli.py              # Código principal CLI
-├── setup.py                # Script de instalación setuptools
-├── pyproject.toml          # Configuración del proyecto (PEP 517/518)
-├── requirements.txt        # Dependencias Python
-├── scriptshotweb.sh        # Script legacy (wrapper)
-├── scriptshotweb           # Script legacy Python
-├── install.sh              # Script legacy de instalación
+├── pyproject.toml          # Configuración del proyecto (PEP 621)
+├── MANIFEST.in             # Archivos incluidos en distribución
+├── test_installation.py    # Script de verificación
 ├── .gitignore              # Archivos a ignorar en Git
 ├── LICENSE                 # Licencia MIT
 └── README.md               # Este archivo
@@ -533,80 +458,6 @@ wshot https://example.com --device mobile-17
 wshot https://example.com --super
 ```
 
-### Modo desarrollo legacy (con scripts):
-```bash
-source .venv/bin/activate
-python scriptshotweb https://example.com --device mobile-17
-
-# O usando el wrapper:
-./scriptshotweb.sh https://example.com --super
-```
-
----
-
-## 🎉 Changelog
-
-### v1.0.0 - Refactorización a paquete pip 📦
-- ✅ Reorganización del proyecto como paquete Python instalable
-- ✅ Nuevo comando `wshot` disponible globalmente tras instalación con pip
-- ✅ Estructura de paquete con `setup.py` y `pyproject.toml`
-- ✅ Soporte para instalación desde repositorio Git
-- ✅ Instalación en modo editable para desarrollo
-- ✅ Compatibilidad con instalación legacy mantenida
-- ✅ Scripts de instalación y wrapper legacy preservados
-
-### v2.5 - Extracción de Metadatos OpenGraph 📊
-- ✅ Nuevo parámetro `--open-graph` (alias `--og`) para extraer metadatos
-- ✅ Extracción completa de todos los metadatos og:* (title, description, image, etc.)
-- ✅ Descarga automática de imágenes og:image
-- ✅ Soporte para Twitter Card metadata complementario
-- ✅ Generación de archivos JSON estructurados con toda la información
-- ✅ Se activa automáticamente con `--all` y `--super`
-- ✅ Carpeta dedicada `opengraph/` para organizar archivos
-- ✅ Ideal para auditorías SEO y análisis de redes sociales
-
-### v2.4 - Cierre Automático de Pop-ups 🤖
-- ✅ Nuevo parámetro `--auto-dismiss` para cerrar automáticamente pop-ups
-- ✅ Detección inteligente de banners de cookies en múltiples idiomas
-- ✅ Soporte para frameworks populares (OneTrust, Cookiebot, Quantcast, etc.)
-- ✅ Selectores ARIA y clases comunes incluidos
-- ✅ Ideal para sitios como Google, Facebook y otros con avisos GDPR
-
-### v2.3 - Apertura Automática del Explorador de Archivos
-- ✅ Nuevo parámetro `--open` para abrir explorador automáticamente
-- ✅ Detección inteligente multiplataforma (Windows, macOS, Linux)
-- ✅ Soporte para gestores de archivos Linux (Dolphin, Nautilus, Thunar, etc.)
-- ✅ Usa xdg-open en Linux para detectar automáticamente el gestor predeterminado
-
-### v2.2 - Mejoras en el Proceso de Instalación
-- ✅ Nuevo instalador mejorado con mejor manejo de errores
-- ✅ Script de verificación completo (`check.sh`)
-- ✅ Script auxiliar para dependencias del sistema (`install-deps.sh`)
-- ✅ Instalación optimizada (solo Chromium por defecto)
-- ✅ Instrucciones claras para múltiples distribuciones Linux
-- ✅ Documentación de troubleshooting mejorada
-
-### v2.1 - Mejoras de Organización
-- ✅ Organización en carpeta ./capturas/ por defecto
-- ✅ Soporte para directorios personalizados (`--output-dir`)
-- ✅ Optimización del modo super (2s en lugar de 5s)
-- ✅ Mejoras en velocidad de scroll (0.08s por paso)
-
-### v2.0 - Nuevas Características
-- ✅ Control de tiempo de espera para animaciones (`--wait-time`)
-- ✅ Scroll suave para disparar animaciones (`--smooth-scroll`) 
-- ✅ Modo super optimizado (`--super`)
-- ✅ Sistema de ayuda extendido (`--help`, `--info`)
-- ✅ Mejor manejo de sitios modernos con animaciones
-
-### v1.0 - Funcionalidades Base
-- ✅ Capturas multi-dispositivo
-- ✅ Validación inteligente de URLs
-- ✅ Organización automática de archivos
-- ✅ Capturas viewport y página completa
-
----
-
 ## 🔧 Troubleshooting (Solución de Problemas)
 
 ### Problema: "libicudata.so.66 not found" u otras librerías faltantes
@@ -615,18 +466,18 @@ python scriptshotweb https://example.com --device mobile-17
 
 **Solución:**
 ```bash
-# Opción 1: Script automático (recomendado)
-sudo ./install-deps.sh
+# Ubuntu/Debian
+sudo apt update && sudo apt install -y libnss3 libnspr4 libatk1.0-0 \
+  libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 \
+  libxdamage1 libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
 
-# Opción 2: Manual para Ubuntu/Debian
-sudo apt update
-sudo apt install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
-  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 \
-  libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2
-
-# Opción 3: Manual para Fedora
+# Fedora
 sudo dnf install -y nss nspr atk at-spi2-atk cups-libs libdrm \
-  libxkbcommon libXcomposite libXdamage libXrandr libgbm pango cairo alsa-lib
+  libxkbcomposite libxdamage libXrandr libgbm pango cairo alsa-lib
+
+# Arch Linux
+sudo pacman -S nss nspr atk at-spi2-atk cups libdrm libxkbcommon \
+  libxcomposite libxdamage libxrandr mesa pango cairo alsa-lib
 ```
 
 ### Problema: "playwright: command not found"
@@ -635,41 +486,9 @@ sudo dnf install -y nss nspr atk at-spi2-atk cups-libs libdrm \
 
 **Solución:**
 ```bash
-# Activar entorno virtual
-source .venv/bin/activate
-
 # Reinstalar playwright
 pip install playwright
 playwright install chromium
-```
-
-### Problema: "Python3 not found"
-
-**Síntoma:** Python3 no está instalado.
-
-**Solución:**
-```bash
-# Ubuntu/Debian
-sudo apt install python3 python3-venv python3-pip
-
-# Fedora
-sudo dnf install python3 python3-pip
-
-# Arch Linux
-sudo pacman -S python python-pip
-```
-
-### Problema: "Entorno virtual no se puede crear"
-
-**Síntoma:** Error al ejecutar `python3 -m venv .venv`.
-
-**Solución:**
-```bash
-# Ubuntu/Debian - instalar módulo venv
-sudo apt install python3-venv
-
-# Luego reintentar
-./install.sh
 ```
 
 ### Problema: Las capturas salen en negro o vacías
@@ -679,7 +498,7 @@ sudo apt install python3-venv
 **Solución:**
 ```bash
 # 1. Verificar instalación
-./check.sh
+python test_installation.py
 
 # 2. Aumentar tiempo de espera
 wshot https://sitio.com --device desktop --wait-time 10
@@ -688,66 +507,20 @@ wshot https://sitio.com --device desktop --wait-time 10
 wshot https://sitio.com --super
 ```
 
-### Problema: "OS not officially supported by Playwright"
-
-**Síntoma:** Advertencia sobre sistema operativo no soportado.
-
-**Solución:**
-Esta es solo una advertencia. Playwright intentará usar una versión compatible. Si funciona, puedes ignorarla. Si tienes problemas:
-
-1. Asegúrate de tener todas las dependencias: `sudo ./install-deps.sh`
-2. Verifica con: `./check.sh`
-3. Si persiste, considera actualizar tu distribución Linux
-
-### Problema: Permisos denegados al ejecutar scripts
-
-**Síntoma:** "Permission denied" al ejecutar `./scriptshotweb.sh`.
-
-**Solución:**
-```bash
-chmod +x scriptshotweb.sh scriptshotweb check.sh install-deps.sh
-```
-
-### Problema: URL válida pero no captura
-
-**Síntoma:** La URL responde pero las capturas fallan.
-
-**Causas comunes:**
-1. **Sitio con captcha o protección anti-bot**
-2. **Contenido dinámico que tarda en cargar**
-3. **Sitio requiere JavaScript específico**
-
-**Soluciones:**
-```bash
-# Aumentar tiempo de espera
-wshot https://sitio.com --device desktop --wait-time 15
-
-# Usar scroll suave
-wshot https://sitio.com --device desktop --smooth-scroll
-
-# Probar con modo super
-wshot https://sitio.com --super
-```
-
 ### Verificación completa del sistema
 
-Si tienes múltiples problemas, ejecuta una verificación completa:
+Si tienes múltiples problemas:
 
 ```bash
 # 1. Verificar estado actual
-./check.sh
+python test_installation.py
 
 # 2. Reinstalar desde cero
-rm -rf .venv
-./install.sh
+pip uninstall wshot
+pip install git+https://github.com/DanielMartinezSebastian/wshot.git
+playwright install chromium
 
-# 3. Instalar dependencias del sistema
-sudo ./install-deps.sh
-
-# 4. Verificar nuevamente
-./check.sh
-
-# 5. Prueba funcional
+# 3. Prueba funcional
 wshot https://example.com --device desktop
 ```
 
@@ -764,35 +537,36 @@ Si ninguna solución funciona:
    ```bash
    python3 --version
    lsb_release -a  # o cat /etc/os-release
-   uname -a
    ```
 
 3. **Abre un issue en GitHub** con:
-   - Salida de `./check.sh`
+   - Salida de `python test_installation.py`
    - Contenido de `error.log`
    - Información del sistema
    - Comando que estabas ejecutando
 
 ---
 
-## 📚 Comandos y Scripts Disponibles
+## 🎉 Changelog
 
-### Comando principal (después de instalación con pip):
-| Comando | Descripción |
-|---------|-------------|
-| `wshot` | Comando principal para capturas de pantalla web (instalable con pip) |
+### v1.0.0 - Paquete pip production-ready 📦
+- ✅ Proyecto refactorizado como paquete Python instalable
+- ✅ Comando `wshot` disponible globalmente tras instalación pip
+- ✅ Estructura limpia sin archivos legacy redundantes
+- ✅ Configuración moderna con `pyproject.toml`
+- ✅ Instalación simplificada: `pip install git+https://...`
+- ✅ Script de verificación `test_installation.py`
+- ✅ Compatible con desarrollo: `pip install -e .`
 
-### Scripts legacy (instalación tradicional):
-| Script | Propósito | Requiere sudo |
-|--------|-----------|---------------|
-| `install.sh` | Instalación completa del proyecto con entorno virtual local | No* |
-| `install-deps.sh` | Instalar dependencias del sistema | Sí |
-| `check.sh` | Verificar instalación y funcionalidad legacy | No |
-| `scriptshotweb.sh` | Ejecutar capturas usando wrapper (activa `.venv`) | No |
-| `scriptshotweb` | Script Python legacy (requiere `.venv` activo) | No |
-
-*El instalador puede pedir sudo solo para dependencias del sistema, pero continúa sin ellas.
-
-**Nota:** Si instalaste con pip (`pip install git+https://...`), usa el comando `wshot` directamente.  
-Los scripts legacy son para instalación tradicional con `./install.sh`.
-
+### Características principales incluidas:
+- 📱 Capturas multi-dispositivo (iPhone SE, iPhone 17, iPad, Desktop)
+- 🛡️ Validación inteligente de URLs
+- 📁 Organización automática de archivos por cliente y dispositivo
+- ⏳ Control de animaciones y tiempo de espera configurable
+- 📜 Scroll suave para disparar animaciones basadas en scroll
+- 🤖 Cierre automático de banners de cookies y pop-ups
+- 📊 Extracción de metadatos OpenGraph con descarga de imágenes
+- 🚀 Modo Super (all-devices + smooth-scroll + open-graph + optimizado)
+- 📂 Apertura automática del explorador de archivos
+- 📖 Sistema de ayuda extensivo (`--help` e `--info`)
+- 🎨 Doble captura: viewport + página completa
